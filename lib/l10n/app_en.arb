@@ -1,0 +1,35 @@
+{
+  "@@locale": "en",
+  "appTitle": "Rayuela",
+  "login_title": "Welcome back",
+  "login_subtitle": "Log in to keep contributing to citizen science.",
+  "login_username": "Username",
+  "login_password": "Password",
+  "login_submit": "Log in",
+  "login_forgot": "Forgot password?",
+  "login_no_account": "Don't have an account?",
+  "login_sign_up": "Sign up",
+  "login_google": "Continue with Google",
+  "register_title": "Create your account",
+  "register_full_name": "Full name",
+  "register_email": "Email",
+  "register_confirm_password": "Confirm password",
+  "register_accept_terms": "I accept the terms and privacy policy.",
+  "register_submit": "Create account",
+  "register_have_account": "I already have an account",
+  "dashboard_greeting": "Hi, {name}",
+  "@dashboard_greeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "dashboard_empty_title": "No projects yet",
+  "dashboard_empty_body": "Discover citizen-science projects near you and subscribe to start participating.",
+  "error_no_internet": "No internet connection.",
+  "error_server": "Something went wrong on our side.",
+  "error_unauthorized": "Your session expired. Please log in again.",
+  "common_retry": "Try again",
+  "common_logout": "Log out"
+}
