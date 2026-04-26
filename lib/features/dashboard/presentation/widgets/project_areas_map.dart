@@ -36,12 +36,14 @@ class ProjectAreasMap extends ConsumerStatefulWidget {
     required this.areas,
     required this.onAreaTap,
     this.height = 280,
+    this.isFullscreen = false,
   });
 
   final String projectId;
   final List<ProjectArea> areas;
   final void Function(String areaName) onAreaTap;
   final double height;
+  final bool isFullscreen;
 
   @override
   ConsumerState<ProjectAreasMap> createState() => _ProjectAreasMapState();
@@ -199,6 +201,39 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
               right: 8,
               child: Column(
                 children: [
+                  if (!widget.isFullscreen) ...[
+                    _MapButton(
+                      icon: Icons.fullscreen,
+                      tooltip: 'Full screen',
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            fullscreenDialog: true,
+                            builder: (context) => Scaffold(
+                              appBar: AppBar(
+                                title: const Text('Map'),
+                                leading: IconButton(
+                                  icon: const Icon(Icons.close),
+                                  onPressed: () => Navigator.of(context).pop(),
+                                ),
+                              ),
+                              body: ProjectAreasMap(
+                                projectId: widget.projectId,
+                                areas: widget.areas,
+                                onAreaTap: (areaName) {
+                                  Navigator.of(context).pop();
+                                  widget.onAreaTap(areaName);
+                                },
+                                height: double.infinity,
+                                isFullscreen: true,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 6),
+                  ],
                   _MapButton(
                     icon: Icons.my_location,
                     tooltip: _locationDenied
