@@ -29,18 +29,10 @@ Para que el GPS y la cámara funcionen en dispositivo real, las plataformas nece
 
 ## Setup inicial en una máquina nueva
 
-El repo guarda el código Dart y los assets de marca, pero no los proyectos nativos generados (`android/`, `ios/`). Hay que crearlos una sola vez:
+El repo incluye los proyectos nativos generados (`android/`, `ios/`) con los permisos de cámara y ubicación ya declarados, así que no hace falta correr `flutter create`. Solo instalá dependencias:
 
 ```bash
-cd rayuela-mobile
-flutter create --org app.rayuela --project-name rayuela_mobile \
-  --platforms=android,ios --empty .
 flutter pub get
-```
-
-`flutter create .` sobre un repo existente solo agrega lo que falte; no toca los archivos que ya están. Después instalá los pods de iOS:
-
-```bash
 cd ios && pod install && cd ..
 ```
 
