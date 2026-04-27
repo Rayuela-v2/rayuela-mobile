@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../../../../core/error/app_exception.dart';
 import '../../../../core/error/result.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../core/network/api_paths.dart';
@@ -26,21 +27,49 @@ class AuthRemoteSource {
     );
   }
 
+  /// POST /auth/google. Distinct from [login] because the backend can
+  /// reply with a structured 400 — `requiresUsername: true` plus a
+  /// `suggestedUsername` — when the Google account has no Rayuela
+  /// counterpart yet. We surface that as
+  /// [GoogleSignupRequiresUsernameException] so the UI can collect a
+  /// username and retry, instead of losing the info inside a generic
+  /// [ValidationException].
   Future<Result<LoginResponseDto>> loginWithGoogle({
     required String credential,
     String? username,
-  }) {
-    return _api.request(
-      (d) => d.post<Map<String, dynamic>>(
+  }) async {
+    try {
+      final response = await _api.raw.post<Map<String, dynamic>>(
         ApiPaths.google,
         data: {
           'credential': credential,
           if (username != null) 'username': username,
         },
         options: _anonymous,
-      ),
-      parse: LoginResponseDto.fromJson,
-    );
+      );
+      return Success(LoginResponseDto.fromJson(response.data));
+    } on DioException catch (e) {
+      final data = e.response?.data;
+      if (e.response?.statusCode == 400 && data is Map) {
+        final requires = data['requiresUsername'];
+        if (requires == true || requires == 'true') {
+          final suggested = data['suggestedUsername'];
+          return Failure<LoginResponseDto>(
+            GoogleSignupRequiresUsernameException(
+              message: data['message']?.toString() ??
+                  'Username is required for new Google signup',
+              suggestedUsername: suggested is String ? suggested : null,
+              cause: e,
+            ),
+          );
+        }
+      }
+      return Failure<LoginResponseDto>(_api.mapDioError(e));
+    } catch (e) {
+      return Failure<LoginResponseDto>(
+        UnknownException(message: e.toString(), cause: e),
+      );
+    }
   }
 
   Future<Result<void>> register(RegisterRequestDto req) {

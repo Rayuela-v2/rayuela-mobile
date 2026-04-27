@@ -76,5 +76,24 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<!--
+		Google Sign-In needs the reversed iOS OAuth client ID registered as
+		a URL scheme so it can receive the auth callback. The value below
+		matches GOOGLE_CLIENT_ID_IOS in .env.development. If you rotate the
+		iOS client ID, update this scheme to match (reverse the dotted
+		segments of the client ID, dropping the .apps.googleusercontent.com
+		suffix).
+	-->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.350351419574-spkn539712ia3nr9aomom2i39ht9aa23</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

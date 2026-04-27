@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/config/env.dart';
 import '../../../../core/error/app_exception.dart';
 import '../../../../core/router/routes.dart';
 import '../providers/auth_controller.dart';
@@ -19,6 +20,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _passwordController = TextEditingController();
 
   bool _submitting = false;
+  bool _googleSubmitting = false;
   bool _obscure = true;
   String? _submitError;
   Map<String, String> _fieldErrors = const {};
@@ -51,6 +53,133 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         }
       }
     });
+  }
+
+  Future<void> _signInWithGoogle() async {
+    if (!Env.isGoogleSignInConfigured) {
+      setState(() {
+        _submitError =
+            'Google sign-in is not configured for this build. Pass GOOGLE_CLIENT_ID_WEB (and GOOGLE_CLIENT_ID_IOS on iOS) via --dart-define-from-file=.env.development.';
+      });
+      return;
+    }
+
+    setState(() {
+      _googleSubmitting = true;
+      _submitError = null;
+      _fieldErrors = const {};
+    });
+
+    final controller = ref.read(authControllerProvider.notifier);
+    final error = await controller.loginWithGoogle();
+    if (!mounted) return;
+
+    if (error == null) {
+      // Authenticated. The router listens to authControllerProvider and
+      // will redirect away from /login on its own.
+      setState(() => _googleSubmitting = false);
+      return;
+    }
+
+    if (error is GoogleSignInCancelledException) {
+      // User dismissed the sheet — don't show a noisy banner.
+      setState(() => _googleSubmitting = false);
+      return;
+    }
+
+    if (error is GoogleSignupRequiresUsernameException) {
+      final username = await _promptForGoogleUsername(
+        suggested: error.suggestedUsername,
+      );
+      if (!mounted) return;
+      if (username == null || username.isEmpty) {
+        setState(() => _googleSubmitting = false);
+        return;
+      }
+      final retryError =
+          await controller.completeGoogleSignup(username: username);
+      if (!mounted) return;
+      setState(() {
+        _googleSubmitting = false;
+        if (retryError != null && retryError is! GoogleSignInCancelledException) {
+          _submitError = _describe(retryError);
+          if (retryError is ValidationException) {
+            _fieldErrors = retryError.fieldErrors;
+          }
+        }
+      });
+      return;
+    }
+
+    setState(() {
+      _googleSubmitting = false;
+      _submitError = _describe(error);
+      if (error is ValidationException) {
+        _fieldErrors = error.fieldErrors;
+      }
+    });
+  }
+
+  Future<String?> _promptForGoogleUsername({String? suggested}) {
+    final controller = TextEditingController(text: suggested ?? '');
+    final formKey = GlobalKey<FormState>();
+    return showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) {
+        return AlertDialog(
+          title: const Text('Pick a username'),
+          content: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Text(
+                  "We didn't find a Rayuela account for this Google "
+                  'profile yet. Choose a username to finish signing up.',
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: controller,
+                  autofocus: true,
+                  textInputAction: TextInputAction.done,
+                  decoration: const InputDecoration(
+                    labelText: 'Username',
+                    prefixIcon: Icon(Icons.alternate_email),
+                  ),
+                  validator: (value) {
+                    final v = value?.trim() ?? '';
+                    if (v.isEmpty) return 'Pick a username to continue';
+                    if (v.length < 3) return 'At least 3 characters';
+                    return null;
+                  },
+                  onFieldSubmitted: (_) {
+                    if (formKey.currentState!.validate()) {
+                      Navigator.of(ctx).pop(controller.text.trim());
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () {
+                if (formKey.currentState!.validate()) {
+                  Navigator.of(ctx).pop(controller.text.trim());
+                }
+              },
+              child: const Text('Continue'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   String _describe(AppException e) => switch (e) {
@@ -154,10 +283,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 const SizedBox(height: 12),
                 OutlinedButton.icon(
-                  // Phase 1 will wire google_sign_in and POST /auth/google.
-                  onPressed: null,
-                  icon: const Icon(Icons.g_mobiledata),
-                  label: const Text('Continue with Google (soon)'),
+                  onPressed: (_submitting || _googleSubmitting)
+                      ? null
+                      : _signInWithGoogle,
+                  icon: _googleSubmitting
+                      ? const SizedBox.square(
+                          dimension: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.g_mobiledata),
+                  label: Text(
+                    _googleSubmitting
+                        ? 'Connecting to Google\u2026'
+                        : 'Continue with Google',
+                  ),
                 ),
                 const SizedBox(height: 24),
                 Row(

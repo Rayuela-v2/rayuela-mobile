@@ -68,6 +68,26 @@ class ServerException extends AppException {
   final int? statusCode;
 }
 
+/// Surfaced by `POST /auth/google` when the Google account has no matching
+/// Rayuela user yet. The UI should collect a username from the user and
+/// retry the call.
+class GoogleSignupRequiresUsernameException extends AppException {
+  const GoogleSignupRequiresUsernameException({
+    String message = 'Username is required for new Google signup',
+    this.suggestedUsername,
+    super.cause,
+  }) : super(message: message);
+
+  final String? suggestedUsername;
+}
+
+/// Surfaced when the user dismisses the native Google sign-in sheet.
+/// Different from a real error; UIs typically just stop loading silently.
+class GoogleSignInCancelledException extends AppException {
+  const GoogleSignInCancelledException()
+      : super(message: 'Google sign-in was cancelled');
+}
+
 class UnknownException extends AppException {
   const UnknownException({
     String message = 'Unexpected error',

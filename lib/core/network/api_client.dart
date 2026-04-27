@@ -82,6 +82,12 @@ class ApiClient {
     }
   }
 
+  /// Translate a [DioException] into the app's typed exception hierarchy.
+  /// Exposed so call-sites that need to read the raw response body (e.g.
+  /// `POST /auth/google` to detect `requiresUsername`) can fall back to
+  /// the standard mapping for everything else.
+  AppException mapDioError(DioException e) => _mapError(e);
+
   AppException _mapError(DioException e) {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
