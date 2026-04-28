@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/empty_state.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../domain/entities/checkin_history_item.dart';
@@ -58,18 +59,17 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     if (items.isEmpty) {
       return LayoutBuilder(
         builder: (context, c) => SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: c.maxHeight),
-            child: const EmptyState(
+            child: EmptyState(
               icon: Icons.photo_camera_back_outlined,
-              title: 'No check-ins yet',
-              message:
-                  'Your check-ins for this project will appear here. '
-                  'Open a task and add your first one to start earning points.',
+              title: t.checkins_empty_title,
+              message: t.checkins_empty_body,
             ),
           ),
         ),
@@ -138,6 +138,7 @@ class _CheckinCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     final timeLabel = DateFormat.jm().format(item.datetime.toLocal());
 
     return Container(
@@ -177,7 +178,7 @@ class _CheckinCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  item.taskType.isEmpty ? 'Check-in' : item.taskType,
+                  item.taskType.isEmpty ? t.checkins_card_default_kind : item.taskType,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -229,6 +230,7 @@ class _TaskSolvedChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
@@ -245,7 +247,9 @@ class _TaskSolvedChip extends StatelessWidget {
           ),
           const SizedBox(width: 4),
           Text(
-            (name == null || name!.isEmpty) ? 'Task solved' : 'Solved · $name',
+            (name == null || name!.isEmpty)
+                ? t.checkins_task_solved
+                : t.checkins_task_solved_named(name!),
             style: theme.textTheme.labelSmall?.copyWith(
               color: theme.colorScheme.onTertiaryContainer,
               fontWeight: FontWeight.w600,

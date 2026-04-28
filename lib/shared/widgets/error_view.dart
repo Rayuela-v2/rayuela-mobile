@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/error/app_exception.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Generic inline error UI. Use anywhere an AsyncValue.error resolves.
 class ErrorView extends StatelessWidget {
@@ -16,16 +17,10 @@ class ErrorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final message = switch (error) {
-      NetworkException() => 'No internet connection.\nCheck your signal and retry.',
-      TimeoutException() => 'The server is slow to respond. Try again in a moment.',
-      UnauthorizedException() => 'Your session expired. Please log in again.',
-      ServerException(:final statusCode) =>
-        'Server error${statusCode == null ? '' : ' ($statusCode)'}. Please try again.',
-      ValidationException(:final message) => message,
-      AppException(:final message) => message,
-      _ => error.toString(),
-    };
+    final t = AppLocalizations.of(context)!;
+    final message = error is AppException
+        ? localizeAppException(error as AppException, t, longForm: true)
+        : error.toString();
 
     return Padding(
       padding: const EdgeInsets.all(24),
@@ -48,11 +43,37 @@ class ErrorView extends StatelessWidget {
             OutlinedButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh),
-              label: const Text('Try again'),
+              label: Text(t.common_retry),
             ),
           ],
         ],
       ),
     );
   }
+}
+
+/// Converts an [AppException] to a user-friendly localized string.
+///
+/// Pass [longForm] when displaying the message in a full error view (where we
+/// can afford a second sentence, like "Check your signal and retry.").
+String localizeAppException(
+  AppException e,
+  AppLocalizations t, {
+  bool longForm = false,
+}) {
+  return switch (e) {
+    NetworkException() =>
+      longForm ? t.error_no_internet_long : t.error_no_internet,
+    TimeoutException() => t.error_timeout,
+    UnauthorizedException() => t.error_unauthorized,
+    ServerException(:final statusCode) => statusCode == null
+        ? t.error_server_no_code
+        : t.error_server_with_code(statusCode),
+    ValidationException(:final message) => message,
+    GoogleSignInCancelledException() => '',
+    GoogleSignupRequiresUsernameException(:final message) => message,
+    NotFoundException(:final message) => message,
+    ForbiddenException(:final message) => message,
+    UnknownException(:final message) => message,
+  };
 }

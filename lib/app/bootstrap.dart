@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../core/locale/locale_controller.dart';
 import '../core/network/api_client.dart';
 import '../core/storage/secure_token_store.dart';
 import '../features/auth/presentation/providers/auth_controller.dart';
@@ -16,6 +18,7 @@ Future<ProviderContainer> bootstrapContainer() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final tokens = SecureTokenStore();
+  final prefs = await SharedPreferences.getInstance();
 
   // We need a forward reference to the container so the API client can call
   // back into Riverpod when a refresh ultimately fails.
@@ -33,6 +36,7 @@ Future<ProviderContainer> bootstrapContainer() async {
     overrides: [
       secureTokenStoreProvider.overrideWithValue(tokens),
       apiClientProvider.overrideWithValue(apiClient),
+      sharedPreferencesProvider.overrideWithValue(prefs),
     ],
   );
 

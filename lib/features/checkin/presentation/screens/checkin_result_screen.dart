@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/router/routes.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/checkin_result.dart';
 
 /// Celebrates a successful check-in: points awarded, new badges, score.
@@ -42,6 +43,7 @@ class _CheckinResultScreenState extends State<CheckinResultScreen>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     final r = widget.result;
     final hasBadges = r.newBadges.isNotEmpty;
 
@@ -61,7 +63,7 @@ class _CheckinResultScreenState extends State<CheckinResultScreen>
             }
           },
         ),
-        title: const Text('Thanks for contributing'),
+        title: Text(t.checkin_result_title),
       ),
       body: SafeArea(
         child: Padding(
@@ -81,7 +83,7 @@ class _CheckinResultScreenState extends State<CheckinResultScreen>
                 const SizedBox(height: 16),
                 Center(
                   child: Text(
-                    'Contributed to "${r.contributesTo!.name}"',
+                    t.checkin_result_contributed_to(r.contributesTo!.name),
                     textAlign: TextAlign.center,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
@@ -101,7 +103,7 @@ class _CheckinResultScreenState extends State<CheckinResultScreen>
               const SizedBox(height: 32),
               if (hasBadges) ...[
                 Text(
-                  'New badges',
+                  t.checkin_result_new_badges,
                   style: theme.textTheme.titleMedium
                       ?.copyWith(fontWeight: FontWeight.w600),
                 ),
@@ -121,7 +123,7 @@ class _CheckinResultScreenState extends State<CheckinResultScreen>
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                child: const Text('Back to dashboard'),
+                child: Text(t.checkin_back_to_dashboard),
               ),
               const SizedBox(height: 8),
               OutlinedButton(
@@ -140,7 +142,7 @@ class _CheckinResultScreenState extends State<CheckinResultScreen>
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
-                child: const Text('Back to project'),
+                child: Text(t.checkin_back_to_project),
               ),
             ],
           ),
@@ -157,6 +159,7 @@ class _PointsHero extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -172,7 +175,7 @@ class _PointsHero extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '+$points pts',
+            t.checkin_result_points_label(points),
             style: theme.textTheme.displaySmall?.copyWith(
               color: theme.colorScheme.onPrimaryContainer,
               fontWeight: FontWeight.w800,
@@ -180,8 +183,8 @@ class _PointsHero extends StatelessWidget {
           ),
           Text(
             points == 0
-                ? 'Check-in recorded'
-                : 'Earned for this check-in',
+                ? t.checkin_result_recorded
+                : t.checkin_result_earned,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onPrimaryContainer,
             ),

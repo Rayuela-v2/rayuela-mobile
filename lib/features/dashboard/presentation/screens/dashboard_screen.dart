@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/router/routes.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/empty_state.dart';
 import '../../../../shared/widgets/error_view.dart';
+import '../../../../shared/widgets/language_picker.dart';
 import '../../../auth/presentation/providers/auth_controller.dart';
 import '../providers/projects_providers.dart';
 import '../widgets/project_card.dart';
@@ -14,21 +16,23 @@ class DashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final t = AppLocalizations.of(context)!;
     final authState = ref.watch(authControllerProvider);
     final projects = ref.watch(subscribedProjectsProvider);
 
     final greeting = switch (authState) {
       AuthStateAuthenticated(:final user) =>
-        'Hi, ${user.completeName.split(' ').first}',
-      _ => 'Hi',
+        t.dashboard_greeting(user.completeName.split(' ').first),
+      _ => t.dashboard_greeting_fallback,
     };
 
     return Scaffold(
       appBar: AppBar(
         title: Text(greeting),
         actions: [
+          const LanguagePickerButton(),
           IconButton(
-            tooltip: 'Log out',
+            tooltip: t.common_logout,
             onPressed: () async {
               await ref.read(authControllerProvider.notifier).logout();
             },
@@ -49,12 +53,10 @@ class DashboardScreen extends ConsumerWidget {
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: ConstrainedBox(
                     constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                    child: const EmptyState(
+                    child: EmptyState(
                       icon: Icons.explore_outlined,
-                      title: 'No projects yet',
-                      message:
-                          'Discover citizen-science projects near you and '
-                          'subscribe to start participating.',
+                      title: t.dashboard_empty_title,
+                      message: t.dashboard_empty_body,
                     ),
                   ),
                 ),

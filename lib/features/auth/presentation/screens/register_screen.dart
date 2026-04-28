@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/error/app_exception.dart';
 import '../../../../core/router/routes.dart';
+import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/language_picker.dart';
 import '../providers/auth_controller.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -37,9 +39,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   }
 
   Future<void> _submit() async {
+    final t = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) return;
     if (!_acceptedTerms) {
-      setState(() => _submitError = 'Please accept the terms to continue.');
+      setState(() => _submitError = t.register_must_accept_terms);
       return;
     }
     setState(() {
@@ -58,10 +61,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       // Registration succeeded; fall back to login. Email verification
       // happens out-of-band.
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Account created. Check your email to verify, then log in.',
-          ),
+        SnackBar(
+          content: Text(t.register_success_snackbar),
         ),
       );
       context.goNamed(AppRoute.login);
@@ -76,15 +77,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     });
   }
 
-  String? _emailValidator(String? value) {
-    if (value == null || value.trim().isEmpty) return 'Email is required';
+  String? _emailValidator(String? value, AppLocalizations t) {
+    if (value == null || value.trim().isEmpty) return t.register_email_required;
     final ok = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(value.trim());
-    return ok ? null : 'Enter a valid email';
+    return ok ? null : t.register_email_invalid;
   }
 
-  String? _passwordValidator(String? value) {
+  String? _passwordValidator(String? value, AppLocalizations t) {
     if (value == null || value.length < 8) {
-      return 'Password must be at least 8 characters';
+      return t.register_password_min;
     }
     return null;
   }
@@ -92,8 +93,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Create your account')),
+      appBar: AppBar(
+        title: Text(t.register_title),
+        actions: const [
+          LanguagePickerButton(),
+          SizedBox(width: 4),
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
@@ -107,12 +115,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   textCapitalization: TextCapitalization.words,
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
-                    labelText: 'Full name',
+                    labelText: t.register_full_name,
                     prefixIcon: const Icon(Icons.badge_outlined),
                     errorText: _fieldErrors['complete_name'],
                   ),
-                  validator: (v) =>
-                      (v == null || v.trim().isEmpty) ? 'Enter your name' : null,
+                  validator: (v) => (v == null || v.trim().isEmpty)
+                      ? t.register_full_name_required
+                      : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -120,12 +129,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   autocorrect: false,
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
-                    labelText: 'Username',
+                    labelText: t.login_username,
                     prefixIcon: const Icon(Icons.person_outline),
                     errorText: _fieldErrors['username'],
                   ),
                   validator: (v) => (v == null || v.trim().length < 3)
-                      ? 'Username must be at least 3 characters'
+                      ? t.register_username_min
                       : null,
                 ),
                 const SizedBox(height: 16),
@@ -135,11 +144,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   autocorrect: false,
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
-                    labelText: 'Email',
+                    labelText: t.register_email,
                     prefixIcon: const Icon(Icons.email_outlined),
                     errorText: _fieldErrors['email'],
                   ),
-                  validator: _emailValidator,
+                  validator: (v) => _emailValidator(v, t),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -147,23 +156,24 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   obscureText: true,
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
-                    labelText: 'Password',
+                    labelText: t.login_password,
                     prefixIcon: const Icon(Icons.lock_outline),
                     errorText: _fieldErrors['password'],
                   ),
-                  validator: _passwordValidator,
+                  validator: (v) => _passwordValidator(v, t),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _confirmController,
                   obscureText: true,
                   textInputAction: TextInputAction.done,
-                  decoration: const InputDecoration(
-                    labelText: 'Confirm password',
-                    prefixIcon: Icon(Icons.lock_reset_outlined),
+                  decoration: InputDecoration(
+                    labelText: t.register_confirm_password,
+                    prefixIcon: const Icon(Icons.lock_reset_outlined),
                   ),
-                  validator: (v) =>
-                      v != _passwordController.text ? 'Passwords do not match' : null,
+                  validator: (v) => v != _passwordController.text
+                      ? t.register_passwords_no_match
+                      : null,
                   onFieldSubmitted: (_) => _submit(),
                 ),
                 const SizedBox(height: 16),
@@ -176,7 +186,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ),
                     Expanded(
                       child: Text(
-                        'I accept the terms and privacy policy.',
+                        t.register_accept_terms,
                         style: theme.textTheme.bodyMedium,
                       ),
                     ),
@@ -202,12 +212,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             color: Colors.white,
                           ),
                         )
-                      : const Text('Create account'),
+                      : Text(t.register_submit),
                 ),
                 const SizedBox(height: 8),
                 TextButton(
                   onPressed: () => context.goNamed(AppRoute.login),
-                  child: const Text('I already have an account'),
+                  child: Text(t.register_have_account),
                 ),
               ],
             ),

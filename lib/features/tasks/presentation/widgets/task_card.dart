@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/task_item.dart';
 
 class TaskCard extends StatelessWidget {
@@ -11,6 +12,7 @@ class TaskCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     final solved = task.solved;
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -58,7 +60,7 @@ class TaskCard extends StatelessWidget {
                           const SizedBox(width: 8),
                           _MetaChip(
                             icon: Icons.check_circle_outline,
-                            label: 'by ${task.solvedBy}',
+                            label: t.task_card_solved_by(task.solvedBy!),
                           ),
                         ],
                       ],
@@ -88,6 +90,7 @@ class _TaskBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     final color = solved
         ? theme.colorScheme.surfaceContainerHighest
         : theme.colorScheme.primaryContainer;
@@ -112,7 +115,10 @@ class _TaskBadge extends StatelessWidget {
               fontWeight: FontWeight.w700,
             ),
           ),
-          Text('pts', style: theme.textTheme.labelSmall?.copyWith(color: fg)),
+          Text(
+            t.task_card_pts_unit,
+            style: theme.textTheme.labelSmall?.copyWith(color: fg),
+          ),
         ],
       ),
     );

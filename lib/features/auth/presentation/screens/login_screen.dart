@@ -5,6 +5,9 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/config/env.dart';
 import '../../../../core/error/app_exception.dart';
 import '../../../../core/router/routes.dart';
+import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/error_view.dart';
+import '../../../../shared/widgets/language_picker.dart';
 import '../providers/auth_controller.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -44,10 +47,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           password: _passwordController.text,
         );
     if (!mounted) return;
+    final t = AppLocalizations.of(context)!;
     setState(() {
       _submitting = false;
       if (error != null) {
-        _submitError = _describe(error);
+        _submitError = _describe(error, t);
         if (error is ValidationException) {
           _fieldErrors = error.fieldErrors;
         }
@@ -56,10 +60,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _signInWithGoogle() async {
+    final t = AppLocalizations.of(context)!;
     if (!Env.isGoogleSignInConfigured) {
       setState(() {
-        _submitError =
-            'Google sign-in is not configured for this build. Pass GOOGLE_CLIENT_ID_WEB (and GOOGLE_CLIENT_ID_IOS on iOS) via --dart-define-from-file=.env.development.';
+        _submitError = t.login_google_not_configured;
       });
       return;
     }
@@ -99,10 +103,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       final retryError =
           await controller.completeGoogleSignup(username: username);
       if (!mounted) return;
+      final t2 = AppLocalizations.of(context)!;
       setState(() {
         _googleSubmitting = false;
         if (retryError != null && retryError is! GoogleSignInCancelledException) {
-          _submitError = _describe(retryError);
+          _submitError = _describe(retryError, t2);
           if (retryError is ValidationException) {
             _fieldErrors = retryError.fieldErrors;
           }
@@ -113,7 +118,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     setState(() {
       _googleSubmitting = false;
-      _submitError = _describe(error);
+      _submitError = _describe(error, t);
       if (error is ValidationException) {
         _fieldErrors = error.fieldErrors;
       }
@@ -121,6 +126,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<String?> _promptForGoogleUsername({String? suggested}) {
+    final t = AppLocalizations.of(context)!;
     final controller = TextEditingController(text: suggested ?? '');
     final formKey = GlobalKey<FormState>();
     return showDialog<String>(
@@ -128,30 +134,27 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       barrierDismissible: false,
       builder: (ctx) {
         return AlertDialog(
-          title: const Text('Pick a username'),
+          title: Text(t.login_pick_username_title),
           content: Form(
             key: formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text(
-                  "We didn't find a Rayuela account for this Google "
-                  'profile yet. Choose a username to finish signing up.',
-                ),
+                Text(t.login_pick_username_body),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: controller,
                   autofocus: true,
                   textInputAction: TextInputAction.done,
-                  decoration: const InputDecoration(
-                    labelText: 'Username',
-                    prefixIcon: Icon(Icons.alternate_email),
+                  decoration: InputDecoration(
+                    labelText: t.login_username,
+                    prefixIcon: const Icon(Icons.alternate_email),
                   ),
                   validator: (value) {
                     final v = value?.trim() ?? '';
-                    if (v.isEmpty) return 'Pick a username to continue';
-                    if (v.length < 3) return 'At least 3 characters';
+                    if (v.isEmpty) return t.login_pick_username_required;
+                    if (v.length < 3) return t.login_pick_username_min;
                     return null;
                   },
                   onFieldSubmitted: (_) {
@@ -166,7 +169,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(),
-              child: const Text('Cancel'),
+              child: Text(t.common_cancel),
             ),
             FilledButton(
               onPressed: () {
@@ -174,7 +177,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Navigator.of(ctx).pop(controller.text.trim());
                 }
               },
-              child: const Text('Continue'),
+              child: Text(t.common_continue),
             ),
           ],
         );
@@ -182,18 +185,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  String _describe(AppException e) => switch (e) {
-        UnauthorizedException() => 'Invalid username or password.',
-        NetworkException() => 'No internet connection.',
-        TimeoutException() => 'Server is slow to respond. Try again.',
-        AppException(:final message) => message,
-      };
+  String _describe(AppException e, AppLocalizations t) =>
+      localizeAppException(e, t);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: const [
+          LanguagePickerButton(),
+          SizedBox(width: 4),
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
@@ -202,10 +207,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text('Welcome back', style: theme.textTheme.headlineMedium),
+                Text(t.login_title, style: theme.textTheme.headlineMedium),
                 const SizedBox(height: 8),
                 Text(
-                  'Log in to keep contributing to citizen science.',
+                  t.login_subtitle,
                   style: theme.textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 32),
@@ -215,13 +220,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   autocorrect: false,
                   autofillHints: const [AutofillHints.username],
                   decoration: InputDecoration(
-                    labelText: 'Username',
+                    labelText: t.login_username,
                     prefixIcon: const Icon(Icons.person_outline),
                     errorText: _fieldErrors['username'],
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Enter your username';
+                      return t.login_username_required;
                     }
                     return null;
                   },
@@ -233,7 +238,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   textInputAction: TextInputAction.done,
                   autofillHints: const [AutofillHints.password],
                   decoration: InputDecoration(
-                    labelText: 'Password',
+                    labelText: t.login_password,
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       onPressed: () => setState(() => _obscure = !_obscure),
@@ -245,7 +250,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Enter your password';
+                      return t.login_password_required;
                     }
                     return null;
                   },
@@ -260,7 +265,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         : () {
                             // TODO(phase1): push ForgotPasswordScreen.
                           },
-                    child: const Text('Forgot password?'),
+                    child: Text(t.login_forgot),
                   ),
                 ),
                 if (_submitError != null) ...[
@@ -279,7 +284,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             color: Colors.white,
                           ),
                         )
-                      : const Text('Log in'),
+                      : Text(t.login_submit),
                 ),
                 const SizedBox(height: 12),
                 OutlinedButton.icon(
@@ -294,8 +299,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       : const Icon(Icons.g_mobiledata),
                   label: Text(
                     _googleSubmitting
-                        ? 'Connecting to Google\u2026'
-                        : 'Continue with Google',
+                        ? t.login_google_connecting
+                        : t.login_google,
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -303,12 +308,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Don't have an account?",
+                      t.login_no_account,
                       style: theme.textTheme.bodyMedium,
                     ),
                     TextButton(
                       onPressed: () => context.goNamed(AppRoute.register),
-                      child: const Text('Sign up'),
+                      child: Text(t.login_sign_up),
                     ),
                   ],
                 ),

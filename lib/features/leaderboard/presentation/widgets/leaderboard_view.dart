@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/empty_state.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../../auth/presentation/providers/auth_controller.dart';
@@ -51,12 +52,12 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     if (board.isEmpty) {
-      return const EmptyState(
+      return EmptyState(
         icon: Icons.leaderboard_outlined,
-        title: 'No rankings yet',
-        message:
-            'Be the first to log a check-in and start climbing the leaderboard.',
+        title: t.leaderboard_empty_title,
+        message: t.leaderboard_empty_body,
       );
     }
 
@@ -211,6 +212,7 @@ class _PointsBadgesPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     final fg = highlighted
         ? theme.colorScheme.onPrimaryContainer
         : theme.colorScheme.onSurface;
@@ -236,7 +238,7 @@ class _PointsBadgesPill extends StatelessWidget {
             ),
             const SizedBox(width: 4),
             Text(
-              points == 1 ? 'pt' : 'pts',
+              points == 1 ? t.leaderboard_pt_singular : t.leaderboard_pt_plural,
               style: theme.textTheme.labelSmall?.copyWith(color: muted),
             ),
           ],
@@ -252,7 +254,7 @@ class _PointsBadgesPill extends StatelessWidget {
             ),
             const SizedBox(width: 2),
             Text(
-              badgesCount == 1 ? '1 badge' : '$badgesCount badges',
+              t.leaderboard_badges(badgesCount),
               style: theme.textTheme.labelSmall?.copyWith(color: muted),
             ),
           ],
@@ -268,6 +270,7 @@ class _YouChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
       decoration: BoxDecoration(
@@ -275,7 +278,7 @@ class _YouChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(6),
       ),
       child: Text(
-        'YOU',
+        t.leaderboard_you,
         style: theme.textTheme.labelSmall?.copyWith(
           color: theme.colorScheme.onPrimary,
           fontWeight: FontWeight.w800,

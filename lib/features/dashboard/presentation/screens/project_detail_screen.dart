@@ -9,6 +9,7 @@ import '../../../../features/auth/presentation/providers/auth_controller.dart';
 import '../../../../features/checkin/presentation/widgets/user_checkins_view.dart';
 import '../../../../features/leaderboard/presentation/widgets/leaderboard_view.dart';
 import '../../../../features/leaderboard/presentation/providers/leaderboard_providers.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../domain/entities/project_detail.dart';
 import '../providers/project_detail_providers.dart';
@@ -42,12 +43,13 @@ class ProjectDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final t = AppLocalizations.of(context)!;
     final detailAsync = ref.watch(projectDetailProvider(projectId));
 
     final title = Text(
       detailAsync.maybeWhen(
         data: (d) => d.name,
-        orElse: () => fallbackName ?? 'Project',
+        orElse: () => fallbackName ?? t.project_detail_fallback_title,
       ),
     );
 
@@ -74,17 +76,20 @@ class ProjectDetailScreen extends ConsumerWidget {
           child: Scaffold(
             appBar: AppBar(
               title: title,
-              bottom: const TabBar(
+              bottom: TabBar(
                 isScrollable: false,
                 tabs: [
-                  Tab(icon: Icon(Icons.info_outline), text: 'Overview'),
                   Tab(
-                    icon: Icon(Icons.photo_camera_back_outlined),
-                    text: 'Check-ins',
+                    icon: const Icon(Icons.info_outline),
+                    text: t.project_tab_overview,
                   ),
                   Tab(
-                    icon: Icon(Icons.emoji_events_outlined),
-                    text: 'Progress',
+                    icon: const Icon(Icons.photo_camera_back_outlined),
+                    text: t.project_tab_checkins,
+                  ),
+                  Tab(
+                    icon: const Icon(Icons.emoji_events_outlined),
+                    text: t.project_tab_progress,
                   ),
                 ],
               ),
@@ -140,6 +145,7 @@ class _OverviewTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     final subscribed = detail.isSubscribed;
 
     return ListView(
@@ -191,7 +197,7 @@ class _OverviewTab extends ConsumerWidget {
                 const SizedBox(height: 16),
                 _PrimaryActionButton(
                   icon: Icons.assignment_outlined,
-                  label: 'View tasks',
+                  label: t.project_view_tasks,
                   onPressed: () => context.pushNamed(
                     AppRoute.tasks,
                     pathParameters: {'projectId': detail.id},
@@ -201,7 +207,7 @@ class _OverviewTab extends ConsumerWidget {
                 const SizedBox(height: 12),
                 _PrimaryActionButton(
                   icon: Icons.add_a_photo_outlined,
-                  label: 'Add a check-in',
+                  label: t.project_add_checkin,
                   filled: true,
                   // Pass the project's taskType catalog as `extra` so the
                   // check-in screen can show the chip picker. No taskType
@@ -236,6 +242,7 @@ class _ProgressTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     return RefreshIndicator(
       onRefresh: () async {
         ref.invalidate(leaderboardProvider(detail.id));
@@ -251,7 +258,7 @@ class _ProgressTab extends ConsumerWidget {
         children: [
           _SectionHeader(
             icon: Icons.leaderboard_outlined,
-            label: 'Leaderboard',
+            label: t.project_section_leaderboard,
           ),
           const SizedBox(height: 12),
           LeaderboardView(projectId: detail.id),
@@ -334,6 +341,7 @@ class _StatsRow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
 
     // Resolve the live rank: leaderboard says X, otherwise fall back to
     // whatever shipped on the project payload (currently always null).
@@ -356,14 +364,14 @@ class _StatsRow extends ConsumerWidget {
       children: [
         _StatTile(
           icon: Icons.stars_rounded,
-          label: 'Points',
+          label: t.project_stat_points,
           value: stats.points.toString(),
           color: theme.colorScheme.primary,
         ),
         const SizedBox(width: 12),
         _StatTile(
           icon: Icons.emoji_events_outlined,
-          label: 'Badges',
+          label: t.project_stat_badges,
           value: stats.badgesEarned.toString(),
           color: theme.colorScheme.tertiary,
         ),
@@ -371,7 +379,7 @@ class _StatsRow extends ConsumerWidget {
           const SizedBox(width: 12),
           _StatTile(
             icon: Icons.leaderboard_outlined,
-            label: 'Rank',
+            label: t.project_stat_rank,
             value: '#$rank',
             color: theme.colorScheme.secondary,
           ),
@@ -479,6 +487,7 @@ class _BadgesSectionState extends State<_BadgesSection> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     // Only offer the toggle when the graph would actually have edges,
     // otherwise it's an empty, confusing canvas.
     final hasEdges =
@@ -490,7 +499,7 @@ class _BadgesSectionState extends State<_BadgesSection> {
         Row(
           children: [
             Text(
-              'Badges',
+              t.project_section_badges,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -569,6 +578,7 @@ class _BadgeGraphCard extends StatelessWidget {
   }
 
   void _showBadgeSheet(BuildContext context, ProjectBadge badge) {
+    final t = AppLocalizations.of(context)!;
     showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
@@ -586,7 +596,7 @@ class _BadgeGraphCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              badge.earned ? 'Earned' : 'Locked',
+              badge.earned ? t.badge_earned : t.badge_locked,
               style: Theme.of(context).textTheme.labelMedium?.copyWith(
                     color: badge.earned
                         ? const Color(0xFF2E7D32)
@@ -603,7 +613,7 @@ class _BadgeGraphCard extends StatelessWidget {
             if (badge.previousBadges.isNotEmpty) ...[
               const SizedBox(height: 16),
               Text(
-                'Requires',
+                t.badge_requires,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color:
                           Theme.of(context).colorScheme.onSurfaceVariant,
@@ -761,6 +771,7 @@ class _BadgeTile extends StatelessWidget {
       showDragHandle: true,
       builder: (sheetCtx) {
         final theme = Theme.of(sheetCtx);
+        final t = AppLocalizations.of(sheetCtx)!;
         final earned = badge.earned;
         final color =
             earned ? theme.colorScheme.tertiary : theme.colorScheme.outline;
@@ -800,7 +811,7 @@ class _BadgeTile extends StatelessWidget {
                   borderRadius: BorderRadius.circular(999),
                 ),
                 child: Text(
-                  earned ? 'Earned' : 'Locked',
+                  earned ? t.badge_earned : t.badge_locked,
                   style: theme.textTheme.labelMedium?.copyWith(
                     color: earned
                         ? theme.colorScheme.onTertiaryContainer
@@ -920,6 +931,7 @@ class _SubscribeButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final t = AppLocalizations.of(context)!;
     final state = ref.watch(subscriptionToggleControllerProvider);
     final inFlight = state is SubscriptionInFlight;
 
@@ -945,7 +957,7 @@ class _SubscribeButton extends ConsumerWidget {
                 if (!context.mounted) return;
                 if (ok) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('You\'re subscribed!')),
+                    SnackBar(content: Text(t.project_subscribed_success)),
                   );
                 }
               },
@@ -956,7 +968,7 @@ class _SubscribeButton extends ConsumerWidget {
                 child: CircularProgressIndicator(strokeWidth: 2),
               )
             : const Icon(Icons.add_circle_outline),
-        label: Text(inFlight ? 'Subscribing...' : 'Subscribe to project'),
+        label: Text(inFlight ? t.project_subscribing : t.project_subscribe),
       ),
     );
   }
@@ -968,6 +980,7 @@ class _UnsubscribeTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final t = AppLocalizations.of(context)!;
     final state = ref.watch(subscriptionToggleControllerProvider);
     final inFlight = state is SubscriptionInFlight;
     final theme = Theme.of(context);
@@ -990,10 +1003,8 @@ class _UnsubscribeTile extends ConsumerWidget {
           Icons.logout,
           color: theme.colorScheme.onErrorContainer,
         ),
-        title: const Text('Unsubscribe from this project'),
-        subtitle: const Text(
-          'Your check-ins stay; you stop earning new points and badges.',
-        ),
+        title: Text(t.project_unsubscribe),
+        subtitle: Text(t.project_unsubscribe_subtitle),
         trailing: inFlight
             ? const SizedBox(
                 width: 16,
@@ -1007,22 +1018,20 @@ class _UnsubscribeTile extends ConsumerWidget {
   }
 
   Future<void> _confirm(BuildContext context, WidgetRef ref) async {
+    final t = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Unsubscribe?'),
-        content: const Text(
-          'You can re-subscribe anytime. Earned badges and points stay on '
-          'your profile.',
-        ),
+        title: Text(t.project_unsubscribe_confirm_title),
+        content: Text(t.project_unsubscribe_confirm_body),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('Cancel'),
+            child: Text(t.common_cancel),
           ),
           FilledButton.tonal(
             onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text('Unsubscribe'),
+            child: Text(t.common_unsubscribe),
           ),
         ],
       ),
@@ -1034,7 +1043,7 @@ class _UnsubscribeTile extends ConsumerWidget {
     if (!context.mounted) return;
     if (ok) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Unsubscribed.')),
+        SnackBar(content: Text(t.project_unsubscribe_success)),
       );
     }
   }

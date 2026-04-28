@@ -1,6 +1,7 @@
 {
   "@@locale": "en",
   "appTitle": "Rayuela",
+
   "login_title": "Welcome back",
   "login_subtitle": "Log in to keep contributing to citizen science.",
   "login_username": "Username",
@@ -10,6 +11,16 @@
   "login_no_account": "Don't have an account?",
   "login_sign_up": "Sign up",
   "login_google": "Continue with Google",
+  "login_google_connecting": "Connecting to Google…",
+  "login_google_not_configured": "Google sign-in is not configured for this build. Pass GOOGLE_CLIENT_ID_WEB (and GOOGLE_CLIENT_ID_IOS on iOS) via --dart-define-from-file=.env.development.",
+  "login_invalid_credentials": "Invalid username or password.",
+  "login_username_required": "Enter your username",
+  "login_password_required": "Enter your password",
+  "login_pick_username_title": "Pick a username",
+  "login_pick_username_body": "We didn't find a Rayuela account for this Google profile yet. Choose a username to finish signing up.",
+  "login_pick_username_min": "At least 3 characters",
+  "login_pick_username_required": "Pick a username to continue",
+
   "register_title": "Create your account",
   "register_full_name": "Full name",
   "register_email": "Email",
@@ -17,19 +28,255 @@
   "register_accept_terms": "I accept the terms and privacy policy.",
   "register_submit": "Create account",
   "register_have_account": "I already have an account",
+  "register_full_name_required": "Enter your name",
+  "register_username_min": "Username must be at least 3 characters",
+  "register_email_required": "Email is required",
+  "register_email_invalid": "Enter a valid email",
+  "register_password_min": "Password must be at least 8 characters",
+  "register_passwords_no_match": "Passwords do not match",
+  "register_must_accept_terms": "Please accept the terms to continue.",
+  "register_success_snackbar": "Account created. Check your email to verify, then log in.",
+
   "dashboard_greeting": "Hi, {name}",
   "@dashboard_greeting": {
     "placeholders": {
-      "name": {
-        "type": "String"
-      }
+      "name": { "type": "String" }
     }
   },
+  "dashboard_greeting_fallback": "Hi",
   "dashboard_empty_title": "No projects yet",
   "dashboard_empty_body": "Discover citizen-science projects near you and subscribe to start participating.",
-  "error_no_internet": "No internet connection.",
-  "error_server": "Something went wrong on our side.",
-  "error_unauthorized": "Your session expired. Please log in again.",
+
+  "project_detail_fallback_title": "Project",
+  "project_tab_overview": "Overview",
+  "project_tab_checkins": "Check-ins",
+  "project_tab_progress": "Progress",
+  "project_view_tasks": "View tasks",
+  "project_add_checkin": "Add a check-in",
+  "project_subscribe": "Subscribe to project",
+  "project_subscribing": "Subscribing…",
+  "project_subscribed_success": "You're subscribed!",
+  "project_unsubscribe": "Unsubscribe from this project",
+  "project_unsubscribe_subtitle": "Your check-ins stay; you stop earning new points and badges.",
+  "project_unsubscribe_confirm_title": "Unsubscribe?",
+  "project_unsubscribe_confirm_body": "You can re-subscribe anytime. Earned badges and points stay on your profile.",
+  "project_unsubscribe_success": "Unsubscribed.",
+
+  "project_stat_points": "Points",
+  "project_stat_badges": "Badges",
+  "project_stat_rank": "Rank",
+  "project_section_leaderboard": "Leaderboard",
+  "project_section_badges": "Badges",
+  "project_card_status_active": "Active",
+  "project_card_status_paused": "Paused",
+  "project_card_pts": "{count} pts",
+  "@project_card_pts": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "project_card_badges": "{count} badges",
+  "@project_card_badges": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "badge_earned": "Earned",
+  "badge_locked": "Locked",
+  "badge_requires": "Requires",
+
+  "map_screen_title": "Map",
+  "map_full_screen": "Full screen",
+  "map_center_on_me": "Center on me",
+  "map_location_permission_needed": "Location permission needed",
+  "map_fit_to_areas": "Fit to project areas",
+  "map_legend_has_open": "Has open tasks",
+  "map_legend_no_open": "No open tasks",
+  "map_legend_solved_task": "Check-in solved a task",
+  "map_legend_no_task": "Check-in (no task)",
+  "map_legend_you_here": "You are here",
+  "map_legend_your_location": "Your location",
+  "map_attribution": "© OpenStreetMap",
+  "map_area_no_tasks": "No tasks in this area",
+  "map_area_all_completed": "All {count} tasks completed",
+  "@map_area_all_completed": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "map_area_pending_only": "{count, plural, one{1 task pending} other{{count} tasks pending}}",
+  "@map_area_pending_only": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "map_area_pending_done": "{pending} pending · {done} done",
+  "@map_area_pending_done": {
+    "placeholders": {
+      "pending": { "type": "int" },
+      "done": { "type": "int" }
+    }
+  },
+  "map_open_tasks": "Open tasks",
+
+  "tasks_appbar_fallback": "Tasks",
+  "tasks_section_open": "Open · {count}",
+  "@tasks_section_open": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "tasks_section_solved": "Solved · {count}",
+  "@tasks_section_solved": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "tasks_empty_title": "No tasks yet",
+  "tasks_empty_body": "This project does not have any tasks open right now. Pull down to refresh.",
+  "tasks_filter_label": "Area · {areaName}",
+  "@tasks_filter_label": {
+    "placeholders": { "areaName": { "type": "String" } }
+  },
+  "tasks_empty_for_area_title": "No tasks in \"{areaName}\"",
+  "@tasks_empty_for_area_title": {
+    "placeholders": { "areaName": { "type": "String" } }
+  },
+  "tasks_empty_for_area_body": "This area has no tasks attached right now.",
+  "tasks_clear_filter": "Show all areas",
+  "tasks_already_solved": "\"{name}\" has already been solved.",
+  "@tasks_already_solved": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "task_card_pts_unit": "pts",
+  "task_card_solved_by": "by {name}",
+  "@task_card_solved_by": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+
+  "checkin_screen_title_default": "New check-in",
+  "checkin_section_kind": "What kind of check-in?",
+  "checkin_section_photos": "Photos · {count}/{max}",
+  "@checkin_section_photos": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "max": { "type": "int" }
+    }
+  },
+  "checkin_section_location": "Location",
+  "checkin_section_notes": "Notes (optional)",
+  "checkin_btn_camera": "Camera",
+  "checkin_btn_gallery": "Gallery",
+  "checkin_btn_submit": "Submit check-in",
+  "checkin_picker_freetext_hint": "e.g. observation, photo report, water sample",
+  "checkin_notes_hint": "Anything the project team should know about this observation?",
+  "checkin_photos_hint": "Add up to {max} photos to support your observation.",
+  "@checkin_photos_hint": {
+    "placeholders": { "max": { "type": "int" } }
+  },
+  "checkin_camera_error": "Could not open the camera: {detail}",
+  "@checkin_camera_error": {
+    "placeholders": { "detail": { "type": "String" } }
+  },
+  "checkin_gallery_error": "Could not open the gallery: {detail}",
+  "@checkin_gallery_error": {
+    "placeholders": { "detail": { "type": "String" } }
+  },
+  "checkin_validation_pick_kind": "Pick what kind of check-in this is.",
+  "checkin_validation_add_photo": "Add at least one photo first.",
+  "checkin_validation_waiting_location": "Waiting for your location. Retry or pick a spot on the map.",
+
+  "location_resolving": "Resolving your location…",
+  "location_unavailable": "Location not available yet.",
+  "location_pinned_manual": "Pinned manually on the map",
+  "location_accuracy": "Accuracy ±{meters} m",
+  "@location_accuracy": {
+    "placeholders": { "meters": { "type": "String" } }
+  },
+  "location_btn_pick_on_map": "Pick on map",
+  "location_btn_retry": "Retry",
+  "location_btn_locate": "Locate",
+  "location_btn_use_gps_instead": "Use GPS instead",
+  "location_btn_edit_on_map": "Edit on map",
+  "location_btn_refresh_gps": "Refresh GPS",
+  "location_picker_title": "Pick location on map",
+  "location_picker_recenter": "Re-center",
+  "location_picker_use_this": "Use this location",
+  "location_unknown_error": "Could not determine your location. Try again.",
+  "location_disabled": "Location services are turned off. Enable them to check in.",
+  "location_denied": "Location permission is required to attach your check-in to the project area.",
+  "location_denied_forever": "Location is permanently denied. Open Settings to grant access and try again.",
+
+  "checkin_result_title": "Thanks for contributing",
+  "checkin_result_contributed_to": "Contributed to \"{name}\"",
+  "@checkin_result_contributed_to": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "checkin_result_points_label": "+{points} pts",
+  "@checkin_result_points_label": {
+    "placeholders": { "points": { "type": "int" } }
+  },
+  "checkin_result_recorded": "Check-in recorded",
+  "checkin_result_earned": "Earned for this check-in",
+  "checkin_result_new_badges": "New badges",
+  "checkin_back_to_dashboard": "Back to dashboard",
+  "checkin_back_to_project": "Back to project",
+
+  "checkins_empty_title": "No check-ins yet",
+  "checkins_empty_body": "Your check-ins for this project will appear here. Open a task and add your first one to start earning points.",
+  "checkins_card_default_kind": "Check-in",
+  "checkins_task_solved": "Task solved",
+  "checkins_task_solved_named": "Solved · {name}",
+  "@checkins_task_solved_named": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+
+  "image_viewer_single": "Photo",
+  "image_viewer_paged": "Photo {index} of {total}",
+  "@image_viewer_paged": {
+    "placeholders": {
+      "index": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+
+  "leaderboard_empty_title": "No rankings yet",
+  "leaderboard_empty_body": "Be the first to log a check-in and start climbing the leaderboard.",
+  "leaderboard_you": "YOU",
+  "leaderboard_pt_singular": "pt",
+  "leaderboard_pt_plural": "pts",
+  "leaderboard_badges": "{count, plural, one{1 badge} other{{count} badges}}",
+  "@leaderboard_badges": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "admin_not_supported_title": "The mobile app is for volunteers",
+  "admin_not_supported_body": "Please manage projects, gamification and tasks from the Rayuela web console.",
+
+  "router_route_not_found": "Route not found: {uri}",
+  "@router_route_not_found": {
+    "placeholders": { "uri": { "type": "String" } }
+  },
+  "router_missing_params": "Missing {what} — please open this screen from the dashboard.",
+  "@router_missing_params": {
+    "placeholders": { "what": { "type": "String" } }
+  },
+  "router_param_project_id": "project id",
+  "router_param_checkin_result": "check-in result",
+
+  "language_picker_tooltip": "Language",
+  "language_picker_title": "Language",
+  "language_picker_subtitle": "Choose the language you'd like to use across the app. The change applies right away.",
+  "language_picker_saved": "Language updated.",
+  "language_system": "Follow system",
+  "language_english": "English",
+  "language_spanish": "Español",
+  "language_portuguese": "Português",
+
+  "common_cancel": "Cancel",
+  "common_continue": "Continue",
+  "common_close": "Close",
+  "common_unsubscribe": "Unsubscribe",
   "common_retry": "Try again",
-  "common_logout": "Log out"
+  "common_logout": "Log out",
+
+  "error_no_internet": "No internet connection.",
+  "error_no_internet_long": "No internet connection.\nCheck your signal and retry.",
+  "error_server": "Something went wrong on our side.",
+  "error_server_with_code": "Server error ({code}). Please try again.",
+  "@error_server_with_code": {
+    "placeholders": { "code": { "type": "int" } }
+  },
+  "error_server_no_code": "Server error. Please try again.",
+  "error_unauthorized": "Your session expired. Please log in again.",
+  "error_timeout": "The server is slow to respond. Try again in a moment."
 }

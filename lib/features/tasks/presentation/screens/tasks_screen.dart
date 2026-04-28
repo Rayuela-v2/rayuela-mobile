@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/router/routes.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/empty_state.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../domain/entities/task_item.dart';
@@ -46,10 +47,14 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
   @override
   Widget build(BuildContext context) {
     final tasks = ref.watch(projectTasksProvider(widget.projectId));
+    final t = AppLocalizations.of(context)!;
+    final title = widget.projectName.isEmpty
+        ? t.tasks_appbar_fallback
+        : widget.projectName;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.projectName),
+        title: Text(title),
         bottom: _areaFilter == null
             ? null
             : _AreaFilterBar(
@@ -103,10 +108,11 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
   }
 
   void _openCheckin(BuildContext context, TaskItem task) {
+    final t = AppLocalizations.of(context)!;
     if (task.solved) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('"${task.name}" has already been solved.'),
+          content: Text(t.tasks_already_solved(task.name)),
         ),
       );
       return;
@@ -135,6 +141,7 @@ class _AreaFilterBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
       child: Align(
@@ -145,7 +152,7 @@ class _AreaFilterBar extends StatelessWidget implements PreferredSizeWidget {
             size: 18,
             color: theme.colorScheme.onSecondaryContainer,
           ),
-          label: Text('Area · $areaName'),
+          label: Text(t.tasks_filter_label(areaName)),
           backgroundColor: theme.colorScheme.secondaryContainer,
           labelStyle: TextStyle(
             color: theme.colorScheme.onSecondaryContainer,
@@ -178,6 +185,7 @@ class _TasksList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     if (tasks.isEmpty) {
       // When the empty state is *because* of the area filter, give the
       // user a one-tap escape so they don't have to go back to the map.
@@ -192,39 +200,37 @@ class _TasksList extends StatelessWidget {
                     areaName: areaFilter!,
                     onClearFilter: onClearFilter,
                   )
-                : const EmptyState(
+                : EmptyState(
                     icon: Icons.task_alt_outlined,
-                    title: 'No tasks yet',
-                    message:
-                        'This project does not have any tasks open right now. '
-                        'Pull down to refresh.',
+                    title: t.tasks_empty_title,
+                    message: t.tasks_empty_body,
                   ),
           ),
         ),
       );
     }
 
-    final open = tasks.where((t) => !t.solved).toList(growable: false);
-    final solved = tasks.where((t) => t.solved).toList(growable: false);
+    final open = tasks.where((tt) => !tt.solved).toList(growable: false);
+    final solved = tasks.where((tt) => tt.solved).toList(growable: false);
 
     return ListView(
       padding: const EdgeInsets.all(16),
       physics: const AlwaysScrollableScrollPhysics(),
       children: [
         if (open.isNotEmpty) ...[
-          _SectionHeader(label: 'Open · ${open.length}'),
+          _SectionHeader(label: t.tasks_section_open(open.length)),
           const SizedBox(height: 8),
-          for (final t in open) ...[
-            TaskCard(task: t, onTap: () => onTaskTap(t)),
+          for (final tt in open) ...[
+            TaskCard(task: tt, onTap: () => onTaskTap(tt)),
             const SizedBox(height: 12),
           ],
         ],
         if (solved.isNotEmpty) ...[
           const SizedBox(height: 8),
-          _SectionHeader(label: 'Solved · ${solved.length}'),
+          _SectionHeader(label: t.tasks_section_solved(solved.length)),
           const SizedBox(height: 8),
-          for (final t in solved) ...[
-            TaskCard(task: t, onTap: () => onTaskTap(t)),
+          for (final tt in solved) ...[
+            TaskCard(task: tt, onTap: () => onTaskTap(tt)),
             const SizedBox(height: 12),
           ],
         ],
@@ -242,6 +248,7 @@ class _EmptyForFilter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -254,14 +261,14 @@ class _EmptyForFilter extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'No tasks in "$areaName"',
+            t.tasks_empty_for_area_title(areaName),
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 6),
           Text(
-            'This area has no tasks attached right now.',
+            t.tasks_empty_for_area_body,
             textAlign: TextAlign.center,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
@@ -272,7 +279,7 @@ class _EmptyForFilter extends StatelessWidget {
             FilledButton.tonalIcon(
               onPressed: onClearFilter,
               icon: const Icon(Icons.clear),
-              label: const Text('Show all areas'),
+              label: Text(t.tasks_clear_filter),
             ),
           ],
         ],

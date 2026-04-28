@@ -1,6 +1,7 @@
 {
   "@@locale": "es",
   "appTitle": "Rayuela",
+
   "login_title": "Bienvenido de vuelta",
   "login_subtitle": "Inicia sesión para seguir contribuyendo a la ciencia ciudadana.",
   "login_username": "Usuario",
@@ -10,6 +11,16 @@
   "login_no_account": "¿No tienes cuenta?",
   "login_sign_up": "Registrarse",
   "login_google": "Continuar con Google",
+  "login_google_connecting": "Conectando con Google…",
+  "login_google_not_configured": "El inicio de sesión con Google no está configurado en esta versión. Pasa GOOGLE_CLIENT_ID_WEB (y GOOGLE_CLIENT_ID_IOS en iOS) usando --dart-define-from-file=.env.development.",
+  "login_invalid_credentials": "Usuario o contraseña no válidos.",
+  "login_username_required": "Ingresá tu usuario",
+  "login_password_required": "Ingresá tu contraseña",
+  "login_pick_username_title": "Elegí un nombre de usuario",
+  "login_pick_username_body": "Aún no encontramos una cuenta de Rayuela para este perfil de Google. Elegí un nombre de usuario para terminar el registro.",
+  "login_pick_username_min": "Al menos 3 caracteres",
+  "login_pick_username_required": "Elegí un nombre de usuario para continuar",
+
   "register_title": "Crea tu cuenta",
   "register_full_name": "Nombre completo",
   "register_email": "Correo electrónico",
@@ -17,12 +28,255 @@
   "register_accept_terms": "Acepto los términos y la política de privacidad.",
   "register_submit": "Crear cuenta",
   "register_have_account": "Ya tengo una cuenta",
+  "register_full_name_required": "Ingresá tu nombre",
+  "register_username_min": "El usuario debe tener al menos 3 caracteres",
+  "register_email_required": "El correo es obligatorio",
+  "register_email_invalid": "Ingresá un correo válido",
+  "register_password_min": "La contraseña debe tener al menos 8 caracteres",
+  "register_passwords_no_match": "Las contraseñas no coinciden",
+  "register_must_accept_terms": "Aceptá los términos para continuar.",
+  "register_success_snackbar": "Cuenta creada. Revisa tu correo para verificarla y luego inicia sesión.",
+
   "dashboard_greeting": "Hola, {name}",
+  "@dashboard_greeting": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "dashboard_greeting_fallback": "Hola",
   "dashboard_empty_title": "Aún no tienes proyectos",
   "dashboard_empty_body": "Descubre proyectos de ciencia ciudadana cerca de ti y suscríbete para participar.",
-  "error_no_internet": "Sin conexión a internet.",
-  "error_server": "Algo salió mal de nuestro lado.",
-  "error_unauthorized": "Tu sesión expiró. Inicia sesión de nuevo.",
+
+  "project_detail_fallback_title": "Proyecto",
+  "project_tab_overview": "Resumen",
+  "project_tab_checkins": "Check-ins",
+  "project_tab_progress": "Progreso",
+  "project_view_tasks": "Ver tareas",
+  "project_add_checkin": "Agregar un check-in",
+  "project_subscribe": "Suscribirse al proyecto",
+  "project_subscribing": "Suscribiendo…",
+  "project_subscribed_success": "¡Te suscribiste!",
+  "project_unsubscribe": "Cancelar suscripción a este proyecto",
+  "project_unsubscribe_subtitle": "Tus check-ins se mantienen; dejas de ganar nuevos puntos e insignias.",
+  "project_unsubscribe_confirm_title": "¿Cancelar suscripción?",
+  "project_unsubscribe_confirm_body": "Puedes volver a suscribirte cuando quieras. Las insignias y puntos ganados quedan en tu perfil.",
+  "project_unsubscribe_success": "Suscripción cancelada.",
+
+  "project_stat_points": "Puntos",
+  "project_stat_badges": "Insignias",
+  "project_stat_rank": "Puesto",
+  "project_section_leaderboard": "Tabla de posiciones",
+  "project_section_badges": "Insignias",
+  "project_card_status_active": "Activo",
+  "project_card_status_paused": "En pausa",
+  "project_card_pts": "{count} pts",
+  "@project_card_pts": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "project_card_badges": "{count} insignias",
+  "@project_card_badges": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "badge_earned": "Conseguida",
+  "badge_locked": "Bloqueada",
+  "badge_requires": "Requiere",
+
+  "map_screen_title": "Mapa",
+  "map_full_screen": "Pantalla completa",
+  "map_center_on_me": "Centrar en mí",
+  "map_location_permission_needed": "Se necesita permiso de ubicación",
+  "map_fit_to_areas": "Ajustar a las áreas del proyecto",
+  "map_legend_has_open": "Tiene tareas abiertas",
+  "map_legend_no_open": "Sin tareas abiertas",
+  "map_legend_solved_task": "Check-in que resolvió una tarea",
+  "map_legend_no_task": "Check-in (sin tarea)",
+  "map_legend_you_here": "Estás aquí",
+  "map_legend_your_location": "Tu ubicación",
+  "map_attribution": "© OpenStreetMap",
+  "map_area_no_tasks": "Esta área no tiene tareas",
+  "map_area_all_completed": "Las {count} tareas están completadas",
+  "@map_area_all_completed": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "map_area_pending_only": "{count, plural, one{1 tarea pendiente} other{{count} tareas pendientes}}",
+  "@map_area_pending_only": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "map_area_pending_done": "{pending} pendientes · {done} hechas",
+  "@map_area_pending_done": {
+    "placeholders": {
+      "pending": { "type": "int" },
+      "done": { "type": "int" }
+    }
+  },
+  "map_open_tasks": "Abrir tareas",
+
+  "tasks_appbar_fallback": "Tareas",
+  "tasks_section_open": "Abiertas · {count}",
+  "@tasks_section_open": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "tasks_section_solved": "Resueltas · {count}",
+  "@tasks_section_solved": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "tasks_empty_title": "Aún no hay tareas",
+  "tasks_empty_body": "Este proyecto no tiene tareas abiertas en este momento. Desliza para refrescar.",
+  "tasks_filter_label": "Área · {areaName}",
+  "@tasks_filter_label": {
+    "placeholders": { "areaName": { "type": "String" } }
+  },
+  "tasks_empty_for_area_title": "No hay tareas en \"{areaName}\"",
+  "@tasks_empty_for_area_title": {
+    "placeholders": { "areaName": { "type": "String" } }
+  },
+  "tasks_empty_for_area_body": "Esta área no tiene tareas asociadas en este momento.",
+  "tasks_clear_filter": "Mostrar todas las áreas",
+  "tasks_already_solved": "\"{name}\" ya fue resuelta.",
+  "@tasks_already_solved": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "task_card_pts_unit": "pts",
+  "task_card_solved_by": "por {name}",
+  "@task_card_solved_by": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+
+  "checkin_screen_title_default": "Nuevo check-in",
+  "checkin_section_kind": "¿Qué tipo de check-in?",
+  "checkin_section_photos": "Fotos · {count}/{max}",
+  "@checkin_section_photos": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "max": { "type": "int" }
+    }
+  },
+  "checkin_section_location": "Ubicación",
+  "checkin_section_notes": "Notas (opcional)",
+  "checkin_btn_camera": "Cámara",
+  "checkin_btn_gallery": "Galería",
+  "checkin_btn_submit": "Enviar check-in",
+  "checkin_picker_freetext_hint": "p. ej. observación, reporte fotográfico, muestra de agua",
+  "checkin_notes_hint": "¿Algo que el equipo del proyecto deba saber sobre esta observación?",
+  "checkin_photos_hint": "Agrega hasta {max} fotos para respaldar tu observación.",
+  "@checkin_photos_hint": {
+    "placeholders": { "max": { "type": "int" } }
+  },
+  "checkin_camera_error": "No se pudo abrir la cámara: {detail}",
+  "@checkin_camera_error": {
+    "placeholders": { "detail": { "type": "String" } }
+  },
+  "checkin_gallery_error": "No se pudo abrir la galería: {detail}",
+  "@checkin_gallery_error": {
+    "placeholders": { "detail": { "type": "String" } }
+  },
+  "checkin_validation_pick_kind": "Elegí qué tipo de check-in es.",
+  "checkin_validation_add_photo": "Agregá al menos una foto primero.",
+  "checkin_validation_waiting_location": "Esperando tu ubicación. Reintentá o elegí un punto en el mapa.",
+
+  "location_resolving": "Obteniendo tu ubicación…",
+  "location_unavailable": "Ubicación todavía no disponible.",
+  "location_pinned_manual": "Marcada manualmente en el mapa",
+  "location_accuracy": "Precisión ±{meters} m",
+  "@location_accuracy": {
+    "placeholders": { "meters": { "type": "String" } }
+  },
+  "location_btn_pick_on_map": "Elegir en el mapa",
+  "location_btn_retry": "Reintentar",
+  "location_btn_locate": "Localizar",
+  "location_btn_use_gps_instead": "Usar GPS",
+  "location_btn_edit_on_map": "Editar en el mapa",
+  "location_btn_refresh_gps": "Refrescar GPS",
+  "location_picker_title": "Elegí la ubicación en el mapa",
+  "location_picker_recenter": "Re-centrar",
+  "location_picker_use_this": "Usar esta ubicación",
+  "location_unknown_error": "No pudimos determinar tu ubicación. Probá de nuevo.",
+  "location_disabled": "Los servicios de ubicación están desactivados. Activalos para hacer check-in.",
+  "location_denied": "El permiso de ubicación es necesario para asociar tu check-in al área del proyecto.",
+  "location_denied_forever": "La ubicación está bloqueada permanentemente. Abrí la configuración para concederla y volvé a intentarlo.",
+
+  "checkin_result_title": "¡Gracias por contribuir!",
+  "checkin_result_contributed_to": "Contribuiste a \"{name}\"",
+  "@checkin_result_contributed_to": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "checkin_result_points_label": "+{points} pts",
+  "@checkin_result_points_label": {
+    "placeholders": { "points": { "type": "int" } }
+  },
+  "checkin_result_recorded": "Check-in registrado",
+  "checkin_result_earned": "Ganado por este check-in",
+  "checkin_result_new_badges": "Nuevas insignias",
+  "checkin_back_to_dashboard": "Volver al panel",
+  "checkin_back_to_project": "Volver al proyecto",
+
+  "checkins_empty_title": "Aún no hay check-ins",
+  "checkins_empty_body": "Tus check-ins para este proyecto aparecerán aquí. Abrí una tarea y agregá el primero para empezar a ganar puntos.",
+  "checkins_card_default_kind": "Check-in",
+  "checkins_task_solved": "Tarea resuelta",
+  "checkins_task_solved_named": "Resolvió · {name}",
+  "@checkins_task_solved_named": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+
+  "image_viewer_single": "Foto",
+  "image_viewer_paged": "Foto {index} de {total}",
+  "@image_viewer_paged": {
+    "placeholders": {
+      "index": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+
+  "leaderboard_empty_title": "Aún no hay rankings",
+  "leaderboard_empty_body": "Sé el primero en registrar un check-in y empezar a escalar la tabla.",
+  "leaderboard_you": "TÚ",
+  "leaderboard_pt_singular": "pt",
+  "leaderboard_pt_plural": "pts",
+  "leaderboard_badges": "{count, plural, one{1 insignia} other{{count} insignias}}",
+  "@leaderboard_badges": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "admin_not_supported_title": "La app móvil es para voluntarios",
+  "admin_not_supported_body": "Por favor gestiona los proyectos, la gamificación y las tareas desde la consola web de Rayuela.",
+
+  "router_route_not_found": "Ruta no encontrada: {uri}",
+  "@router_route_not_found": {
+    "placeholders": { "uri": { "type": "String" } }
+  },
+  "router_missing_params": "Falta {what} — abrí esta pantalla desde el panel.",
+  "@router_missing_params": {
+    "placeholders": { "what": { "type": "String" } }
+  },
+  "router_param_project_id": "el id del proyecto",
+  "router_param_checkin_result": "el resultado del check-in",
+
+  "language_picker_tooltip": "Idioma",
+  "language_picker_title": "Idioma",
+  "language_picker_subtitle": "Elegí el idioma que querés usar en toda la app. El cambio se aplica al instante.",
+  "language_picker_saved": "Idioma actualizado.",
+  "language_system": "Usar el del sistema",
+  "language_english": "English",
+  "language_spanish": "Español",
+  "language_portuguese": "Português",
+
+  "common_cancel": "Cancelar",
+  "common_continue": "Continuar",
+  "common_close": "Cerrar",
+  "common_unsubscribe": "Cancelar suscripción",
   "common_retry": "Reintentar",
-  "common_logout": "Cerrar sesión"
+  "common_logout": "Cerrar sesión",
+
+  "error_no_internet": "Sin conexión a internet.",
+  "error_no_internet_long": "Sin conexión a internet.\nVerificá tu señal y reintentá.",
+  "error_server": "Algo salió mal de nuestro lado.",
+  "error_server_with_code": "Error del servidor ({code}). Probá de nuevo.",
+  "@error_server_with_code": {
+    "placeholders": { "code": { "type": "int" } }
+  },
+  "error_server_no_code": "Error del servidor. Probá de nuevo.",
+  "error_unauthorized": "Tu sesión expiró. Iniciá sesión de nuevo.",
+  "error_timeout": "El servidor está tardando en responder. Probá en un momento."
 }

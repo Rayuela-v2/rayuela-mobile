@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../../../l10n/app_localizations.dart';
+
 /// Modal map picker for overriding the auto-resolved GPS location of a
 /// check-in. Mirrors the web app's `LocationPicker.vue` (OpenLayers there,
 /// flutter_map + OSM here).
@@ -60,6 +62,7 @@ class _LocationPickerSheetState extends State<LocationPickerSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     return Column(
       children: [
         Padding(
@@ -68,14 +71,14 @@ class _LocationPickerSheetState extends State<LocationPickerSheet> {
             children: [
               Expanded(
                 child: Text(
-                  'Pick location on map',
+                  t.location_picker_title,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
               IconButton(
-                tooltip: 'Re-center',
+                tooltip: t.location_picker_recenter,
                 icon: const Icon(Icons.my_location),
                 onPressed: () {
                   if (widget.initial != null) {
@@ -188,7 +191,7 @@ class _LocationPickerSheetState extends State<LocationPickerSheet> {
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  child: const Text('Cancel'),
+                  child: Text(t.common_cancel),
                 ),
               ),
               const SizedBox(width: 12),
@@ -200,7 +203,7 @@ class _LocationPickerSheetState extends State<LocationPickerSheet> {
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                   icon: const Icon(Icons.check),
-                  label: const Text('Use this location'),
+                  label: Text(t.location_picker_use_this),
                 ),
               ),
             ],

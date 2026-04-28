@@ -5,6 +5,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import '../../../checkin/domain/entities/checkin_history_item.dart';
 import '../../../checkin/presentation/providers/checkin_providers.dart';
 import '../../../tasks/domain/entities/task_item.dart';
@@ -108,6 +109,7 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     final tasksAsync = ref.watch(projectTasksProvider(widget.projectId));
     final checkinsAsync = ref.watch(userCheckinsProvider(widget.projectId));
 
@@ -204,30 +206,34 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
                   if (!widget.isFullscreen) ...[
                     _MapButton(
                       icon: Icons.fullscreen,
-                      tooltip: 'Full screen',
+                      tooltip: t.map_full_screen,
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute<void>(
                             fullscreenDialog: true,
-                            builder: (context) => Scaffold(
-                              appBar: AppBar(
-                                title: const Text('Map'),
-                                leading: IconButton(
-                                  icon: const Icon(Icons.close),
-                                  onPressed: () => Navigator.of(context).pop(),
+                            builder: (context) {
+                              final tt = AppLocalizations.of(context)!;
+                              return Scaffold(
+                                appBar: AppBar(
+                                  title: Text(tt.map_screen_title),
+                                  leading: IconButton(
+                                    icon: const Icon(Icons.close),
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                  ),
                                 ),
-                              ),
-                              body: ProjectAreasMap(
-                                projectId: widget.projectId,
-                                areas: widget.areas,
-                                onAreaTap: (areaName) {
-                                  Navigator.of(context).pop();
-                                  widget.onAreaTap(areaName);
-                                },
-                                height: double.infinity,
-                                isFullscreen: true,
-                              ),
-                            ),
+                                body: ProjectAreasMap(
+                                  projectId: widget.projectId,
+                                  areas: widget.areas,
+                                  onAreaTap: (areaName) {
+                                    Navigator.of(context).pop();
+                                    widget.onAreaTap(areaName);
+                                  },
+                                  height: double.infinity,
+                                  isFullscreen: true,
+                                ),
+                              );
+                            },
                           ),
                         );
                       },
@@ -237,14 +243,14 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
                   _MapButton(
                     icon: Icons.my_location,
                     tooltip: _locationDenied
-                        ? 'Location permission needed'
-                        : 'Center on me',
+                        ? t.map_location_permission_needed
+                        : t.map_center_on_me,
                     onPressed: _recenterOnUser,
                   ),
                   const SizedBox(height: 6),
                   _MapButton(
                     icon: Icons.fit_screen_outlined,
-                    tooltip: 'Fit to project areas',
+                    tooltip: t.map_fit_to_areas,
                     onPressed:
                         widget.areas.isEmpty ? null : _fitToAreas,
                   ),
@@ -572,6 +578,7 @@ class _Legend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
@@ -583,22 +590,22 @@ class _Legend extends StatelessWidget {
         spacing: 12,
         runSpacing: 6,
         children: [
-          const _LegendChip(
-            swatch: _SquareSwatch(
+          _LegendChip(
+            swatch: const _SquareSwatch(
               fill: Color(0x4D0000FF),
               border: Color(0xFF319FD3),
             ),
-            label: 'Has open tasks',
+            label: t.map_legend_has_open,
           ),
-          const _LegendChip(
-            swatch: _SquareSwatch(
+          _LegendChip(
+            swatch: const _SquareSwatch(
               fill: Color(0x80808080),
               border: Color(0xFFCCCCCC),
             ),
-            label: 'No open tasks',
+            label: t.map_legend_no_open,
           ),
-          const _LegendChip(
-            swatch: _GlyphSwatch(
+          _LegendChip(
+            swatch: const _GlyphSwatch(
               child: Text(
                 '✔',
                 style: TextStyle(
@@ -608,7 +615,7 @@ class _Legend extends StatelessWidget {
                 ),
               ),
             ),
-            label: 'Check-in solved a task',
+            label: t.map_legend_solved_task,
           ),
           _LegendChip(
             swatch: _GlyphSwatch(
@@ -621,11 +628,13 @@ class _Legend extends StatelessWidget {
                 ),
               ),
             ),
-            label: 'Check-in (no task)',
+            label: t.map_legend_no_task,
           ),
           _LegendChip(
             swatch: const _DotSwatch(color: Color(0xFFADD8E6)),
-            label: hasUserLocation ? 'You are here' : 'Your location',
+            label: hasUserLocation
+                ? t.map_legend_you_here
+                : t.map_legend_your_location,
           ),
         ]
             .map(
@@ -745,14 +754,15 @@ class _AreaInfoBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     final solved = totalTasks - pendingTasks;
     final summary = totalTasks == 0
-        ? 'No tasks in this area'
+        ? t.map_area_no_tasks
         : pendingTasks == 0
-            ? 'All $totalTasks tasks completed'
+            ? t.map_area_all_completed(totalTasks)
             : (solved == 0
-                ? '$pendingTasks task${pendingTasks == 1 ? "" : "s"} pending'
-                : '$pendingTasks pending · $solved done');
+                ? t.map_area_pending_only(pendingTasks)
+                : t.map_area_pending_done(pendingTasks, solved));
 
     return Container(
       constraints: const BoxConstraints(maxWidth: 260),
@@ -806,7 +816,7 @@ class _AreaInfoBanner extends StatelessWidget {
               child: FilledButton.tonalIcon(
                 onPressed: onOpen,
                 icon: const Icon(Icons.arrow_forward, size: 16),
-                label: const Text('Open tasks'),
+                label: Text(t.map_open_tasks),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   visualDensity: VisualDensity.compact,

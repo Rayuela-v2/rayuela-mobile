@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/project_summary.dart';
 
 class ProjectCard extends StatelessWidget {
@@ -16,6 +17,7 @@ class ProjectCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -61,12 +63,12 @@ class ProjectCard extends StatelessWidget {
                     children: [
                       _StatChip(
                         icon: Icons.stars_rounded,
-                        label: '${project.userPoints} pts',
+                        label: t.project_card_pts(project.userPoints),
                       ),
                       const SizedBox(width: 8),
                       _StatChip(
                         icon: Icons.emoji_events_outlined,
-                        label: '${project.userBadgesCount} badges',
+                        label: t.project_card_badges(project.userBadgesCount),
                       ),
                     ],
                   ),
@@ -114,6 +116,7 @@ class _StatusChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     final color = available
         ? theme.colorScheme.primaryContainer
         : theme.colorScheme.surfaceContainerHighest;
@@ -127,7 +130,7 @@ class _StatusChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
-        available ? 'Active' : 'Paused',
+        available ? t.project_card_status_active : t.project_card_status_paused,
         style: theme.textTheme.labelSmall?.copyWith(color: fg),
       ),
     );

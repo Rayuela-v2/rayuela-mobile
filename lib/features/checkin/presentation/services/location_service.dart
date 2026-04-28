@@ -13,7 +13,7 @@ class LocationService {
   Future<Position> currentPosition() async {
     final servicesEnabled = await Geolocator.isLocationServiceEnabled();
     if (!servicesEnabled) {
-      throw const _LocationDisabledException();
+      throw const LocationDisabledException();
     }
 
     var permission = await Geolocator.checkPermission();
@@ -23,9 +23,9 @@ class LocationService {
 
     switch (permission) {
       case LocationPermission.denied:
-        throw const _LocationDeniedException();
+        throw const LocationDeniedException();
       case LocationPermission.deniedForever:
-        throw const _LocationDeniedForeverException();
+        throw const LocationDeniedForeverException();
       case LocationPermission.always:
       case LocationPermission.whileInUse:
       case LocationPermission.unableToDetermine:
@@ -42,16 +42,20 @@ class LocationService {
   }
 }
 
-class _LocationDisabledException extends ForbiddenException {
-  const _LocationDisabledException()
+/// Thrown when device location services are turned off entirely.
+/// The UI translates this via [localizeAppException]; the [message] field
+/// keeps an English fallback for non-UI consumers (logs, crash reports).
+class LocationDisabledException extends ForbiddenException {
+  const LocationDisabledException()
       : super(
           message:
               'Location services are turned off. Enable them to check in.',
         );
 }
 
-class _LocationDeniedException extends ForbiddenException {
-  const _LocationDeniedException()
+/// Thrown when the user denied the location permission this run.
+class LocationDeniedException extends ForbiddenException {
+  const LocationDeniedException()
       : super(
           message:
               'Location permission is required to attach your check-in to '
@@ -59,8 +63,10 @@ class _LocationDeniedException extends ForbiddenException {
         );
 }
 
-class _LocationDeniedForeverException extends ForbiddenException {
-  const _LocationDeniedForeverException()
+/// Thrown when the user denied location permission permanently — the OS
+/// won't re-prompt; they have to flip the toggle in Settings.
+class LocationDeniedForeverException extends ForbiddenException {
+  const LocationDeniedForeverException()
       : super(
           message:
               'Location is permanently denied. Open Settings to grant '

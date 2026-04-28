@@ -12,6 +12,7 @@ import '../../features/checkin/presentation/screens/checkin_screen.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/dashboard/presentation/screens/project_detail_screen.dart';
 import '../../features/tasks/presentation/screens/tasks_screen.dart';
+import '../../l10n/app_localizations.dart';
 import '../../shared/widgets/admin_not_supported_screen.dart';
 import 'routes.dart';
 
@@ -55,7 +56,9 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final projectId = state.pathParameters['projectId'] ?? '';
           if (projectId.isEmpty) {
-            return const _MissingParamsScreen(what: 'project id');
+            return _MissingParamsScreen(
+              what: AppLocalizations.of(context)!.router_param_project_id,
+            );
           }
           final projectName = state.uri.queryParameters['projectName'];
           return ProjectDetailScreen(
@@ -69,8 +72,8 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         name: AppRoute.tasks,
         builder: (context, state) {
           final projectId = state.pathParameters['projectId'] ?? '';
-          final projectName =
-              state.uri.queryParameters['projectName'] ?? 'Tasks';
+          final projectName = state.uri.queryParameters['projectName'] ??
+              AppLocalizations.of(context)!.tasks_appbar_fallback;
           // Optional area filter — set when navigating from the project
           // map's tap-on-area action. Empty string treated as "no filter"
           // so reusing the same route from a navigation pop works cleanly.
@@ -91,7 +94,9 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final projectId = state.pathParameters['projectId'] ?? '';
           if (projectId.isEmpty) {
-            return const _MissingParamsScreen(what: 'project id');
+            return _MissingParamsScreen(
+              what: AppLocalizations.of(context)!.router_param_project_id,
+            );
           }
           final qp = state.uri.queryParameters;
           // taskType is optional now: when launched from a specific Task
@@ -133,7 +138,9 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           }
           // Defensive fallback: if someone deep-links here without an
           // extra, send them home gracefully.
-          return const _MissingParamsScreen(what: 'check-in result');
+          return _MissingParamsScreen(
+            what: AppLocalizations.of(context)!.router_param_checkin_result,
+          );
         },
       ),
       GoRoute(
@@ -145,7 +152,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     errorBuilder: (context, state) => Scaffold(
       appBar: AppBar(),
       body: Center(
-        child: Text('Route not found: ${state.uri}'),
+        child: Text(
+          AppLocalizations.of(context)!
+              .router_route_not_found(state.uri.toString()),
+        ),
       ),
     ),
   );
@@ -200,6 +210,7 @@ class _MissingParamsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(),
       body: Center(
@@ -211,14 +222,14 @@ class _MissingParamsScreen extends StatelessWidget {
               const Icon(Icons.warning_amber_outlined, size: 48),
               const SizedBox(height: 12),
               Text(
-                'Missing $what — please open this screen from the dashboard.',
+                t.router_missing_params(what),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
               FilledButton(
                 onPressed: () =>
                     GoRouter.of(context).goNamed(AppRoute.dashboard),
-                child: const Text('Back to dashboard'),
+                child: Text(t.checkin_back_to_dashboard),
               ),
             ],
           ),

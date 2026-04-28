@@ -10,6 +10,8 @@ import 'package:latlong2/latlong.dart';
 import '../../../../core/error/app_exception.dart';
 import '../../../../core/error/result.dart';
 import '../../../../core/router/routes.dart';
+import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/error_view.dart';
 import '../../domain/entities/checkin_request.dart';
 import '../../domain/entities/checkin_result.dart';
 import '../providers/checkin_providers.dart';
@@ -93,6 +95,7 @@ class _CheckinScreenState extends ConsumerState<CheckinScreen> {
 
   Future<void> _resolveLocation() async {
     if (_resolvingLocation) return;
+    final t = AppLocalizations.of(context)!;
     setState(() {
       _resolvingLocation = true;
       _locationError = null;
@@ -108,18 +111,19 @@ class _CheckinScreenState extends ConsumerState<CheckinScreen> {
       if (!mounted) return;
       setState(() {
         _resolvingLocation = false;
-        _locationError = e.message;
+        _locationError = localizeAppException(e, t);
       });
-    } catch (e) {
+    } catch (_) {
       if (!mounted) return;
       setState(() {
         _resolvingLocation = false;
-        _locationError = 'Could not determine your location. Try again.';
+        _locationError = t.location_unknown_error;
       });
     }
   }
 
   Future<void> _pickFromCamera() async {
+    final t = AppLocalizations.of(context)!;
     if (_images.length >= _maxImages) return;
     try {
       final shot = await _picker.pickImage(
@@ -131,11 +135,12 @@ class _CheckinScreenState extends ConsumerState<CheckinScreen> {
         setState(() => _images.add(shot));
       }
     } catch (e) {
-      _toast('Could not open the camera: $e');
+      _toast(t.checkin_camera_error(e.toString()));
     }
   }
 
   Future<void> _pickFromGallery() async {
+    final t = AppLocalizations.of(context)!;
     final remaining = _maxImages - _images.length;
     if (remaining <= 0) return;
     try {
@@ -149,7 +154,7 @@ class _CheckinScreenState extends ConsumerState<CheckinScreen> {
         _images.addAll(picked.take(remaining));
       });
     } catch (e) {
-      _toast('Could not open the gallery: $e');
+      _toast(t.checkin_gallery_error(e.toString()));
     }
   }
 
@@ -197,19 +202,19 @@ class _CheckinScreenState extends ConsumerState<CheckinScreen> {
 
   Future<void> _submit() async {
     if (_submitting) return;
+    final t = AppLocalizations.of(context)!;
     final taskType = _effectiveTaskType;
     if (taskType == null) {
-      setState(() => _submitError = 'Pick what kind of check-in this is.');
+      setState(() => _submitError = t.checkin_validation_pick_kind);
       return;
     }
     if (_images.isEmpty) {
-      setState(() => _submitError = 'Add at least one photo first.');
+      setState(() => _submitError = t.checkin_validation_add_photo);
       return;
     }
     final coords = _effectiveLatLng;
     if (coords == null) {
-      setState(() => _submitError =
-          'Waiting for your location. Retry or pick a spot on the map.');
+      setState(() => _submitError = t.checkin_validation_waiting_location);
       return;
     }
 
@@ -252,7 +257,7 @@ class _CheckinScreenState extends ConsumerState<CheckinScreen> {
       case Failure<CheckinResult>(:final error):
         setState(() {
           _submitting = false;
-          _submitError = error.message;
+          _submitError = localizeAppException(error, t);
         });
     }
   }
@@ -260,6 +265,7 @@ class _CheckinScreenState extends ConsumerState<CheckinScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     final canSubmit = !_submitting &&
         _images.isNotEmpty &&
         _effectiveLatLng != null &&
@@ -272,14 +278,16 @@ class _CheckinScreenState extends ConsumerState<CheckinScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.taskName ?? widget.projectName ?? 'New check-in'),
+        title: Text(widget.taskName ??
+            widget.projectName ??
+            t.checkin_screen_title_default),
       ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
           children: [
             if (showPicker) ...[
-              _SectionLabel(label: 'What kind of check-in?'),
+              _SectionLabel(label: t.checkin_section_kind),
               const SizedBox(height: 8),
               _TaskTypePicker(
                 options: widget.availableTaskTypes,
@@ -298,7 +306,9 @@ class _CheckinScreenState extends ConsumerState<CheckinScreen> {
               ),
               const SizedBox(height: 24),
             ],
-            _SectionLabel(label: 'Photos · ${_images.length}/$_maxImages'),
+            _SectionLabel(
+              label: t.checkin_section_photos(_images.length, _maxImages),
+            ),
             const SizedBox(height: 8),
             _PhotoGrid(
               images: _images,
@@ -313,7 +323,7 @@ class _CheckinScreenState extends ConsumerState<CheckinScreen> {
                         ? null
                         : _pickFromCamera,
                     icon: const Icon(Icons.photo_camera_outlined),
-                    label: const Text('Camera'),
+                    label: Text(t.checkin_btn_camera),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -323,13 +333,13 @@ class _CheckinScreenState extends ConsumerState<CheckinScreen> {
                         ? null
                         : _pickFromGallery,
                     icon: const Icon(Icons.photo_library_outlined),
-                    label: const Text('Gallery'),
+                    label: Text(t.checkin_btn_gallery),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 24),
-            _SectionLabel(label: 'Location'),
+            _SectionLabel(label: t.checkin_section_location),
             const SizedBox(height: 8),
             _LocationCard(
               position: _position,
@@ -341,17 +351,16 @@ class _CheckinScreenState extends ConsumerState<CheckinScreen> {
               onClearManual: _clearManualLocation,
             ),
             const SizedBox(height: 24),
-            _SectionLabel(label: 'Notes (optional)'),
+            _SectionLabel(label: t.checkin_section_notes),
             const SizedBox(height: 8),
             TextField(
               controller: _notesController,
               minLines: 3,
               maxLines: 6,
               maxLength: 500,
-              decoration: const InputDecoration(
-                hintText:
-                    'Anything the project team should know about this observation?',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                hintText: t.checkin_notes_hint,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
@@ -395,7 +404,7 @@ class _CheckinScreenState extends ConsumerState<CheckinScreen> {
                         color: Colors.white,
                       ),
                     )
-                  : const Text('Submit check-in'),
+                  : Text(t.checkin_btn_submit),
             ),
           ],
         ),
@@ -431,6 +440,7 @@ class _PhotoGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     if (images.isEmpty) {
       return Container(
         height: 96,
@@ -444,7 +454,7 @@ class _PhotoGrid extends StatelessWidget {
         ),
         alignment: Alignment.center,
         child: Text(
-          'Add up to $_maxImages photos to support your observation.',
+          t.checkin_photos_hint(_maxImages),
           textAlign: TextAlign.center,
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
@@ -516,6 +526,7 @@ class _LocationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
 
     // Manual override always wins — render a distinct "pinned by you" card.
     if (manualLatLng != null) {
@@ -536,7 +547,7 @@ class _LocationCard extends StatelessWidget {
                     style: theme.textTheme.bodyMedium,
                   ),
                   Text(
-                    'Pinned manually on the map',
+                    t.location_pinned_manual,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -545,12 +556,12 @@ class _LocationCard extends StatelessWidget {
               ),
             ),
             IconButton(
-              tooltip: 'Edit on map',
+              tooltip: t.location_btn_edit_on_map,
               icon: const Icon(Icons.edit_location_alt_outlined),
               onPressed: onPickOnMap,
             ),
             IconButton(
-              tooltip: 'Use GPS instead',
+              tooltip: t.location_btn_use_gps_instead,
               icon: const Icon(Icons.gps_fixed),
               onPressed: onClearManual,
             ),
@@ -570,14 +581,14 @@ class _LocationCard extends StatelessWidget {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                'Resolving your location…',
+                t.location_resolving,
                 style: theme.textTheme.bodyMedium,
               ),
             ),
             TextButton.icon(
               onPressed: onPickOnMap,
               icon: const Icon(Icons.map_outlined, size: 18),
-              label: const Text('Pick on map'),
+              label: Text(t.location_btn_pick_on_map),
             ),
           ],
         ),
@@ -610,10 +621,13 @@ class _LocationCard extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: onPickOnMap,
-                  child: const Text('Pick on map'),
+                  child: Text(t.location_btn_pick_on_map),
                 ),
                 const SizedBox(width: 8),
-                TextButton(onPressed: onRetry, child: const Text('Retry')),
+                TextButton(
+                  onPressed: onRetry,
+                  child: Text(t.location_btn_retry),
+                ),
               ],
             ),
           ],
@@ -628,12 +642,18 @@ class _LocationCard extends StatelessWidget {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                'Location not available yet.',
+                t.location_unavailable,
                 style: theme.textTheme.bodyMedium,
               ),
             ),
-            TextButton(onPressed: onPickOnMap, child: const Text('Pick on map')),
-            TextButton(onPressed: onRetry, child: const Text('Locate')),
+            TextButton(
+              onPressed: onPickOnMap,
+              child: Text(t.location_btn_pick_on_map),
+            ),
+            TextButton(
+              onPressed: onRetry,
+              child: Text(t.location_btn_locate),
+            ),
           ],
         ),
       );
@@ -653,7 +673,7 @@ class _LocationCard extends StatelessWidget {
                   style: theme.textTheme.bodyMedium,
                 ),
                 Text(
-                  'Accuracy ±${position!.accuracy.toStringAsFixed(0)} m',
+                  t.location_accuracy(position!.accuracy.toStringAsFixed(0)),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -662,12 +682,12 @@ class _LocationCard extends StatelessWidget {
             ),
           ),
           IconButton(
-            tooltip: 'Pick on map',
+            tooltip: t.location_btn_pick_on_map,
             icon: const Icon(Icons.map_outlined),
             onPressed: onPickOnMap,
           ),
           IconButton(
-            tooltip: 'Refresh GPS',
+            tooltip: t.location_btn_refresh_gps,
             icon: const Icon(Icons.refresh),
             onPressed: onRetry,
           ),
@@ -717,15 +737,16 @@ class _TaskTypePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     if (options.isEmpty) {
       // Free-text fallback. Backwards-compat with projects that don't yet
       // ship a taskTypes catalog.
       return TextField(
         controller: customController,
         onChanged: (_) => onCustomChanged(),
-        decoration: const InputDecoration(
-          hintText: 'e.g. observation, photo report, water sample',
-          border: OutlineInputBorder(),
+        decoration: InputDecoration(
+          hintText: t.checkin_picker_freetext_hint,
+          border: const OutlineInputBorder(),
         ),
       );
     }

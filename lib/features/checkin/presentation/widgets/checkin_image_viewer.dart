@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import '../utils/checkin_image_url.dart';
 
 /// Full-screen image viewer for a check-in's photo strip. Pinch-to-zoom,
@@ -55,6 +56,7 @@ class _CheckinImageViewerState extends State<CheckinImageViewer> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final total = widget.imageRefs.length;
     return Scaffold(
       backgroundColor: Colors.black,
@@ -63,7 +65,9 @@ class _CheckinImageViewerState extends State<CheckinImageViewer> {
         elevation: 0,
         foregroundColor: Colors.white,
         title: Text(
-          total > 1 ? 'Photo ${_index + 1} of $total' : 'Photo',
+          total > 1
+              ? t.image_viewer_paged(_index + 1, total)
+              : t.image_viewer_single,
         ),
       ),
       body: GestureDetector(

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/router/routes.dart';
 import '../../features/auth/presentation/providers/auth_controller.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Shown when an Admin user logs in. The mobile app is participant-only —
 /// see MIGRATION_PLAN §2.2.
@@ -13,6 +14,7 @@ class AdminNotSupportedScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -28,14 +30,13 @@ class AdminNotSupportedScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'The mobile app is for volunteers',
+                t.admin_not_supported_title,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.headlineSmall,
               ),
               const SizedBox(height: 12),
               Text(
-                'Please manage projects, gamification and tasks from the '
-                'Rayuela web console.',
+                t.admin_not_supported_body,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyMedium,
               ),
@@ -46,7 +47,7 @@ class AdminNotSupportedScreen extends ConsumerWidget {
                   if (!context.mounted) return;
                   context.goNamed(AppRoute.login);
                 },
-                child: const Text('Log out'),
+                child: Text(t.common_logout),
               ),
             ],
           ),
