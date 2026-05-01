@@ -100,4 +100,14 @@ class AuthRemoteSource {
       parse: (_) {},
     );
   }
+
+  Future<Result<void>> logout(String refreshToken) {
+    return _api.request<void>(
+      (d) => d.post<Object?>(
+        ApiPaths.logout,
+        data: {'refreshToken': refreshToken},
+      ),
+      parse: (_) {},
+    );
+  }
 }

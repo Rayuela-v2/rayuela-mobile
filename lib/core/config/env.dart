@@ -76,14 +76,11 @@ class Env {
     return true;
   }
 
-  /// Gate for the refresh-token flow. Set to `true` once the backend ships
-  /// `POST /auth/refresh` (see MIGRATION_PLAN §4.1).
-  static const bool useRefreshToken = bool.fromEnvironment(
-    'USE_REFRESH_TOKEN',
-  );
-
   /// Toggles verbose HTTP logging in debug builds.
-  static const bool logHttp = bool.fromEnvironment(
-    'LOG_HTTP',
-  );
+  static bool get logHttp => const bool.fromEnvironment('LOG_HTTP');
+
+  /// Whether to use the `POST /auth/refresh` endpoint when receiving a 401.
+  /// Needs to be enabled once backend §4.1 ships.
+  static bool get useRefreshToken =>
+      const bool.fromEnvironment('USE_REFRESH_TOKEN', defaultValue: true);
 }

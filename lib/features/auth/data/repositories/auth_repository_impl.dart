@@ -106,7 +106,10 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> logout() async {
-    // TODO(backend §4.1): POST /auth/logout to invalidate the refresh token.
+    final refreshToken = await _tokens.readRefreshToken();
+    if (refreshToken != null) {
+      await _remote.logout(refreshToken);
+    }
     await _tokens.clear();
   }
 

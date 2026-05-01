@@ -8,17 +8,12 @@ class ApiPaths {
   static const String register = '/auth/register';
   static const String google = '/auth/google';
   static const String forgotPassword = '/auth/forgot-password';
-  static const String recoverPassword = '/auth/recover-password';
-  static const String verifyEmail = '/auth/verify-email';
-  static const String refresh = '/auth/refresh'; // backend §4.1
-  static const String logout = '/auth/logout'; // backend §4.1
-
-  // User
+  
+  static const String logout = '/auth/logout';
+  static const String refresh = '/auth/refresh';
   static const String me = '/user';
-  static const String updateMe = '/user'; // PATCH (backend §4.1)
-  static const String devices = '/user/devices'; // backend §4.2
 
-  // Projects
+  // --- Voluntariado / Tareas ---
   static const String volunteerPublicProjects = '/volunteer/public/projects';
   static const String volunteerProjects = '/volunteer/projects';
   static String project(String id) => '/projects/$id';
