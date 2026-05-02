@@ -23,7 +23,7 @@ void main() {
   });
 
   /// Helper: wait for the seed-state evaluation to land on `_last`.
-  Future<void> _settle() => Future<void>.delayed(Duration.zero);
+  Future<void> settle() => Future<void>.delayed(Duration.zero);
 
   test('reports offline when no interface is up', () async {
     when(() => connectivity.checkConnectivity())
@@ -33,7 +33,7 @@ void main() {
       connectivity: connectivity,
       probe: () async => true, // probe is irrelevant when offline
     );
-    await _settle();
+    await settle();
 
     expect(await svc.refresh(force: true), NetworkReachability.offline);
     expect(svc.current, NetworkReachability.offline);
@@ -78,7 +78,7 @@ void main() {
       connectivity: connectivity,
       probe: () async => true,
     );
-    await _settle();
+    await settle();
 
     final emitted = <NetworkReachability>[];
     final sub = svc.changes.listen(emitted.add);
@@ -87,8 +87,8 @@ void main() {
     when(() => connectivity.checkConnectivity())
         .thenAnswer((_) async => [ConnectivityResult.wifi]);
     changeController.add([ConnectivityResult.wifi]);
-    await _settle();
-    await _settle();
+    await settle();
+    await settle();
 
     expect(emitted, contains(NetworkReachability.online));
 
@@ -108,7 +108,6 @@ void main() {
         probeCalls++;
         return true;
       },
-      probeCooldown: const Duration(seconds: 30),
     );
 
     await svc.refresh(force: true);

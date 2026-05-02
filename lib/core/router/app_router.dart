@@ -25,7 +25,6 @@ final goRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: AppPath.splash,
     refreshListenable: authListenable,
-    debugLogDiagnostics: false,
     redirect: (context, state) {
       final auth = ref.read(authControllerProvider);
       return _redirectFor(auth, state);

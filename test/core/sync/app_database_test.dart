@@ -9,11 +9,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 /// Tests for [AppDatabase] using the FFI-backed factory so the suite can
 /// run on the host VM (no Android/iOS plugin required).
 void main() {
-  setUpAll(() {
-    // Initialise the FFI bindings once for the whole suite. Calling this
-    // is a no-op after the first invocation.
-    sqfliteFfiInit();
-  });
+  setUpAll(sqfliteFfiInit);
 
   group('AppDatabase.open', () {
     late AppDatabase db;
@@ -65,7 +61,7 @@ void main() {
         'next_attempt_at',
         'created_at',
         'updated_at',
-      }));
+      }),);
     });
 
     test('foreign keys cascade-delete attached images', () async {
@@ -103,7 +99,7 @@ void main() {
 
       final after = await db.db.query('outbox_checkin_images');
       expect(after, isEmpty,
-          reason: 'ON DELETE CASCADE should have removed the image row');
+          reason: 'ON DELETE CASCADE should have removed the image row',);
     });
 
     test('reopening preserves the schema (migration is idempotent)',

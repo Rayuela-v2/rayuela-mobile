@@ -297,7 +297,7 @@ class _CheckinScreenState extends ConsumerState<CheckinScreen> {
       appBar: AppBar(
         title: Text(widget.taskName ??
             widget.projectName ??
-            t.checkin_screen_title_default),
+            t.checkin_screen_title_default,),
       ),
       body: SafeArea(
         child: ListView(
@@ -384,7 +384,7 @@ class _CheckinScreenState extends ConsumerState<CheckinScreen> {
             if (showOfflineChip) ...[
               Container(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 12, vertical: 10),
+                    horizontal: 12, vertical: 10,),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.tertiaryContainer
                       .withValues(alpha: 0.6),
@@ -496,7 +496,6 @@ class _PhotoGrid extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: theme.colorScheme.outlineVariant,
-            style: BorderStyle.solid,
           ),
         ),
         alignment: Alignment.center,
@@ -650,7 +649,7 @@ class _LocationCard extends StatelessWidget {
             Row(
               children: [
                 Icon(Icons.location_off_outlined,
-                    color: theme.colorScheme.onErrorContainer),
+                    color: theme.colorScheme.onErrorContainer,),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(

@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/error/result.dart';
 import '../../../../shared/providers/core_providers.dart';
 import '../../../auth/domain/entities/auth_user.dart';
 import '../../../auth/presentation/providers/auth_controller.dart';
-import '../../../../core/error/result.dart';
 import '../../data/repositories/projects_repository_impl.dart';
 import '../../data/sources/projects_remote_source.dart';
 import '../../domain/entities/project_summary.dart';
@@ -25,7 +25,7 @@ final projectsRepositoryProvider = Provider<ProjectsRepository>((ref) {
 
 /// Sentinel used when no user is signed in — repository will fall back to
 /// the wire data unchanged.
-final AuthUser _emptyUser = const AuthUser(
+const AuthUser _emptyUser = AuthUser(
   id: '',
   username: '',
   completeName: '',

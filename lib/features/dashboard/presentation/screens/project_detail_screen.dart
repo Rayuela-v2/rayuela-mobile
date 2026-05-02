@@ -1,5 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:convert';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,8 +8,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/router/routes.dart';
 import '../../../../features/auth/presentation/providers/auth_controller.dart';
 import '../../../../features/checkin/presentation/widgets/user_checkins_view.dart';
-import '../../../../features/leaderboard/presentation/widgets/leaderboard_view.dart';
 import '../../../../features/leaderboard/presentation/providers/leaderboard_providers.dart';
+import '../../../../features/leaderboard/presentation/widgets/leaderboard_view.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../domain/entities/project_detail.dart';
@@ -77,7 +78,6 @@ class ProjectDetailScreen extends ConsumerWidget {
             appBar: AppBar(
               title: title,
               bottom: TabBar(
-                isScrollable: false,
                 tabs: [
                   Tab(
                     icon: const Icon(Icons.info_outline),
@@ -521,11 +521,11 @@ class _BadgesSectionState extends State<_BadgesSection> {
                 showSelectedIcon: false,
                 onSelectionChanged: (s) =>
                     setState(() => _showGraph = s.first),
-                style: ButtonStyle(
+                style: const ButtonStyle(
                   visualDensity: VisualDensity.compact,
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   padding: WidgetStatePropertyAll(
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                    EdgeInsets.symmetric(horizontal: 8),
                   ),
                 ),
               ),
@@ -779,7 +779,6 @@ class _BadgeTile extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
                 width: 96,
@@ -803,7 +802,7 @@ class _BadgeTile extends StatelessWidget {
               const SizedBox(height: 4),
               Container(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 12, vertical: 4),
+                    horizontal: 12, vertical: 4,),
                 decoration: BoxDecoration(
                   color: earned
                       ? theme.colorScheme.tertiaryContainer

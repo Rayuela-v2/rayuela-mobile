@@ -11,7 +11,7 @@ void main() {
   late AppDatabase db;
   late OutboxDao dao;
 
-  OutboxEntry _entry({
+  OutboxEntry entry({
     required String id,
     required String userId,
     String projectId = 'p1',
@@ -57,7 +57,7 @@ void main() {
 
   test('insert persists row + image attachments transactionally', () async {
     await dao.insert(
-      _entry(
+      entry(
         id: 'a',
         userId: 'u1',
         images: const [
@@ -88,11 +88,11 @@ void main() {
     final t1 = DateTime.utc(2026, 5, 1, 9);
     final t2 = DateTime.utc(2026, 5, 1, 10);
 
-    await dao.insert(_entry(id: 'middle', userId: 'u1', createdAt: t1));
-    await dao.insert(_entry(id: 'oldest', userId: 'u1', createdAt: t0));
-    await dao.insert(_entry(id: 'newest', userId: 'u1', createdAt: t2));
+    await dao.insert(entry(id: 'middle', userId: 'u1', createdAt: t1));
+    await dao.insert(entry(id: 'oldest', userId: 'u1', createdAt: t0));
+    await dao.insert(entry(id: 'newest', userId: 'u1', createdAt: t2));
     // Different user — must not interfere.
-    await dao.insert(_entry(id: 'other', userId: 'u2', createdAt: t0));
+    await dao.insert(entry(id: 'other', userId: 'u2', createdAt: t0));
 
     final next = await dao.nextEligible('u1');
     expect(next?.id, 'oldest');
@@ -102,28 +102,28 @@ void main() {
     final past = DateTime.utc(2026, 5, 1, 8);
     final future = DateTime.utc(2026, 5, 2, 8);
 
-    await dao.insert(_entry(
+    await dao.insert(entry(
       id: 'soon',
       userId: 'u1',
       status: OutboxStatus.failed,
       nextAttemptAt: past,
-    ));
-    await dao.insert(_entry(
+    ),);
+    await dao.insert(entry(
       id: 'later',
       userId: 'u1',
       status: OutboxStatus.failed,
       nextAttemptAt: future,
       createdAt: DateTime.utc(2026, 5, 1, 7), // older than `soon`
-    ));
+    ),);
 
     final at = DateTime.utc(2026, 5, 1, 10);
     final next = await dao.nextEligible('u1', now: at);
     expect(next?.id, 'soon',
-        reason: '`later`s next_attempt_at is in the future, must be skipped');
+        reason: '`later`s next_attempt_at is in the future, must be skipped',);
   });
 
   test('markFailed bumps attempt and sets retry schedule', () async {
-    await dao.insert(_entry(id: 'r', userId: 'u1'));
+    await dao.insert(entry(id: 'r', userId: 'u1'));
     final retryAt = DateTime.utc(2026, 5, 1, 13);
     await dao.markFailed(
       'r',
@@ -141,7 +141,7 @@ void main() {
   });
 
   test('markDead clears the retry schedule', () async {
-    await dao.insert(_entry(id: 'd', userId: 'u1'));
+    await dao.insert(entry(id: 'd', userId: 'u1'));
     await dao.markDead(
       'd',
       attemptCount: 7,
@@ -155,7 +155,7 @@ void main() {
   });
 
   test('reclaimStaleInflight resets long-running inflight rows', () async {
-    await dao.insert(_entry(id: 'stuck', userId: 'u1'));
+    await dao.insert(entry(id: 'stuck', userId: 'u1'));
     await dao.markInflight('stuck');
     // Backdate by hand — the DAO doesn't expose updated_at directly.
     await db.db.rawUpdate(
@@ -171,32 +171,32 @@ void main() {
   });
 
   test('pendingCount excludes dead rows', () async {
-    await dao.insert(_entry(id: 'a', userId: 'u1'));
-    await dao.insert(_entry(
+    await dao.insert(entry(id: 'a', userId: 'u1'));
+    await dao.insert(entry(
       id: 'b',
       userId: 'u1',
       status: OutboxStatus.failed,
       attemptCount: 2,
-    ));
-    await dao.insert(_entry(
+    ),);
+    await dao.insert(entry(
       id: 'c',
       userId: 'u1',
       status: OutboxStatus.dead,
       attemptCount: 7,
-    ));
+    ),);
 
     expect(await dao.pendingCount('u1'), 2);
   });
 
   test('knownIds returns the full id set for sweepOrphans', () async {
-    await dao.insert(_entry(id: 'one', userId: 'u1'));
-    await dao.insert(_entry(id: 'two', userId: 'u2'));
+    await dao.insert(entry(id: 'one', userId: 'u1'));
+    await dao.insert(entry(id: 'two', userId: 'u2'));
     expect(await dao.knownIds(), {'one', 'two'});
   });
 
   test('delete removes the row and cascades to images', () async {
     await dao.insert(
-      _entry(
+      entry(
         id: 'gone',
         userId: 'u1',
         images: const [

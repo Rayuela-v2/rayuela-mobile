@@ -48,7 +48,7 @@ void main() {
   late _MockConnectivity rawConnectivity;
   late StreamController<List<ConnectivityResult>> connectivityChanges;
 
-  Future<String> _writeFakeJpeg(String name) async {
+  Future<String> writeFakeJpeg(String name) async {
     final f = File(p.join(tempRoot.path, name));
     await f.writeAsBytes(List.filled(8, 1));
     return f.path;
@@ -100,7 +100,7 @@ void main() {
       );
       addTearDown(svc.dispose);
 
-      final src = await _writeFakeJpeg('a.jpg');
+      final src = await writeFakeJpeg('a.jpg');
       final entry = await svc.enqueue(
         userId: 'u1',
         projectId: 'p1',
@@ -132,18 +132,18 @@ void main() {
           taskType: 'observation',
           latitude: '0',
           longitude: '0',
-          datetime: DateTime.utc(2026, 5, 1),
-          clientCapturedAt: DateTime.utc(2026, 5, 1),
+          datetime: DateTime.utc(2026, 5),
+          clientCapturedAt: DateTime.utc(2026, 5),
           images: const [],
           status: OutboxStatus.pending,
           attemptCount: 0,
-          createdAt: DateTime.utc(2026, 5, 1),
-          updatedAt: DateTime.utc(2026, 5, 1),
+          createdAt: DateTime.utc(2026, 5),
+          updatedAt: DateTime.utc(2026, 5),
         ),
       );
 
       final stubUuid = _MockUuid();
-      when(() => stubUuid.v4()).thenReturn(fixedId);
+      when(stubUuid.v4).thenReturn(fixedId);
 
       final svc = OutboxService(
         dao: dao,
@@ -154,7 +154,7 @@ void main() {
       );
       addTearDown(svc.dispose);
 
-      final src = await _writeFakeJpeg('b.jpg');
+      final src = await writeFakeJpeg('b.jpg');
       await expectLater(
         () => svc.enqueue(
           userId: 'u1',
@@ -190,7 +190,7 @@ void main() {
       );
       addTearDown(svc.dispose);
 
-      final src = await _writeFakeJpeg('c.jpg');
+      final src = await writeFakeJpeg('c.jpg');
       final first = await svc.enqueue(
         userId: 'u1',
         projectId: 'p1',
@@ -227,14 +227,14 @@ void main() {
       );
       addTearDown(svc.dispose);
 
-      final src = await _writeFakeJpeg('d.jpg');
+      final src = await writeFakeJpeg('d.jpg');
       final entry = await svc.enqueue(
         userId: 'u1',
         projectId: 'p1',
         taskType: 'observation',
         latitude: '0',
         longitude: '0',
-        datetime: DateTime.utc(2026, 5, 1),
+        datetime: DateTime.utc(2026, 5),
         sourceImagePaths: [src],
       );
 
@@ -261,7 +261,7 @@ void main() {
       );
       addTearDown(svc.dispose);
 
-      final src = await _writeFakeJpeg('e.jpg');
+      final src = await writeFakeJpeg('e.jpg');
       final first = await svc.enqueue(
         userId: 'u1',
         projectId: 'p1',
@@ -302,14 +302,14 @@ void main() {
       );
       addTearDown(svc.dispose);
 
-      final src = await _writeFakeJpeg('f.jpg');
+      final src = await writeFakeJpeg('f.jpg');
       final entry = await svc.enqueue(
         userId: 'u1',
         projectId: 'p1',
         taskType: 'observation',
         latitude: '0',
         longitude: '0',
-        datetime: DateTime.utc(2026, 5, 1),
+        datetime: DateTime.utc(2026, 5),
         sourceImagePaths: [src],
       );
 
@@ -335,14 +335,14 @@ void main() {
       );
       addTearDown(svc.dispose);
 
-      final src = await _writeFakeJpeg('g.jpg');
+      final src = await writeFakeJpeg('g.jpg');
       await svc.enqueue(
         userId: 'u1',
         projectId: 'p1',
         taskType: 'observation',
         latitude: '0',
         longitude: '0',
-        datetime: DateTime.utc(2026, 5, 1),
+        datetime: DateTime.utc(2026, 5),
         sourceImagePaths: [src],
       );
 

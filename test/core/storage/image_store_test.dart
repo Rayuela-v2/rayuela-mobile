@@ -27,7 +27,7 @@ void main() {
     }
   });
 
-  Future<String> _writeSourceFile(String name, List<int> bytes) async {
+  Future<String> writeSourceFile(String name, List<int> bytes) async {
     final f = File(p.join(tempRoot.path, name));
     await f.writeAsBytes(bytes, flush: true);
     return f.path;
@@ -35,8 +35,8 @@ void main() {
 
   test('persist copies each source into outbox/<id>/<position>.jpg',
       () async {
-    final s1 = await _writeSourceFile('a.jpg', List.filled(64, 1));
-    final s2 = await _writeSourceFile('b.jpg', List.filled(32, 2));
+    final s1 = await writeSourceFile('a.jpg', List.filled(64, 1));
+    final s2 = await writeSourceFile('b.jpg', List.filled(32, 2));
 
     final stored = await store.persist(
       outboxId: 'cake-001',
@@ -58,7 +58,7 @@ void main() {
 
   test('persist throws and rolls back the directory if a source is missing',
       () async {
-    final ok = await _writeSourceFile('ok.jpg', List.filled(8, 9));
+    final ok = await writeSourceFile('ok.jpg', List.filled(8, 9));
     final bogus = p.join(tempRoot.path, 'does-not-exist.jpg');
 
     await expectLater(
@@ -74,7 +74,7 @@ void main() {
   });
 
   test('deleteForOutbox removes the directory and is idempotent', () async {
-    final src = await _writeSourceFile('one.jpg', [0, 1, 2, 3]);
+    final src = await writeSourceFile('one.jpg', [0, 1, 2, 3]);
     await store.persist(outboxId: 'id-1', sourcePaths: [src]);
 
     final dir = Directory(p.join(baseDir.path, 'id-1'));
@@ -89,7 +89,7 @@ void main() {
 
   test('sweepOrphans removes folders not in knownIds and old enough',
       () async {
-    final src = await _writeSourceFile('z.jpg', [0]);
+    final src = await writeSourceFile('z.jpg', [0]);
     await store.persist(outboxId: 'still-pending', sourcePaths: [src]);
     await store.persist(outboxId: 'orphan', sourcePaths: [src]);
 
@@ -104,7 +104,6 @@ void main() {
 
     final removed = await store.sweepOrphans(
       knownIds: {'still-pending'},
-      minAge: const Duration(hours: 1),
     );
 
     expect(removed, 1);
@@ -116,7 +115,7 @@ void main() {
   });
 
   test('totalBytesUsed sums every file under baseDir', () async {
-    final src = await _writeSourceFile(
+    final src = await writeSourceFile(
       'b.jpg',
       Uint8List.fromList(List.filled(100, 7)),
     );

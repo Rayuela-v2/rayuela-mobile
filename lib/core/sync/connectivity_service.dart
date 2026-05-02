@@ -139,7 +139,7 @@ class ConnectivityService {
     }
     _emit(reachable
         ? NetworkReachability.online
-        : NetworkReachability.interfaceUp);
+        : NetworkReachability.interfaceUp,);
     return _last;
   }
 

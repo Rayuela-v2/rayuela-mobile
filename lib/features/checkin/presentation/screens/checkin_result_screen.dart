@@ -355,7 +355,7 @@ class _BadgeTile extends StatelessWidget {
       child: Row(
         children: [
           Icon(Icons.emoji_events_outlined,
-              color: theme.colorScheme.primary, size: 32),
+              color: theme.colorScheme.primary, size: 32,),
           const SizedBox(width: 12),
           Expanded(
             child: Column(

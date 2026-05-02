@@ -167,7 +167,7 @@ class _LocationPickerSheetState extends State<LocationPickerSheet> {
                 bottom: 6,
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 6, vertical: 2),
+                      horizontal: 6, vertical: 2,),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.surface.withValues(alpha: 0.85),
                     borderRadius: BorderRadius.circular(4),

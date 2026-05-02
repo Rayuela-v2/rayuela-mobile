@@ -22,7 +22,6 @@ class AppTheme {
   static ThemeData light() {
     final colorScheme = ColorScheme.fromSeed(
       seedColor: RayuelaColors.primary,
-      brightness: Brightness.light,
       surface: RayuelaColors.surface,
       error: RayuelaColors.danger,
     );

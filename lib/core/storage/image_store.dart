@@ -48,11 +48,6 @@ class FlutterImageCompressorImpl implements ImageCompressor {
       minWidth: maxLongEdge,
       minHeight: maxLongEdge,
       quality: quality,
-      format: CompressFormat.jpeg,
-      // Keep EXIF orientation so portrait shots aren't rotated by the
-      // backend. We strip everything else by virtue of re-encoding.
-      keepExif: false,
-      autoCorrectionAngle: true,
     );
     if (bytes == null) {
       // Fallback: ship the original bytes uncompressed. Better to upload
