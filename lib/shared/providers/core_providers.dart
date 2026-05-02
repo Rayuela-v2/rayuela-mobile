@@ -5,6 +5,9 @@ import '../../core/storage/image_store.dart';
 import '../../core/storage/secure_token_store.dart';
 import '../../core/sync/app_database.dart';
 import '../../core/sync/connectivity_service.dart';
+import '../../core/sync/outbox/outbox_dao.dart';
+import '../../core/sync/outbox/outbox_lifecycle.dart';
+import '../../core/sync/outbox/outbox_service.dart';
 
 /// Root providers shared across features. Overridden in `main.dart` so the
 /// app can wire real implementations without touching feature code.
@@ -45,5 +48,27 @@ final imageStoreProvider = Provider<ImageStore>((ref) {
 /// reachability probe so the outbox drainer can distinguish "interface
 /// up" from "backend reachable".
 final connectivityServiceProvider = Provider<ConnectivityService>((ref) {
+  throw UnimplementedError('Override in bootstrap');
+});
+
+/// DAO over the SQLite outbox tables. Built on top of [appDatabaseProvider]
+/// so feature code never has to know which table a row lives in.
+final outboxDaoProvider = Provider<OutboxDao>((ref) {
+  return OutboxDao(ref.watch(appDatabaseProvider).db);
+});
+
+/// Orchestrator for the offline check-in queue: enqueue, drain, retry,
+/// discard. Wired in `bootstrap.dart` so its [OutboxSender] dependency
+/// (which lives in `features/checkin/`) can be plugged in without
+/// `core/` knowing about it.
+final outboxServiceProvider = Provider<OutboxService>((ref) {
+  throw UnimplementedError('Override in bootstrap');
+});
+
+/// Listener that turns OS lifecycle + connectivity events into
+/// `outboxService.drain(...)` calls. Sprint B wires this in bootstrap;
+/// the auth controller calls `bind(userId)` after login and `unbind()`
+/// on sign-out.
+final outboxLifecycleProvider = Provider<OutboxLifecycle>((ref) {
   throw UnimplementedError('Override in bootstrap');
 });

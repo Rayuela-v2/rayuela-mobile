@@ -47,6 +47,19 @@ class NotFoundException extends AppException {
   }) : super(message: message);
 }
 
+/// HTTP 409 Conflict.
+///
+/// Phase 2 outbox uses this on `POST /checkin` with an Idempotency-Key:
+/// the backend returns 409 when it has already stored a checkin under
+/// that key (a previous attempt actually landed despite the client
+/// thinking it failed). The drainer treats it as success.
+class ConflictException extends AppException {
+  const ConflictException({
+    String message = 'Resource already exists',
+    super.cause,
+  }) : super(message: message);
+}
+
 class ValidationException extends AppException {
   const ValidationException({
     required super.message,

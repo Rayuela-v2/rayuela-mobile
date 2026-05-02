@@ -211,6 +211,14 @@
   "checkin_back_to_dashboard": "Volver al panel",
   "checkin_back_to_project": "Volver al proyecto",
 
+  "checkin_result_queued_title": "Guardado — se enviará cuando tengas señal",
+  "checkin_result_queued_subtitle": "Enviaremos tu check-in automáticamente apenas vuelvas a tener conexión. Puedes seguir usando la app mientras tanto.",
+  "checkin_result_queued_at": "Capturado a las {time}",
+  "@checkin_result_queued_at": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "checkin_offline_chip": "Sin conexión — lo enviaremos cuando vuelvas a tener red",
+
   "checkins_empty_title": "Aún no hay check-ins",
   "checkins_empty_body": "Tus check-ins para este proyecto aparecerán aquí. Abrí una tarea y agregá el primero para empezar a ganar puntos.",
   "checkins_card_default_kind": "Check-in",

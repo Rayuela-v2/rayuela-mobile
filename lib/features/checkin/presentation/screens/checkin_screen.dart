@@ -10,10 +10,12 @@ import 'package:latlong2/latlong.dart';
 import '../../../../core/error/app_exception.dart';
 import '../../../../core/error/result.dart';
 import '../../../../core/router/routes.dart';
+import '../../../../core/sync/connectivity_service.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/providers/core_providers.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../domain/entities/checkin_request.dart';
-import '../../domain/entities/checkin_result.dart';
+import '../../domain/entities/checkin_submission_outcome.dart';
 import '../providers/checkin_providers.dart';
 import '../widgets/location_picker_sheet.dart';
 
@@ -242,19 +244,27 @@ class _CheckinScreenState extends ConsumerState<CheckinScreen> {
     if (!mounted) return;
 
     switch (result) {
-      case Success<CheckinResult>(:final value):
-        // The history list shown on the project's "My check-ins" tab needs
-        // to pick up this new entry — bust its cache. The provider auto-
-        // disposes, so this is cheap when the tab isn't mounted.
-        ref.invalidate(userCheckinsProvider(widget.projectId));
-        // Replace the form so back from the result returns to the project
-        // detail rather than to a stale form with images we'd want to wipe.
-        context.pushReplacementNamed(
-          AppRoute.checkinResult,
-          pathParameters: {'projectId': widget.projectId},
-          extra: value,
-        );
-      case Failure<CheckinResult>(:final error):
+      case Success<CheckinSubmissionOutcome>(:final value):
+        switch (value) {
+          case CheckinSubmissionAccepted() || CheckinSubmissionQueued():
+            // Either way the user's "My check-ins" list should refresh —
+            // pending entries appear inline in the same view as accepted
+            // ones (Sprint C will surface them).
+            ref.invalidate(userCheckinsProvider(widget.projectId));
+            // Replace the form so "back" returns to the project detail
+            // rather than the stale form.
+            context.pushReplacementNamed(
+              AppRoute.checkinResult,
+              pathParameters: {'projectId': widget.projectId},
+              extra: value,
+            );
+          case CheckinSubmissionRejected(:final error):
+            setState(() {
+              _submitting = false;
+              _submitError = localizeAppException(error, t);
+            });
+        }
+      case Failure<CheckinSubmissionOutcome>(:final error):
         setState(() {
           _submitting = false;
           _submitError = localizeAppException(error, t);
@@ -270,6 +280,13 @@ class _CheckinScreenState extends ConsumerState<CheckinScreen> {
         _images.isNotEmpty &&
         _effectiveLatLng != null &&
         _effectiveTaskType != null;
+
+    // Reachability is read live so the offline chip appears/disappears
+    // as the user moves in and out of coverage while filling the form.
+    // We watch the service rather than its stream so we still get a
+    // value before the first stream tick.
+    final reachability = ref.watch(connectivityServiceProvider).current;
+    final showOfflineChip = reachability != NetworkReachability.online;
 
     // Don't show the picker if we already arrived with an explicit
     // taskType (came from the Tasks list — the chosen task is the source
@@ -364,6 +381,36 @@ class _CheckinScreenState extends ConsumerState<CheckinScreen> {
               ),
             ),
             const SizedBox(height: 16),
+            if (showOfflineChip) ...[
+              Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 12, vertical: 10),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.tertiaryContainer
+                      .withValues(alpha: 0.6),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.cloud_off_outlined,
+                      size: 18,
+                      color: theme.colorScheme.onTertiaryContainer,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        t.checkin_offline_chip,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onTertiaryContainer,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+            ],
             if (_submitError != null) ...[
               Container(
                 padding: const EdgeInsets.all(12),

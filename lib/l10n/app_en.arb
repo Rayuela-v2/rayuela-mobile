@@ -211,6 +211,14 @@
   "checkin_back_to_dashboard": "Back to dashboard",
   "checkin_back_to_project": "Back to project",
 
+  "checkin_result_queued_title": "Saved — will sync when you have signal",
+  "checkin_result_queued_subtitle": "We'll send your check-in automatically as soon as you're back online. You can keep working in the meantime.",
+  "checkin_result_queued_at": "Captured at {time}",
+  "@checkin_result_queued_at": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "checkin_offline_chip": "No connection — we'll send it when you're back online",
+
   "checkins_empty_title": "No check-ins yet",
   "checkins_empty_body": "Your check-ins for this project will appear here. Open a task and add your first one to start earning points.",
   "checkins_card_default_kind": "Check-in",

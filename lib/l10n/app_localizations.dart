@@ -904,6 +904,30 @@ abstract class AppLocalizations {
   /// **'Back to project'**
   String get checkin_back_to_project;
 
+  /// No description provided for @checkin_result_queued_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved — will sync when you have signal'**
+  String get checkin_result_queued_title;
+
+  /// No description provided for @checkin_result_queued_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll send your check-in automatically as soon as you\'re back online. You can keep working in the meantime.'**
+  String get checkin_result_queued_subtitle;
+
+  /// No description provided for @checkin_result_queued_at.
+  ///
+  /// In en, this message translates to:
+  /// **'Captured at {time}'**
+  String checkin_result_queued_at(String time);
+
+  /// No description provided for @checkin_offline_chip.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection — we\'ll send it when you\'re back online'**
+  String get checkin_offline_chip;
+
   /// No description provided for @checkins_empty_title.
   ///
   /// In en, this message translates to:

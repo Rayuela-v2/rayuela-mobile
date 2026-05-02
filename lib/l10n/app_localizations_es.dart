@@ -478,6 +478,23 @@ class AppLocalizationsEs extends AppLocalizations {
   String get checkin_back_to_project => 'Volver al proyecto';
 
   @override
+  String get checkin_result_queued_title =>
+      'Guardado — se enviará cuando tengas señal';
+
+  @override
+  String get checkin_result_queued_subtitle =>
+      'Enviaremos tu check-in automáticamente apenas vuelvas a tener conexión. Puedes seguir usando la app mientras tanto.';
+
+  @override
+  String checkin_result_queued_at(String time) {
+    return 'Capturado a las $time';
+  }
+
+  @override
+  String get checkin_offline_chip =>
+      'Sin conexión — lo enviaremos cuando vuelvas a tener red';
+
+  @override
   String get checkins_empty_title => 'Aún no hay check-ins';
 
   @override

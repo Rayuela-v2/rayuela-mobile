@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/error/app_exception.dart';
 import '../../../../core/error/result.dart';
 import '../../../../shared/providers/core_providers.dart';
+import '../../../auth/presentation/providers/auth_controller.dart';
 import '../../data/repositories/checkins_repository_impl.dart';
+import '../../data/sources/checkin_outbox_sender.dart';
 import '../../data/sources/checkins_remote_source.dart';
 import '../../domain/entities/checkin_history_item.dart';
 import '../../domain/repositories/checkins_repository.dart';
@@ -13,8 +15,25 @@ final checkinsRemoteSourceProvider = Provider<CheckinsRemoteSource>((ref) {
   return CheckinsRemoteSource(ref.watch(apiClientProvider));
 });
 
+/// Bridge from the generic outbox to the check-in feature: knows how to
+/// translate one [OutboxEntry] into a `POST /checkin` call. Held in this
+/// file (rather than in `core/`) so the dependency arrow stays
+/// `features → core`.
+final checkinOutboxSenderProvider = Provider<CheckinOutboxSender>((ref) {
+  return CheckinOutboxSender(ref.watch(checkinsRemoteSourceProvider));
+});
+
 final checkinsRepositoryProvider = Provider<CheckinsRepository>((ref) {
-  return CheckinsRepositoryImpl(ref.watch(checkinsRemoteSourceProvider));
+  return CheckinsRepositoryImpl(
+    remote: ref.watch(checkinsRemoteSourceProvider),
+    outbox: ref.watch(outboxServiceProvider),
+    outboxDao: ref.watch(outboxDaoProvider),
+    connectivity: ref.watch(connectivityServiceProvider),
+    currentUserId: () {
+      final state = ref.read(authControllerProvider);
+      return state is AuthStateAuthenticated ? state.user.id : '';
+    },
+  );
 });
 
 final locationServiceProvider = Provider<LocationService>((ref) {

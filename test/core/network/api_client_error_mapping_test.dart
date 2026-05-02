@@ -24,6 +24,8 @@ void main() {
     // is sent without an Authorization header — fine for these tests.
     when(() => storage.read(key: any(named: 'key')))
         .thenAnswer((_) async => null);
+    when(() => storage.delete(key: any(named: 'key')))
+        .thenAnswer((_) async {});
 
     adapter = _StubAdapter();
     dio = Dio(BaseOptions(baseUrl: 'https://example.test'))

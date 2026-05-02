@@ -7,6 +7,7 @@ import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/checkin/domain/entities/checkin_result.dart';
+import '../../features/checkin/domain/entities/checkin_submission_outcome.dart';
 import '../../features/checkin/presentation/screens/checkin_result_screen.dart';
 import '../../features/checkin/presentation/screens/checkin_screen.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
@@ -130,9 +131,19 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final projectId = state.pathParameters['projectId'] ?? '';
           final extra = state.extra;
+          // The form (Phase 2) hands us a CheckinSubmissionOutcome so the
+          // screen can render either the reward (Accepted) or the
+          // "Pending" state (Queued). Older callers that still hand a raw
+          // CheckinResult are tolerated and treated as Accepted.
+          if (extra is CheckinSubmissionOutcome) {
+            return CheckinResultScreen(
+              outcome: extra,
+              projectId: projectId,
+            );
+          }
           if (extra is CheckinResult) {
             return CheckinResultScreen(
-              result: extra,
+              outcome: CheckinSubmissionAccepted(extra),
               projectId: projectId,
             );
           }

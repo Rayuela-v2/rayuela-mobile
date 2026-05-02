@@ -129,6 +129,8 @@ class ApiClient {
         return ForbiddenException(message: message, cause: e);
       case 404:
         return NotFoundException(message: message, cause: e);
+      case 409:
+        return ConflictException(message: message, cause: e);
       case >= 500:
         return ServerException(message: message, statusCode: status, cause: e);
       default:
