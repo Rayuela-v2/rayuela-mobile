@@ -55,16 +55,30 @@ dependencies:
   # Google sign-in (idToken handed to POST /auth/google).
   google_sign_in: ^6.2.1
 
+  # Phase 2 — offline & sync (Sprint A foundations).
+  # See docs/OFFLINE_SYNC_PLAN.md for the full design.
+  sqflite: ^2.3.3+1            # Local SQLite store (outbox + caches)
+  path_provider: ^2.1.4        # Resolve app-private directories cross-platform
+  path: ^1.9.0                 # Path joining helpers (used by ImageStore + AppDatabase)
+  connectivity_plus: ^6.0.5    # Network interface state stream
+  mutex: ^3.1.0                # Single-flight lock for the outbox drainer
+  uuid: ^4.5.1                 # Outbox row id == Idempotency-Key value
+
   # Planned in later phases (added here so pubspec is stable):
   # firebase_core: ^3.6.0
   # firebase_messaging: ^15.1.3
-  # sqflite: ^2.3.3+1
+  # workmanager: ^0.5.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
   mocktail: ^1.0.4
+
+  # Phase 2 — runs the SQLite implementation on host VMs (CI + local
+  # `flutter test`) by linking against the FFI bindings instead of the
+  # platform plugin. Production code stays on the regular `sqflite` API.
+  sqflite_common_ffi: ^2.3.3
 
 flutter:
   uses-material-design: true
