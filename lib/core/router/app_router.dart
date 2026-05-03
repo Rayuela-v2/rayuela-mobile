@@ -10,6 +10,7 @@ import '../../features/checkin/domain/entities/checkin_result.dart';
 import '../../features/checkin/domain/entities/checkin_submission_outcome.dart';
 import '../../features/checkin/presentation/screens/checkin_result_screen.dart';
 import '../../features/checkin/presentation/screens/checkin_screen.dart';
+import '../../features/checkin/presentation/screens/pending_data_screen.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/dashboard/presentation/screens/project_detail_screen.dart';
 import '../../features/tasks/presentation/screens/tasks_screen.dart';
@@ -152,6 +153,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             what: AppLocalizations.of(context)!.router_param_checkin_result,
           );
         },
+      ),
+      GoRoute(
+        path: AppPath.pendingData,
+        name: AppRoute.pendingData,
+        builder: (_, __) => const PendingDataScreen(),
       ),
       GoRoute(
         path: AppPath.adminNotSupported,

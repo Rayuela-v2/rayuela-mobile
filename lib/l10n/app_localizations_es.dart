@@ -495,6 +495,89 @@ class AppLocalizationsEs extends AppLocalizations {
       'Sin conexión — lo enviaremos cuando vuelvas a tener red';
 
   @override
+  String get outbox_status_pending => 'Pendiente';
+
+  @override
+  String get outbox_status_retrying => 'Reintentando…';
+
+  @override
+  String get outbox_status_inflight => 'Enviando…';
+
+  @override
+  String get outbox_status_failed => 'Falló — toca para reintentar';
+
+  @override
+  String get outbox_action_retry => 'Reintentar ahora';
+
+  @override
+  String get outbox_action_discard => 'Descartar';
+
+  @override
+  String get outbox_action_retry_all => 'Reintentar todos';
+
+  @override
+  String get outbox_section_pending => 'Por enviar';
+
+  @override
+  String outbox_pending_at(String time) {
+    return 'Capturado a las $time';
+  }
+
+  @override
+  String outbox_attempt_count(int count) {
+    return 'Intento N° $count';
+  }
+
+  @override
+  String get outbox_discard_confirm_title =>
+      '¿Descartar el check-in pendiente?';
+
+  @override
+  String get outbox_discard_confirm_body =>
+      'Las fotos y los datos se borrarán de este dispositivo. Esta acción no se puede deshacer.';
+
+  @override
+  String get outbox_discard_confirm_cta => 'Descartar';
+
+  @override
+  String get outbox_cancel => 'Cancelar';
+
+  @override
+  String get dashboard_outbox_banner_one => '1 check-in por enviar';
+
+  @override
+  String dashboard_outbox_banner_many(int count) {
+    return '$count check-ins por enviar';
+  }
+
+  @override
+  String get dashboard_outbox_banner_action => 'Ver';
+
+  @override
+  String get dashboard_sync_status_offline => 'Sin conexión';
+
+  @override
+  String get dashboard_sync_status_syncing => 'Sincronizando…';
+
+  @override
+  String get dashboard_sync_status_error => 'Problemas de sincronización';
+
+  @override
+  String get pending_data_title => 'Datos pendientes';
+
+  @override
+  String get pending_data_empty_title => 'Nada por sincronizar';
+
+  @override
+  String get pending_data_empty_body =>
+      'Los check-ins que crees sin conexión aparecerán acá mientras esperamos red.';
+
+  @override
+  String pending_data_project_label(String projectId) {
+    return 'Proyecto: $projectId';
+  }
+
+  @override
   String get checkins_empty_title => 'Aún no hay check-ins';
 
   @override

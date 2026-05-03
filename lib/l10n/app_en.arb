@@ -219,6 +219,45 @@
   },
   "checkin_offline_chip": "No connection — we'll send it when you're back online",
 
+  "outbox_status_pending": "Pending",
+  "outbox_status_retrying": "Retrying…",
+  "outbox_status_inflight": "Sending…",
+  "outbox_status_failed": "Failed — tap to retry",
+  "outbox_action_retry": "Retry now",
+  "outbox_action_discard": "Discard",
+  "outbox_action_retry_all": "Retry all",
+  "outbox_section_pending": "Waiting to sync",
+  "outbox_pending_at": "Captured at {time}",
+  "@outbox_pending_at": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "outbox_attempt_count": "Attempt #{count}",
+  "@outbox_attempt_count": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "outbox_discard_confirm_title": "Discard pending check-in?",
+  "outbox_discard_confirm_body": "The photos and details will be removed from this device. This cannot be undone.",
+  "outbox_discard_confirm_cta": "Discard",
+  "outbox_cancel": "Cancel",
+
+  "dashboard_outbox_banner_one": "1 check-in waiting to sync",
+  "dashboard_outbox_banner_many": "{count} check-ins waiting to sync",
+  "@dashboard_outbox_banner_many": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "dashboard_outbox_banner_action": "View",
+  "dashboard_sync_status_offline": "Offline",
+  "dashboard_sync_status_syncing": "Syncing…",
+  "dashboard_sync_status_error": "Sync issues",
+
+  "pending_data_title": "Pending data",
+  "pending_data_empty_title": "Nothing waiting",
+  "pending_data_empty_body": "Check-ins you create offline will appear here while we wait for a connection.",
+  "pending_data_project_label": "Project: {projectId}",
+  "@pending_data_project_label": {
+    "placeholders": { "projectId": { "type": "String" } }
+  },
+
   "checkins_empty_title": "No check-ins yet",
   "checkins_empty_body": "Your check-ins for this project will appear here. Open a task and add your first one to start earning points.",
   "checkins_card_default_kind": "Check-in",

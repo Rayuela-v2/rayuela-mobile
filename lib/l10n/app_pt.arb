@@ -219,6 +219,45 @@
   },
   "checkin_offline_chip": "Sem conexão — vamos enviar quando você estiver online",
 
+  "outbox_status_pending": "Pendente",
+  "outbox_status_retrying": "Tentando de novo…",
+  "outbox_status_inflight": "Enviando…",
+  "outbox_status_failed": "Falhou — toque para tentar de novo",
+  "outbox_action_retry": "Tentar agora",
+  "outbox_action_discard": "Descartar",
+  "outbox_action_retry_all": "Tentar todos",
+  "outbox_section_pending": "Aguardando envio",
+  "outbox_pending_at": "Capturado às {time}",
+  "@outbox_pending_at": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "outbox_attempt_count": "Tentativa nº {count}",
+  "@outbox_attempt_count": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "outbox_discard_confirm_title": "Descartar check-in pendente?",
+  "outbox_discard_confirm_body": "As fotos e dados serão removidos deste dispositivo. Esta ação não pode ser desfeita.",
+  "outbox_discard_confirm_cta": "Descartar",
+  "outbox_cancel": "Cancelar",
+
+  "dashboard_outbox_banner_one": "1 check-in para enviar",
+  "dashboard_outbox_banner_many": "{count} check-ins para enviar",
+  "@dashboard_outbox_banner_many": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "dashboard_outbox_banner_action": "Ver",
+  "dashboard_sync_status_offline": "Sem conexão",
+  "dashboard_sync_status_syncing": "Sincronizando…",
+  "dashboard_sync_status_error": "Problemas de sincronização",
+
+  "pending_data_title": "Dados pendentes",
+  "pending_data_empty_title": "Nada para sincronizar",
+  "pending_data_empty_body": "Os check-ins que você criar sem conexão vão aparecer aqui enquanto esperamos rede.",
+  "pending_data_project_label": "Projeto: {projectId}",
+  "@pending_data_project_label": {
+    "placeholders": { "projectId": { "type": "String" } }
+  },
+
   "checkins_empty_title": "Ainda não há check-ins",
   "checkins_empty_body": "Seus check-ins para este projeto vão aparecer aqui. Abra uma tarefa e adicione o primeiro para começar a ganhar pontos.",
   "checkins_card_default_kind": "Check-in",

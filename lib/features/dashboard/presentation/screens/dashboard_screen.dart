@@ -8,6 +8,7 @@ import '../../../../shared/widgets/empty_state.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../../../shared/widgets/language_picker.dart';
 import '../../../auth/presentation/providers/auth_controller.dart';
+import '../../../checkin/presentation/widgets/outbox_badge.dart';
 import '../providers/projects_providers.dart';
 import '../widgets/project_card.dart';
 
@@ -30,6 +31,10 @@ class DashboardScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(greeting),
         actions: [
+          // Sync badge sits before the language picker so it's the
+          // first thing the user sees when something is going on with
+          // the queue. Auto-hides when the system is idle.
+          const SyncStatusBadge(),
           const LanguagePickerButton(),
           IconButton(
             tooltip: t.common_logout,
@@ -53,35 +58,49 @@ class DashboardScreen extends ConsumerWidget {
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: ConstrainedBox(
                     constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                    child: EmptyState(
-                      icon: Icons.explore_outlined,
-                      title: t.dashboard_empty_title,
-                      message: t.dashboard_empty_body,
+                    child: Column(
+                      children: [
+                        const OutboxBanner(),
+                        Expanded(
+                          child: EmptyState(
+                            icon: Icons.explore_outlined,
+                            title: t.dashboard_empty_title,
+                            message: t.dashboard_empty_body,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               );
             }
-            return ListView.separated(
-              padding: const EdgeInsets.all(16),
+            return CustomScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: list.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
-              itemBuilder: (context, i) {
-                final project = list[i];
-                return ProjectCard(
-                  project: project,
-                  onTap: () {
-                    // pushNamed (not goNamed) so the AppBar back button on
-                    // the detail screen returns here.
-                    context.pushNamed(
-                      AppRoute.projectDetail,
-                      pathParameters: {'projectId': project.id},
-                      queryParameters: {'projectName': project.name},
-                    );
-                  },
-                );
-              },
+              slivers: [
+                const SliverToBoxAdapter(child: OutboxBanner()),
+                SliverPadding(
+                  padding: const EdgeInsets.all(16),
+                  sliver: SliverList.separated(
+                    itemCount: list.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    itemBuilder: (context, i) {
+                      final project = list[i];
+                      return ProjectCard(
+                        project: project,
+                        onTap: () {
+                          // pushNamed (not goNamed) so the AppBar back
+                          // button on the detail screen returns here.
+                          context.pushNamed(
+                            AppRoute.projectDetail,
+                            pathParameters: {'projectId': project.id},
+                            queryParameters: {'projectName': project.name},
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
             );
           },
           error: (error, _) => LayoutBuilder(

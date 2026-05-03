@@ -928,6 +928,150 @@ abstract class AppLocalizations {
   /// **'No connection — we\'ll send it when you\'re back online'**
   String get checkin_offline_chip;
 
+  /// No description provided for @outbox_status_pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get outbox_status_pending;
+
+  /// No description provided for @outbox_status_retrying.
+  ///
+  /// In en, this message translates to:
+  /// **'Retrying…'**
+  String get outbox_status_retrying;
+
+  /// No description provided for @outbox_status_inflight.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending…'**
+  String get outbox_status_inflight;
+
+  /// No description provided for @outbox_status_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed — tap to retry'**
+  String get outbox_status_failed;
+
+  /// No description provided for @outbox_action_retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry now'**
+  String get outbox_action_retry;
+
+  /// No description provided for @outbox_action_discard.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get outbox_action_discard;
+
+  /// No description provided for @outbox_action_retry_all.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry all'**
+  String get outbox_action_retry_all;
+
+  /// No description provided for @outbox_section_pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting to sync'**
+  String get outbox_section_pending;
+
+  /// No description provided for @outbox_pending_at.
+  ///
+  /// In en, this message translates to:
+  /// **'Captured at {time}'**
+  String outbox_pending_at(String time);
+
+  /// No description provided for @outbox_attempt_count.
+  ///
+  /// In en, this message translates to:
+  /// **'Attempt #{count}'**
+  String outbox_attempt_count(int count);
+
+  /// No description provided for @outbox_discard_confirm_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard pending check-in?'**
+  String get outbox_discard_confirm_title;
+
+  /// No description provided for @outbox_discard_confirm_body.
+  ///
+  /// In en, this message translates to:
+  /// **'The photos and details will be removed from this device. This cannot be undone.'**
+  String get outbox_discard_confirm_body;
+
+  /// No description provided for @outbox_discard_confirm_cta.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get outbox_discard_confirm_cta;
+
+  /// No description provided for @outbox_cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get outbox_cancel;
+
+  /// No description provided for @dashboard_outbox_banner_one.
+  ///
+  /// In en, this message translates to:
+  /// **'1 check-in waiting to sync'**
+  String get dashboard_outbox_banner_one;
+
+  /// No description provided for @dashboard_outbox_banner_many.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} check-ins waiting to sync'**
+  String dashboard_outbox_banner_many(int count);
+
+  /// No description provided for @dashboard_outbox_banner_action.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get dashboard_outbox_banner_action;
+
+  /// No description provided for @dashboard_sync_status_offline.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get dashboard_sync_status_offline;
+
+  /// No description provided for @dashboard_sync_status_syncing.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing…'**
+  String get dashboard_sync_status_syncing;
+
+  /// No description provided for @dashboard_sync_status_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync issues'**
+  String get dashboard_sync_status_error;
+
+  /// No description provided for @pending_data_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending data'**
+  String get pending_data_title;
+
+  /// No description provided for @pending_data_empty_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing waiting'**
+  String get pending_data_empty_title;
+
+  /// No description provided for @pending_data_empty_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-ins you create offline will appear here while we wait for a connection.'**
+  String get pending_data_empty_body;
+
+  /// No description provided for @pending_data_project_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Project: {projectId}'**
+  String pending_data_project_label(String projectId);
+
   /// No description provided for @checkins_empty_title.
   ///
   /// In en, this message translates to:

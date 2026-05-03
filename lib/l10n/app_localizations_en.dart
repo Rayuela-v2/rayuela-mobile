@@ -490,6 +490,88 @@ class AppLocalizationsEn extends AppLocalizations {
       'No connection — we\'ll send it when you\'re back online';
 
   @override
+  String get outbox_status_pending => 'Pending';
+
+  @override
+  String get outbox_status_retrying => 'Retrying…';
+
+  @override
+  String get outbox_status_inflight => 'Sending…';
+
+  @override
+  String get outbox_status_failed => 'Failed — tap to retry';
+
+  @override
+  String get outbox_action_retry => 'Retry now';
+
+  @override
+  String get outbox_action_discard => 'Discard';
+
+  @override
+  String get outbox_action_retry_all => 'Retry all';
+
+  @override
+  String get outbox_section_pending => 'Waiting to sync';
+
+  @override
+  String outbox_pending_at(String time) {
+    return 'Captured at $time';
+  }
+
+  @override
+  String outbox_attempt_count(int count) {
+    return 'Attempt #$count';
+  }
+
+  @override
+  String get outbox_discard_confirm_title => 'Discard pending check-in?';
+
+  @override
+  String get outbox_discard_confirm_body =>
+      'The photos and details will be removed from this device. This cannot be undone.';
+
+  @override
+  String get outbox_discard_confirm_cta => 'Discard';
+
+  @override
+  String get outbox_cancel => 'Cancel';
+
+  @override
+  String get dashboard_outbox_banner_one => '1 check-in waiting to sync';
+
+  @override
+  String dashboard_outbox_banner_many(int count) {
+    return '$count check-ins waiting to sync';
+  }
+
+  @override
+  String get dashboard_outbox_banner_action => 'View';
+
+  @override
+  String get dashboard_sync_status_offline => 'Offline';
+
+  @override
+  String get dashboard_sync_status_syncing => 'Syncing…';
+
+  @override
+  String get dashboard_sync_status_error => 'Sync issues';
+
+  @override
+  String get pending_data_title => 'Pending data';
+
+  @override
+  String get pending_data_empty_title => 'Nothing waiting';
+
+  @override
+  String get pending_data_empty_body =>
+      'Check-ins you create offline will appear here while we wait for a connection.';
+
+  @override
+  String pending_data_project_label(String projectId) {
+    return 'Project: $projectId';
+  }
+
+  @override
   String get checkins_empty_title => 'No check-ins yet';
 
   @override
