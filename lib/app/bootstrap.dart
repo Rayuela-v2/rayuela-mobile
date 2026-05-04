@@ -2,8 +2,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:dio/dio.dart';
+
 import '../core/locale/locale_controller.dart';
 import '../core/network/api_client.dart';
+import '../core/network/api_paths.dart';
 import '../core/storage/image_store.dart';
 import '../core/storage/secure_token_store.dart';
 import '../core/sync/app_database.dart';
@@ -41,16 +44,45 @@ Future<ProviderContainer> bootstrapContainer() async {
   final appDb = results[0] as AppDatabase;
   final imageStore = results[1] as ImageStore;
 
+  // We need a forward reference to the API client for the connectivity
+  // probe — declared `late` so the closure captures the eventual value.
+  late final ApiClient apiClient;
+
   // Connectivity wraps a `connectivity_plus` instance and a reachability
-  // probe. Sprint A ships with the default "always reachable" probe;
-  // Sprint D will swap it for one that hits `/health` on the backend.
-  final connectivity = ConnectivityService();
+  // probe. The probe hits `GET /health` (no auth, no logging) with a
+  // tight timeout: any HTTP response — success or error — means we
+  // reached the backend, only DioExceptions of type connectionError /
+  // timeout count as "unreachable".
+  final connectivity = ConnectivityService(
+    probe: () async {
+      try {
+        await apiClient.raw.get<dynamic>(
+          ApiPaths.health,
+          options: Options(
+            sendTimeout: const Duration(seconds: 4),
+            receiveTimeout: const Duration(seconds: 4),
+            // Some backends 405 on GET /health; we still consider that
+            // "reachable", which is why we don't validate the status.
+            validateStatus: (_) => true,
+          ),
+        );
+        return true;
+      } on DioException catch (e) {
+        return e.type != DioExceptionType.connectionTimeout &&
+            e.type != DioExceptionType.receiveTimeout &&
+            e.type != DioExceptionType.sendTimeout &&
+            e.type != DioExceptionType.connectionError;
+      } catch (_) {
+        return false;
+      }
+    },
+  );
 
   // We need a forward reference to the container so the API client can call
   // back into Riverpod when a refresh ultimately fails.
   late final ProviderContainer container;
 
-  final apiClient = ApiClient(
+  apiClient = ApiClient(
     tokens: tokens,
     onAuthFailure: () {
       // Fired by RefreshInterceptor after a 401 + refresh-token failure.

@@ -40,4 +40,8 @@ class ApiPaths {
   // Storage
   static String storageFile(String key) =>
       '/storage/file?key=${Uri.encodeQueryComponent(key)}';
+
+  // Health (no auth) — used by ConnectivityService to distinguish
+  // "interface up" from "backend reachable".
+  static const String health = '/health';
 }
