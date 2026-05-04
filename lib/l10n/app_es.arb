@@ -219,6 +219,32 @@
   },
   "checkin_offline_chip": "Sin conexión — lo enviaremos cuando vuelvas a tener red",
 
+  "cache_just_now": "ahora mismo",
+  "cache_seconds_ago": "hace {count} s",
+  "@cache_seconds_ago": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cache_minutes_ago": "hace {count} min",
+  "@cache_minutes_ago": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cache_hours_ago": "hace {count} h",
+  "@cache_hours_ago": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cache_days_ago": "hace {count} d",
+  "@cache_days_ago": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cache_updated_chip": "Actualizado {age}",
+  "@cache_updated_chip": {
+    "placeholders": { "age": { "type": "String" } }
+  },
+  "cache_offline_chip": "Mostrando copia sin conexión · última actualización {age}",
+  "@cache_offline_chip": {
+    "placeholders": { "age": { "type": "String" } }
+  },
+
   "outbox_status_pending": "Pendiente",
   "outbox_status_retrying": "Reintentando…",
   "outbox_status_inflight": "Enviando…",

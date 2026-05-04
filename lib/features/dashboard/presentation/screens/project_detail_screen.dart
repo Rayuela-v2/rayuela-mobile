@@ -49,13 +49,14 @@ class ProjectDetailScreen extends ConsumerWidget {
 
     final title = Text(
       detailAsync.maybeWhen(
-        data: (d) => d.name,
+        data: (cached) => cached.value.name,
         orElse: () => fallbackName ?? t.project_detail_fallback_title,
       ),
     );
 
     return detailAsync.when(
-      data: (detail) {
+      data: (cached) {
+        final detail = cached.value;
         // Tabs are only meaningful once the user is subscribed — that's
         // the point at which "My check-ins" carries content. For the
         // unsubscribed flow we keep the simple single-pane layout to
@@ -65,8 +66,9 @@ class ProjectDetailScreen extends ConsumerWidget {
             appBar: AppBar(title: title),
             body: RefreshIndicator(
               onRefresh: () async {
-                ref.invalidate(projectDetailProvider(projectId));
-                await ref.read(projectDetailProvider(projectId).future);
+                try {
+                  await ref.read(refreshProjectDetailProvider)(projectId);
+                } catch (_) {/* surfaces via AsyncError below */}
               },
               child: _OverviewTab(detail: detail),
             ),
@@ -246,11 +248,9 @@ class _ProgressTab extends ConsumerWidget {
     return RefreshIndicator(
       onRefresh: () async {
         ref.invalidate(leaderboardProvider(detail.id));
-        ref.invalidate(projectDetailProvider(detail.id));
-        await Future.wait([
-          ref.read(leaderboardProvider(detail.id).future),
-          ref.read(projectDetailProvider(detail.id).future),
-        ]);
+        try {
+          await ref.read(refreshProjectDetailProvider)(detail.id);
+        } catch (_) {/* surfaced as AsyncError elsewhere */}
       },
       child: ListView(
         padding: const EdgeInsets.fromLTRB(16, 20, 16, 32),
@@ -348,13 +348,13 @@ class _StatsRow extends ConsumerWidget {
     final leaderboardAsync = ref.watch(leaderboardProvider(projectId));
     final auth = ref.watch(authControllerProvider);
     final liveRank = leaderboardAsync.maybeWhen(
-      data: (board) {
+      data: (cached) {
         final userId = switch (auth) {
           AuthStateAuthenticated(:final user) => user.id,
           _ => null,
         };
         if (userId == null) return null;
-        return board.entryForUser(userId)?.rank;
+        return cached.value.entryForUser(userId)?.rank;
       },
       orElse: () => null,
     );

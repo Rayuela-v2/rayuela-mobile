@@ -31,7 +31,8 @@ class LeaderboardView extends ConsumerWidget {
     };
 
     return async.when(
-      data: (board) => _Body(board: board, currentUserId: currentUserId),
+      data: (cached) =>
+          _Body(board: cached.value, currentUserId: currentUserId),
       loading: () => const Padding(
         padding: EdgeInsets.symmetric(vertical: 24),
         child: Center(child: CircularProgressIndicator()),

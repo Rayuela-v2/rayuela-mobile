@@ -1,24 +1,41 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/cache/cached_value.dart';
 import '../../../../core/error/result.dart';
 import '../../../auth/presentation/providers/auth_controller.dart';
 import '../../domain/entities/project_detail.dart';
 import 'projects_providers.dart';
 
-/// Detail for a single project, keyed by projectId. Auto-disposes when the
-/// detail screen pops so we don't hold onto leaderboard data nobody is
-/// looking at. Pull-to-refresh invalidates the family entry.
+/// Stale-while-revalidate stream of one project's detail. Auto-disposes
+/// when the detail screen pops. Pull-to-refresh invalidates the family
+/// entry to re-run the cache + remote pair.
 final projectDetailProvider =
-    FutureProvider.autoDispose.family<ProjectDetail, String>(
-  (ref, projectId) async {
+    StreamProvider.autoDispose.family<Cached<ProjectDetail>, String>(
+  (ref, projectId) {
     final repo = ref.watch(projectsRepositoryProvider);
-    final res = await repo.getProjectDetail(projectId);
-    return switch (res) {
-      Success<ProjectDetail>(:final value) => value,
-      Failure<ProjectDetail>(:final error) => throw error,
-    };
+    return repo.watchProjectDetail(projectId);
   },
 );
+
+/// Convenience view: drops the cache metadata for callers that only
+/// care about the entity itself.
+final projectDetailValueProvider = Provider.autoDispose
+    .family<AsyncValue<ProjectDetail>, String>((ref, projectId) {
+  return ref.watch(projectDetailProvider(projectId)).whenData((c) => c.value);
+});
+
+/// One-shot refresh used by pull-to-refresh handlers. Bypasses the SWR
+/// stream to force a remote round-trip and re-emits the new cache, so
+/// the spinner stays up until the network call resolves.
+final refreshProjectDetailProvider =
+    Provider<Future<void> Function(String)>((ref) {
+  return (projectId) async {
+    final repo = ref.read(projectsRepositoryProvider);
+    final res = await repo.getProjectDetail(projectId);
+    if (res is Failure<ProjectDetail>) throw res.error;
+    ref.invalidate(projectDetailProvider(projectId));
+  };
+});
 
 /// View state for the subscribe button. Tracks in-flight calls so the UI
 /// can disable the button + show a spinner without bothering the detail

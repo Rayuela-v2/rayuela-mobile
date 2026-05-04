@@ -495,6 +495,28 @@ class AppLocalizationsPt extends AppLocalizations {
       'Sem conexão — vamos enviar quando você estiver online';
 
   @override
+  String get cache_just_now => 'agora mesmo';
+
+  @override
+  String cache_seconds_ago(int count) => 'há $count s';
+
+  @override
+  String cache_minutes_ago(int count) => 'há $count min';
+
+  @override
+  String cache_hours_ago(int count) => 'há $count h';
+
+  @override
+  String cache_days_ago(int count) => 'há $count d';
+
+  @override
+  String cache_updated_chip(String age) => 'Atualizado $age';
+
+  @override
+  String cache_offline_chip(String age) =>
+      'Mostrando cópia offline · última atualização $age';
+
+  @override
   String get outbox_status_pending => 'Pendente';
 
   @override

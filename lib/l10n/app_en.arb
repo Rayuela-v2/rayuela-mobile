@@ -219,6 +219,32 @@
   },
   "checkin_offline_chip": "No connection — we'll send it when you're back online",
 
+  "cache_just_now": "just now",
+  "cache_seconds_ago": "{count} s ago",
+  "@cache_seconds_ago": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cache_minutes_ago": "{count} m ago",
+  "@cache_minutes_ago": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cache_hours_ago": "{count} h ago",
+  "@cache_hours_ago": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cache_days_ago": "{count} d ago",
+  "@cache_days_ago": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cache_updated_chip": "Updated {age}",
+  "@cache_updated_chip": {
+    "placeholders": { "age": { "type": "String" } }
+  },
+  "cache_offline_chip": "Showing offline copy · last updated {age}",
+  "@cache_offline_chip": {
+    "placeholders": { "age": { "type": "String" } }
+  },
+
   "outbox_status_pending": "Pending",
   "outbox_status_retrying": "Retrying…",
   "outbox_status_inflight": "Sending…",

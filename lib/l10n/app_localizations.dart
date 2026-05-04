@@ -928,6 +928,27 @@ abstract class AppLocalizations {
   /// **'No connection — we\'ll send it when you\'re back online'**
   String get checkin_offline_chip;
 
+  /// **'just now'**
+  String get cache_just_now;
+
+  /// **'{count} s ago'**
+  String cache_seconds_ago(int count);
+
+  /// **'{count} m ago'**
+  String cache_minutes_ago(int count);
+
+  /// **'{count} h ago'**
+  String cache_hours_ago(int count);
+
+  /// **'{count} d ago'**
+  String cache_days_ago(int count);
+
+  /// **'Updated {age}'**
+  String cache_updated_chip(String age);
+
+  /// **'Showing offline copy · last updated {age}'**
+  String cache_offline_chip(String age);
+
   /// No description provided for @outbox_status_pending.
   ///
   /// In en, this message translates to:

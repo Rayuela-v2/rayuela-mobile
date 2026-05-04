@@ -7,6 +7,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/empty_state.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../../../shared/widgets/language_picker.dart';
+import '../../../../shared/widgets/last_updated_chip.dart';
 import '../../../auth/presentation/providers/auth_controller.dart';
 import '../../../checkin/presentation/widgets/outbox_badge.dart';
 import '../providers/projects_providers.dart';
@@ -46,21 +47,36 @@ class DashboardScreen extends ConsumerWidget {
         ],
       ),
       body: RefreshIndicator(
+        // SWR semantics: invalidating re-runs the cache → remote pair.
+        // We also kick a one-shot refresh so the spinner stays up until
+        // the network call returns (otherwise the cached value resolves
+        // immediately and the indicator collapses too early).
         onRefresh: () async {
           ref.invalidate(subscribedProjectsProvider);
-          await ref.read(subscribedProjectsProvider.future);
+          try {
+            await ref.read(refreshSubscribedProjectsProvider)();
+          } catch (_) {
+            // Errors land on the AsyncError branch below.
+          }
         },
         child: projects.when(
-          data: (list) {
+          data: (cached) {
+            final list = cached.value;
+            final chip = LastUpdatedChip(
+              fetchedAt: cached.fetchedAt,
+              isStale: cached.isStale,
+            );
             if (list.isEmpty) {
               return LayoutBuilder(
                 builder: (context, constraints) => SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    constraints:
+                        BoxConstraints(minHeight: constraints.maxHeight),
                     child: Column(
                       children: [
                         const OutboxBanner(),
+                        chip,
                         Expanded(
                           child: EmptyState(
                             icon: Icons.explore_outlined,
@@ -78,6 +94,7 @@ class DashboardScreen extends ConsumerWidget {
               physics: const AlwaysScrollableScrollPhysics(),
               slivers: [
                 const SliverToBoxAdapter(child: OutboxBanner()),
+                SliverToBoxAdapter(child: chip),
                 SliverPadding(
                   padding: const EdgeInsets.all(16),
                   sliver: SliverList.separated(

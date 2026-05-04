@@ -490,6 +490,28 @@ class AppLocalizationsEn extends AppLocalizations {
       'No connection — we\'ll send it when you\'re back online';
 
   @override
+  String get cache_just_now => 'just now';
+
+  @override
+  String cache_seconds_ago(int count) => '$count s ago';
+
+  @override
+  String cache_minutes_ago(int count) => '$count m ago';
+
+  @override
+  String cache_hours_ago(int count) => '$count h ago';
+
+  @override
+  String cache_days_ago(int count) => '$count d ago';
+
+  @override
+  String cache_updated_chip(String age) => 'Updated $age';
+
+  @override
+  String cache_offline_chip(String age) =>
+      'Showing offline copy · last updated $age';
+
+  @override
   String get outbox_status_pending => 'Pending';
 
   @override

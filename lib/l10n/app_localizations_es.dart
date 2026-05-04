@@ -495,6 +495,28 @@ class AppLocalizationsEs extends AppLocalizations {
       'Sin conexión — lo enviaremos cuando vuelvas a tener red';
 
   @override
+  String get cache_just_now => 'ahora mismo';
+
+  @override
+  String cache_seconds_ago(int count) => 'hace $count s';
+
+  @override
+  String cache_minutes_ago(int count) => 'hace $count min';
+
+  @override
+  String cache_hours_ago(int count) => 'hace $count h';
+
+  @override
+  String cache_days_ago(int count) => 'hace $count d';
+
+  @override
+  String cache_updated_chip(String age) => 'Actualizado $age';
+
+  @override
+  String cache_offline_chip(String age) =>
+      'Mostrando copia sin conexión · última actualización $age';
+
+  @override
   String get outbox_status_pending => 'Pendiente';
 
   @override

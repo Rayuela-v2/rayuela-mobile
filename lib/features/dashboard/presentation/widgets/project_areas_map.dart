@@ -114,7 +114,7 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
     final checkinsAsync = ref.watch(userCheckinsProvider(widget.projectId));
 
     final tasks = tasksAsync.maybeWhen(
-      data: (list) => list,
+      data: (cached) => cached.value,
       orElse: () => const <TaskItem>[],
     );
     final checkins = checkinsAsync.maybeWhen(
