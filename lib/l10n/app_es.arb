@@ -245,6 +245,33 @@
     "placeholders": { "age": { "type": "String" } }
   },
 
+  "map_download_offline_tooltip": "Descargar mapas para uso sin conexión",
+  "map_download_offline_title": "¿Descargar mapas?",
+  "map_download_offline_body": "Vamos a guardar las baldosas del proyecto en este dispositivo para que el mapa funcione sin conexión. Puede descargar hasta 30 MB.",
+  "map_download_offline_cta": "Descargar",
+  "map_download_offline_starting": "Preparando la descarga…",
+  "map_download_offline_progress": "Descargando mapas · {percent}%",
+  "@map_download_offline_progress": {
+    "placeholders": { "percent": { "type": "int" } }
+  },
+  "map_download_offline_done": "Mapas listos ({count} baldosas)",
+  "@map_download_offline_done": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "map_download_offline_too_large": "Área del proyecto demasiado grande ({estimated} baldosas, máx {cap})",
+  "@map_download_offline_too_large": {
+    "placeholders": {
+      "estimated": { "type": "int" },
+      "cap": { "type": "int" }
+    }
+  },
+  "map_download_offline_cancelled": "Descarga de mapas cancelada",
+  "map_clear_cache_tooltip": "Borrar mapas sin conexión",
+  "map_clear_cache_title": "¿Borrar mapas sin conexión?",
+  "map_clear_cache_body": "Se eliminarán todas las baldosas en caché. Los mapas seguirán funcionando online y se redescargarán cuando haga falta.",
+  "map_clear_cache_cta": "Borrar",
+  "map_clear_cache_done": "Mapas sin conexión borrados",
+
   "outbox_status_pending": "Pendiente",
   "outbox_status_retrying": "Reintentando…",
   "outbox_status_inflight": "Enviando…",

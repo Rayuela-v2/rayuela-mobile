@@ -245,6 +245,33 @@
     "placeholders": { "age": { "type": "String" } }
   },
 
+  "map_download_offline_tooltip": "Download maps for offline use",
+  "map_download_offline_title": "Download maps?",
+  "map_download_offline_body": "We'll save the project's tiles to this device so the map keeps working without a connection. May download up to 30 MB.",
+  "map_download_offline_cta": "Download",
+  "map_download_offline_starting": "Preparing download…",
+  "map_download_offline_progress": "Downloading maps · {percent}%",
+  "@map_download_offline_progress": {
+    "placeholders": { "percent": { "type": "int" } }
+  },
+  "map_download_offline_done": "Maps ready ({count} tiles)",
+  "@map_download_offline_done": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "map_download_offline_too_large": "Project area too large ({estimated} tiles, max {cap})",
+  "@map_download_offline_too_large": {
+    "placeholders": {
+      "estimated": { "type": "int" },
+      "cap": { "type": "int" }
+    }
+  },
+  "map_download_offline_cancelled": "Map download cancelled",
+  "map_clear_cache_tooltip": "Clear offline maps",
+  "map_clear_cache_title": "Clear offline maps?",
+  "map_clear_cache_body": "This removes every cached map tile. The maps will keep working when online and re-download as needed.",
+  "map_clear_cache_cta": "Clear",
+  "map_clear_cache_done": "Offline maps cleared",
+
   "outbox_status_pending": "Pending",
   "outbox_status_retrying": "Retrying…",
   "outbox_status_inflight": "Sending…",

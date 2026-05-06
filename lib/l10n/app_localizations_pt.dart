@@ -498,23 +498,84 @@ class AppLocalizationsPt extends AppLocalizations {
   String get cache_just_now => 'agora mesmo';
 
   @override
-  String cache_seconds_ago(int count) => 'há $count s';
+  String cache_seconds_ago(int count) {
+    return 'há $count s';
+  }
 
   @override
-  String cache_minutes_ago(int count) => 'há $count min';
+  String cache_minutes_ago(int count) {
+    return 'há $count min';
+  }
 
   @override
-  String cache_hours_ago(int count) => 'há $count h';
+  String cache_hours_ago(int count) {
+    return 'há $count h';
+  }
 
   @override
-  String cache_days_ago(int count) => 'há $count d';
+  String cache_days_ago(int count) {
+    return 'há $count d';
+  }
 
   @override
-  String cache_updated_chip(String age) => 'Atualizado $age';
+  String cache_updated_chip(String age) {
+    return 'Atualizado $age';
+  }
 
   @override
-  String cache_offline_chip(String age) =>
-      'Mostrando cópia offline · última atualização $age';
+  String cache_offline_chip(String age) {
+    return 'Mostrando cópia offline · última atualização $age';
+  }
+
+  @override
+  String get map_download_offline_tooltip => 'Baixar mapas para uso offline';
+
+  @override
+  String get map_download_offline_title => 'Baixar mapas?';
+
+  @override
+  String get map_download_offline_body =>
+      'Vamos salvar os blocos do projeto neste dispositivo para que o mapa continue funcionando sem conexão. Pode baixar até 30 MB.';
+
+  @override
+  String get map_download_offline_cta => 'Baixar';
+
+  @override
+  String get map_download_offline_starting => 'Preparando o download…';
+
+  @override
+  String map_download_offline_progress(int percent) {
+    return 'Baixando mapas · $percent%';
+  }
+
+  @override
+  String map_download_offline_done(int count) {
+    return 'Mapas prontos ($count blocos)';
+  }
+
+  @override
+  String map_download_offline_too_large(int estimated, int cap) {
+    return 'Área do projeto muito grande ($estimated blocos, máx $cap)';
+  }
+
+  @override
+  String get map_download_offline_cancelled => 'Download de mapas cancelado';
+
+  @override
+  String get map_clear_cache_tooltip => 'Limpar mapas offline';
+
+  @override
+  String get map_clear_cache_title => 'Limpar mapas offline?';
+
+  @override
+  String get map_clear_cache_body =>
+      'Todos os blocos em cache serão removidos. Os mapas continuam funcionando online e serão baixados de novo quando precisar.';
+
+  @override
+  String get map_clear_cache_cta => 'Limpar';
+
+  @override
+  String get map_clear_cache_done => 'Mapas offline limpos';
 
   @override
   String get outbox_status_pending => 'Pendente';

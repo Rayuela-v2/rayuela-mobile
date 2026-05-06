@@ -493,23 +493,84 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cache_just_now => 'just now';
 
   @override
-  String cache_seconds_ago(int count) => '$count s ago';
+  String cache_seconds_ago(int count) {
+    return '$count s ago';
+  }
 
   @override
-  String cache_minutes_ago(int count) => '$count m ago';
+  String cache_minutes_ago(int count) {
+    return '$count m ago';
+  }
 
   @override
-  String cache_hours_ago(int count) => '$count h ago';
+  String cache_hours_ago(int count) {
+    return '$count h ago';
+  }
 
   @override
-  String cache_days_ago(int count) => '$count d ago';
+  String cache_days_ago(int count) {
+    return '$count d ago';
+  }
 
   @override
-  String cache_updated_chip(String age) => 'Updated $age';
+  String cache_updated_chip(String age) {
+    return 'Updated $age';
+  }
 
   @override
-  String cache_offline_chip(String age) =>
-      'Showing offline copy · last updated $age';
+  String cache_offline_chip(String age) {
+    return 'Showing offline copy · last updated $age';
+  }
+
+  @override
+  String get map_download_offline_tooltip => 'Download maps for offline use';
+
+  @override
+  String get map_download_offline_title => 'Download maps?';
+
+  @override
+  String get map_download_offline_body =>
+      'We\'ll save the project\'s tiles to this device so the map keeps working without a connection. May download up to 30 MB.';
+
+  @override
+  String get map_download_offline_cta => 'Download';
+
+  @override
+  String get map_download_offline_starting => 'Preparing download…';
+
+  @override
+  String map_download_offline_progress(int percent) {
+    return 'Downloading maps · $percent%';
+  }
+
+  @override
+  String map_download_offline_done(int count) {
+    return 'Maps ready ($count tiles)';
+  }
+
+  @override
+  String map_download_offline_too_large(int estimated, int cap) {
+    return 'Project area too large ($estimated tiles, max $cap)';
+  }
+
+  @override
+  String get map_download_offline_cancelled => 'Map download cancelled';
+
+  @override
+  String get map_clear_cache_tooltip => 'Clear offline maps';
+
+  @override
+  String get map_clear_cache_title => 'Clear offline maps?';
+
+  @override
+  String get map_clear_cache_body =>
+      'This removes every cached map tile. The maps will keep working when online and re-download as needed.';
+
+  @override
+  String get map_clear_cache_cta => 'Clear';
+
+  @override
+  String get map_clear_cache_done => 'Offline maps cleared';
 
   @override
   String get outbox_status_pending => 'Pending';

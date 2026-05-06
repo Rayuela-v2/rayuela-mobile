@@ -245,6 +245,33 @@
     "placeholders": { "age": { "type": "String" } }
   },
 
+  "map_download_offline_tooltip": "Baixar mapas para uso offline",
+  "map_download_offline_title": "Baixar mapas?",
+  "map_download_offline_body": "Vamos salvar os blocos do projeto neste dispositivo para que o mapa continue funcionando sem conexão. Pode baixar até 30 MB.",
+  "map_download_offline_cta": "Baixar",
+  "map_download_offline_starting": "Preparando o download…",
+  "map_download_offline_progress": "Baixando mapas · {percent}%",
+  "@map_download_offline_progress": {
+    "placeholders": { "percent": { "type": "int" } }
+  },
+  "map_download_offline_done": "Mapas prontos ({count} blocos)",
+  "@map_download_offline_done": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "map_download_offline_too_large": "Área do projeto muito grande ({estimated} blocos, máx {cap})",
+  "@map_download_offline_too_large": {
+    "placeholders": {
+      "estimated": { "type": "int" },
+      "cap": { "type": "int" }
+    }
+  },
+  "map_download_offline_cancelled": "Download de mapas cancelado",
+  "map_clear_cache_tooltip": "Limpar mapas offline",
+  "map_clear_cache_title": "Limpar mapas offline?",
+  "map_clear_cache_body": "Todos os blocos em cache serão removidos. Os mapas continuam funcionando online e serão baixados de novo quando precisar.",
+  "map_clear_cache_cta": "Limpar",
+  "map_clear_cache_done": "Mapas offline limpos",
+
   "outbox_status_pending": "Pendente",
   "outbox_status_retrying": "Tentando de novo…",
   "outbox_status_inflight": "Enviando…",

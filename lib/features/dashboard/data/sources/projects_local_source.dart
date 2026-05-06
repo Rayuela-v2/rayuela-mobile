@@ -115,12 +115,12 @@ Map<String, Object?> _encodeSummary(ProjectSummary p) => {
 List<ProjectSummary> _decodeSummaryList(Object? raw) {
   if (raw is! List) return const [];
   return raw
-      .whereType<Map>()
+      .whereType<Map<Object?, Object?>>()
       .map(_decodeSummary)
       .toList(growable: false);
 }
 
-ProjectSummary _decodeSummary(Map<dynamic, dynamic> m) {
+ProjectSummary _decodeSummary(Map<Object?, Object?> m) {
   return ProjectSummary(
     id: (m['id'] ?? '').toString(),
     name: (m['name'] ?? '').toString(),
@@ -186,7 +186,7 @@ Map<String, Object?> _encodeBadge(ProjectBadge b) => {
 
 List<ProjectBadge> _decodeBadges(Object? raw) {
   if (raw is! List) return const [];
-  return raw.whereType<Map>().map((m) {
+  return raw.whereType<Map<Object?, Object?>>().map((m) {
     return ProjectBadge(
       name: (m['name'] ?? '').toString(),
       description: m['description']?.toString(),
@@ -209,7 +209,7 @@ Map<String, Object?> _encodeArea(ProjectArea a) => {
 
 List<ProjectArea> _decodeAreas(Object? raw) {
   if (raw is! List) return const [];
-  return raw.whereType<Map>().map((m) {
+  return raw.whereType<Map<Object?, Object?>>().map((m) {
     final ringsRaw = m['rings'];
     final rings = <List<LatLng>>[];
     if (ringsRaw is List) {

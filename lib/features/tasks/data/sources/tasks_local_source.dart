@@ -72,7 +72,7 @@ Map<String, Object?> _encodeOne(TaskItem t) => {
 
 List<TaskItem> _decode(Object? raw) {
   if (raw is! List) return const [];
-  return raw.whereType<Map>().map((m) {
+  return raw.whereType<Map<Object?, Object?>>().map((m) {
     return TaskItem(
       id: (m['id'] ?? '').toString(),
       projectId: (m['projectId'] ?? '').toString(),

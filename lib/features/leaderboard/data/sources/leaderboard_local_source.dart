@@ -65,7 +65,7 @@ Leaderboard _decode(Object? raw) {
   final entriesRaw = raw['entries'];
   final entries = <LeaderboardEntry>[];
   if (entriesRaw is List) {
-    for (final m in entriesRaw.whereType<Map>()) {
+    for (final m in entriesRaw.whereType<Map<Object?, Object?>>()) {
       final badgesRaw = m['badges'];
       final badges = <String>[];
       if (badgesRaw is List) {

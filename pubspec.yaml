@@ -64,6 +64,12 @@ dependencies:
   mutex: ^3.1.0                # Single-flight lock for the outbox drainer
   uuid: ^4.5.1                 # Outbox row id == Idempotency-Key value
 
+  # Phase 2 — Sprint F: cached OSM tiles for offline maps.
+  # `flutter_cache_manager` keeps a bounded LRU of HTTP responses on disk;
+  # we use it both as the tile fetcher inside flutter_map and as the
+  # store the pre-cache loop populates ahead of time.
+  flutter_cache_manager: ^3.4.1
+
   # Planned in later phases (added here so pubspec is stable):
   # firebase_core: ^3.6.0
   # firebase_messaging: ^15.1.3

@@ -36,6 +36,11 @@ class PendingDataScreen extends ConsumerWidget {
             tooltip: t.outbox_action_retry_all,
             onPressed: () => _retryAll(ref),
           ),
+          IconButton(
+            icon: const Icon(Icons.layers_clear_outlined),
+            tooltip: t.map_clear_cache_tooltip,
+            onPressed: () => _clearMapCache(context, ref),
+          ),
         ],
       ),
       body: pendingAsync.when(
@@ -110,6 +115,32 @@ class PendingDataScreen extends ConsumerWidget {
     if (auth is! AuthStateAuthenticated) return;
     // ignore: unawaited_futures
     ref.read(outboxServiceProvider).drain(userId: auth.user.id);
+  }
+
+  Future<void> _clearMapCache(BuildContext context, WidgetRef ref) async {
+    final t = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(t.map_clear_cache_title),
+        content: Text(t.map_clear_cache_body),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(t.outbox_cancel),
+          ),
+          FilledButton.tonal(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(t.map_clear_cache_cta),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+    await ref.read(tileCacheServiceProvider).clear();
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(t.map_clear_cache_done)));
   }
 
   void _retry(WidgetRef ref, String id) {
