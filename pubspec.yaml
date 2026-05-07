@@ -70,6 +70,17 @@ dependencies:
   # store the pre-cache loop populates ahead of time.
   flutter_cache_manager: ^3.4.1
 
+  # Phase 2 — Sprint G: background sync.
+  # Wraps Android WorkManager and iOS BGTaskScheduler so the outbox
+  # drainer can flush queued check-ins without the user reopening the
+  # app. See docs/OFFLINE_SYNC_PLAN.md §10 Sprint G for the iOS native
+  # wiring (Info.plist + AppDelegate).
+  #
+  # 0.6.x is the first release that drops the deprecated Android v1
+  # embedding (PluginRegistrantCallback / ShimPluginRegistry); 0.5.x
+  # fails to build on Flutter 3.29+ where those symbols are gone.
+  workmanager: ^0.6.0
+
   # Planned in later phases (added here so pubspec is stable):
   # firebase_core: ^3.6.0
   # firebase_messaging: ^15.1.3

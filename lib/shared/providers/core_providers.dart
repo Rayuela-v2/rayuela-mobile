@@ -7,6 +7,7 @@ import '../../core/storage/image_store.dart';
 import '../../core/storage/secure_token_store.dart';
 import '../../core/sync/app_database.dart';
 import '../../core/sync/connectivity_service.dart';
+import '../../core/sync/outbox/background_sync_scheduler.dart';
 import '../../core/sync/outbox/outbox_dao.dart';
 import '../../core/sync/outbox/outbox_lifecycle.dart';
 import '../../core/sync/outbox/outbox_service.dart';
@@ -72,6 +73,14 @@ final outboxServiceProvider = Provider<OutboxService>((ref) {
 /// the auth controller calls `bind(userId)` after login and `unbind()`
 /// on sign-out.
 final outboxLifecycleProvider = Provider<OutboxLifecycle>((ref) {
+  throw UnimplementedError('Override in bootstrap');
+});
+
+/// Drives Android WorkManager / iOS BGTaskScheduler so the outbox
+/// drains in the background even when the app isn't open. Bootstrap
+/// initialises it once; the auth-state listener schedules / cancels.
+final backgroundSyncSchedulerProvider =
+    Provider<BackgroundSyncScheduler>((ref) {
   throw UnimplementedError('Override in bootstrap');
 });
 

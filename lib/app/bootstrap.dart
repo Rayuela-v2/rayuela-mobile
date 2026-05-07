@@ -11,6 +11,8 @@ import '../core/storage/image_store.dart';
 import '../core/storage/secure_token_store.dart';
 import '../core/sync/app_database.dart';
 import '../core/sync/connectivity_service.dart';
+import '../core/sync/outbox/background_sync.dart';
+import '../core/sync/outbox/background_sync_scheduler.dart';
 import '../core/sync/outbox/outbox_dao.dart';
 import '../core/sync/outbox/outbox_lifecycle.dart';
 import '../core/sync/outbox/outbox_service.dart';
@@ -108,6 +110,17 @@ Future<ProviderContainer> bootstrapContainer() async {
     connectivity: connectivity,
   );
 
+  // Background sync (Sprint G): the scheduler hooks Android's
+  // WorkManager and iOS's BGTaskScheduler so the outbox keeps
+  // draining when the app isn't in the foreground.
+  final backgroundSyncScheduler = BackgroundSyncScheduler(
+    registrar: const WorkmanagerTaskRegistrar(),
+  );
+  // Hook the dispatcher entry-point. No-op if it's already been
+  // initialised on this isolate (handles hot-restart in dev).
+  // ignore: unawaited_futures
+  backgroundSyncScheduler.initialize(backgroundCallbackDispatcher);
+
   // Best-effort cleanup of orphaned image folders left over from a
   // crash mid-enqueue. Runs in the background — don't block startup.
   // Now that the DAO is up we can pass `knownIds` so we never delete
@@ -128,6 +141,8 @@ Future<ProviderContainer> bootstrapContainer() async {
       outboxDaoProvider.overrideWithValue(outboxDao),
       outboxServiceProvider.overrideWithValue(outboxService),
       outboxLifecycleProvider.overrideWithValue(outboxLifecycle),
+      backgroundSyncSchedulerProvider
+          .overrideWithValue(backgroundSyncScheduler),
     ],
   );
 
@@ -145,12 +160,31 @@ Future<ProviderContainer> bootstrapContainer() async {
     (previous, next) {
       if (next is AuthStateAuthenticated) {
         outboxLifecycle.bind(next.user.id);
+        // Periodic background drain only matters for signed-in users.
+        // Re-registering with `keep` policy means this is a no-op when
+        // the task is already scheduled.
+        // ignore: unawaited_futures
+        backgroundSyncScheduler.schedulePeriodic();
       } else {
         outboxLifecycle.unbind();
+        // Drop scheduled tasks so a signed-out user doesn't keep
+        // waking the device.
+        // ignore: unawaited_futures
+        backgroundSyncScheduler.cancelAll();
       }
     },
     fireImmediately: true,
   );
+
+  // Trigger a one-off background sync whenever connectivity flips to
+  // online — covers the "app gets killed offline, network comes back"
+  // case that the foreground-only OutboxLifecycle drain misses.
+  connectivity.changes.listen((reachability) {
+    if (reachability == NetworkReachability.online) {
+      // ignore: unawaited_futures
+      backgroundSyncScheduler.kickOneOff();
+    }
+  });
 
   return container;
 }
