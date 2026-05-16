@@ -248,13 +248,7 @@ class OutboxService {
   Future<bool> retry(String id) async {
     final row = await _dao.findById(id);
     if (row == null) return false;
-    await _dao.markFailed(
-      id,
-      attemptCount: row.attemptCount,
-      nextAttemptAt: _clock(),
-      errorCode: 'manual_retry',
-      errorMessage: 'User requested immediate retry',
-    );
+    await _dao.clearErrorAndMakeEligible(id, now: _clock());
     _changesController.add(id);
     return true;
   }

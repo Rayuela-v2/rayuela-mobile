@@ -352,5 +352,49 @@ void main() {
       expect(await dao.pendingCount('u1'), 1);
     });
   });
+
+  group('retry', () {
+    test(
+        'clears prior error fields and resets eligibility (does not overwrite with debug string)',
+        () async {
+      final sender = _ScriptedSender([]);
+      final svc = OutboxService(
+        dao: dao,
+        imageStore: imageStore,
+        connectivity: connectivity,
+        sender: sender,
+        clock: () => DateTime.utc(2026, 5, 16, 12),
+      );
+      addTearDown(svc.dispose);
+
+      final src = await writeFakeJpeg('r.jpg');
+      final entry = await svc.enqueue(
+        userId: 'u1',
+        projectId: 'p1',
+        taskType: 'observation',
+        latitude: '0',
+        longitude: '0',
+        datetime: DateTime.utc(2026, 5, 16, 12),
+        sourceImagePaths: [src],
+      );
+      await dao.markFailed(
+        entry.id,
+        attemptCount: 2,
+        nextAttemptAt: DateTime.utc(2027),
+        errorCode: 'http_503',
+        errorMessage: 'Server unavailable',
+      );
+
+      final ok = await svc.retry(entry.id);
+      expect(ok, isTrue);
+
+      final row = await dao.findById(entry.id);
+      expect(row!.lastErrorMessage, isNull,
+          reason: 'retry must not surface an internal debug string to the UI');
+      expect(row.lastErrorCode, isNull);
+      expect(row.nextAttemptAt!.isBefore(DateTime.utc(2026, 5, 16, 13)), isTrue,
+          reason: 'row must be eligible immediately');
+    });
+  });
 }
 

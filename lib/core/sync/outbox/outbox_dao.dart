@@ -197,6 +197,24 @@ class OutboxDao {
     );
   }
 
+  Future<void> clearErrorAndMakeEligible(
+    String id, {
+    required DateTime now,
+  }) async {
+    await _db.update(
+      'outbox_checkins',
+      {
+        'status': OutboxStatus.pending.wireValue,
+        'next_attempt_at': now.toUtc().toIso8601String(),
+        'last_error_code': null,
+        'last_error_message': null,
+        'updated_at': _nowIso(),
+      },
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
   /// Drop a row (and its images via FK cascade). Called after a
   /// successful POST or after the user discards a `dead` entry.
   Future<void> delete(String id) async {
