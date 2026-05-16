@@ -69,7 +69,7 @@ Decisiones tomadas, con su porqué.
 | Conectividad | `connectivity_plus` para señal **+** ping de salud (`HEAD /health` o `GET /me`) antes de drenar | `connectivity_plus` solo dice "hay interfaz", no si hay tráfico real (captive portals, datos sin cobertura, VPN cerrada). |
 | Reintentos | Exponential backoff con jitter: 5 s, 15 s, 60 s, 5 min, 30 min, 2 h, 6 h (máx); `attemptCount` por ítem; reset al pasar a foreground | Evita tormenta de reintentos; respeta servidores; alineado con buenas prácticas Google/Apple. |
 | Trabajo en background | App lifecycle (`AppLifecycleState.resumed`) + `connectivity_plus` stream para drenar de inmediato; `workmanager` (Android) y `BGTaskScheduler` (iOS) **opcional** para drenar sin abrir la app | iOS es muy restrictivo con background; no podemos prometer "sincroniza en 2 minutos" sin el usuario, así que el primer ciclo se dispara al volver al foreground. |
-| Concurrencia | Una sola tarea de drenado a la vez (lock por `Mutex` o `Completer`); fotos se cargan en stream, no todas a memoria | Evita doble envío del mismo ítem cuando se solapan los disparadores. |
+| Concurrencia | Una sola tarea de drenado a la vez (flag `_draining`); fotos se cargan en stream, no todas a memoria | Evita doble envío del mismo ítem cuando se solapan los disparadores. |
 | Aislamiento por usuario | Todas las tablas llevan `userId`; al hacer logout se borra la cola si el usuario lo confirma | Nunca enviamos un check‑in compuesto por **otro** usuario tras un cambio de cuenta. |
 | Estado expuesto a UI | `OutboxNotifier` (Riverpod `AsyncNotifier`) emite `List<OutboxEntry>` y un agregado `SyncStatus { idle, syncing, error, offline }` | Las pantallas consumen un `provider` claro y reactivo. |
 | Telemetría | Contadores `outbox_enqueued`, `outbox_sent_ok`, `outbox_sent_fail`, `outbox_dropped` con razón | Imprescindible para detectar regresiones y outbox "huérfanas". |
@@ -552,7 +552,7 @@ mejoras complementarias.
 | Backend rechaza por validación nueva (cliente viejo) | Cola muerta | Endpoint que devuelve `details` + UI con "Editar y reintentar". |
 | `image_picker` en iOS escribe en `/private/var/...` y el SO lo purga | Pérdida de fotos | Copia inmediata a `outbox/<id>/` antes de salir de la pantalla. |
 | Migraciones DB con cola llena | Pérdida de datos | Tests que abren v(N‑1) con seeds y suben a vN; `_migrations` no destructivo. |
-| Reentrancia del drainer | Doble envío | `Mutex` global + filas en `inflight` con TTL (re‑adoptar si `inflight` lleva > 10 min). |
+| Reentrancia del drainer | Doble envío | Flag `_draining` + filas en `inflight` con TTL (re‑adoptar si `inflight` lleva > 10 min). |
 | Permisos de notificaciones denegados | El usuario no se entera del fallo | Banner persistente en Dashboard + badge en AppBar; las push son extra, no único canal. |
 | Drift de zona horaria | `datetime` UTC equivocado | Capturamos siempre con `DateTime.now().toUtc()`; UI formatea con TZ del dispositivo. |
 
@@ -666,41 +666,21 @@ class OutboxService {
   OutboxService(this._dao, this._remote, this._imageStore, this._connectivity,
       this._tokens);
 
-  final _drainLock = Mutex();
+  bool _draining = false;
 
-  Future<void> drain() => _drainLock.protect(_drainLoop);
-
-  Future<void> _drainLoop() async {
-    if (!await _connectivity.isOnlineForReal()) return;
-    final userId = await _tokens.readUserId();
-    if (userId == null) return;
-
-    var processed = 0;
-    while (processed < 50) {
-      final entry = await _dao.nextEligible(userId, now: DateTime.now());
-      if (entry == null) break;
-
-      await _dao.markInflight(entry.id);
-      final outcome = await _attempt(entry);
-      switch (outcome) {
-        case _Done():
-          await _imageStore.deleteForOutbox(entry.id);
-          await _dao.delete(entry.id);
-          processed++;
-        case _Retryable(:final error):
-          await _dao.bumpAttempt(entry.id, error: error,
-              nextAt: DateTime.now().add(_backoff(entry.attemptCount + 1)));
-          break; // sale del while: respetamos la cola
-        case _Permanent(:final error):
-          await _dao.markDead(entry.id, error: error);
-          processed++;
-        case _AlreadyExists():
-          await _imageStore.deleteForOutbox(entry.id);
-          await _dao.delete(entry.id);
-          processed++;
-      }
+  Future<void> drain({required String userId}) async {
+    if (_draining) return;
+    _draining = true;
+    try {
+      await _drainLoop(userId);
+    } finally {
+      _draining = false;
     }
-    _statusController.add(processed > 0 ? SyncStatus.idle : SyncStatus.idle);
+  }
+
+  Future<void> _drainLoop(String userId) async {
+    if (!await _connectivity.isOnlineForReal()) return;
+    // ...
   }
 }
 ```

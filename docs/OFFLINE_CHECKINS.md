@@ -114,7 +114,7 @@ conectividad, ciclo de vida del app, y tareas en background.
 | **`OutboxDao`** | CRUD sobre `outbox_checkins` y `outbox_checkin_images`. Expone `nextEligible`, `markFailed/Dead`, `reclaimStaleInflight`. |
 | **`ImageStore`** | Comprime y copia las fotos al sandbox de la app antes de encolar. `sweepOrphans` limpia carpetas sin fila. |
 | **`CheckinsRepositoryImpl`** | Decide en cada `submitCheckin` si va directo o a cola. Devuelve `Accepted | Queued | Rejected`. |
-| **`OutboxService`** | Drena la cola bajo un `Mutex`, aplica backoff con jitter, emite `SyncStatus` y `changes`. |
+| **`OutboxService`** | Drena la cola bajo un single-flight flag, aplica backoff con jitter, emite `SyncStatus` y `changes`. |
 | **`OutboxSender` / `CheckinOutboxSender`** | Bridge entre `core/sync` y la feature: traduce `OutboxEntry` → `POST /checkin`. |
 | **`OutboxLifecycle`** | Observer de `WidgetsBinding` + listener de conectividad. Llama `drain()` en `resumed` y al pasar a online. |
 | **`ConnectivityService`** | Combina `connectivity_plus` con un probe a `GET /health`. Distingue `offline | interfaceUp | online`. |
@@ -207,7 +207,7 @@ flowchart TD
 
 Detalles a fijarse:
 
-- **Mutex global**: `drainLock` evita que dos triggers solapados
+- **Flag de drenado**: `_draining` evita que dos triggers solapados
   manden la misma fila dos veces. Si un trigger llega mientras hay
   drain corriendo, hace early‑return; el drain en curso ya va a ver
   las filas nuevas en su próximo `nextEligible`.
