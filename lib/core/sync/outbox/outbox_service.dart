@@ -90,6 +90,7 @@ class OutboxService {
   /// lose them) before the SQLite row is inserted. If anything fails
   /// we roll back the on-disk folder and rethrow.
   Future<OutboxEntry> enqueue({
+    String? id,
     required String userId,
     required String projectId,
     String? taskId,
@@ -100,11 +101,11 @@ class OutboxService {
     String? notes,
     required List<String> sourceImagePaths,
   }) async {
-    final id = _uuid.v4();
+    final entryId = id ?? _uuid.v4();
     final now = _clock().toUtc();
 
     final stored = await _imageStore.persist(
-      outboxId: id,
+      outboxId: entryId,
       sourcePaths: sourceImagePaths,
     );
     final images = [
@@ -118,7 +119,7 @@ class OutboxService {
     ];
 
     final entry = OutboxEntry(
-      id: id,
+      id: entryId,
       userId: userId,
       projectId: projectId,
       taskId: taskId,
@@ -139,10 +140,10 @@ class OutboxService {
       await _dao.insert(entry);
     } catch (e) {
       // Roll back the orphan folder so a retry doesn't pile up bytes.
-      await _imageStore.deleteForOutbox(id);
+      await _imageStore.deleteForOutbox(entryId);
       rethrow;
     }
-    _changesController.add(id);
+    _changesController.add(entryId);
     return entry;
   }
 
