@@ -1,8 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:dio/dio.dart';
 
 import '../core/locale/locale_controller.dart';
 import '../core/network/api_client.dart';
@@ -46,9 +45,17 @@ Future<ProviderContainer> bootstrapContainer() async {
   final appDb = results[0] as AppDatabase;
   final imageStore = results[1] as ImageStore;
 
-  // We need a forward reference to the API client for the connectivity
-  // probe — declared `late` so the closure captures the eventual value.
-  late final ApiClient apiClient;
+  // We need a forward reference to the container so the API client can call
+  // back into Riverpod when a refresh ultimately fails.
+  late final ProviderContainer container;
+
+  final apiClient = ApiClient(
+    tokens: tokens,
+    onAuthFailure: () {
+      // Fired by RefreshInterceptor after a 401 + refresh-token failure.
+      container.read(authControllerProvider.notifier).forceSignOut();
+    },
+  );
 
   // Connectivity wraps a `connectivity_plus` instance and a reachability
   // probe. The probe hits `GET /health` (no auth, no logging) with a
@@ -77,18 +84,6 @@ Future<ProviderContainer> bootstrapContainer() async {
       } catch (_) {
         return false;
       }
-    },
-  );
-
-  // We need a forward reference to the container so the API client can call
-  // back into Riverpod when a refresh ultimately fails.
-  late final ProviderContainer container;
-
-  apiClient = ApiClient(
-    tokens: tokens,
-    onAuthFailure: () {
-      // Fired by RefreshInterceptor after a 401 + refresh-token failure.
-      container.read(authControllerProvider.notifier).forceSignOut();
     },
   );
 
