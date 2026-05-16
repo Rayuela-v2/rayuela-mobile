@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/error/result.dart';
 import '../../../../core/router/routes.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/empty_state.dart';
@@ -65,14 +64,10 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          // Force a remote round-trip — `.future` would resolve from
-          // cache and collapse the spinner immediately.
-          try {
-            final repo = ref.read(tasksRepositoryProvider);
-            final res = await repo.getTasksForProject(widget.projectId);
-            if (res is Failure<List<TaskItem>>) throw res.error;
-          } catch (_) {/* surfaces via AsyncError below */}
           ref.invalidate(projectTasksProvider(widget.projectId));
+          await ref
+              .read(projectTasksProvider(widget.projectId).stream)
+              .firstWhere((cached) => !cached.isStale);
         },
         child: tasks.when(
           data: (cached) => _TasksList(

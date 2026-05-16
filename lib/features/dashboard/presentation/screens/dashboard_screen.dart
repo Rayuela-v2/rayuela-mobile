@@ -48,16 +48,13 @@ class DashboardScreen extends ConsumerWidget {
       ),
       body: RefreshIndicator(
         // SWR semantics: invalidating re-runs the cache → remote pair.
-        // We also kick a one-shot refresh so the spinner stays up until
-        // the network call returns (otherwise the cached value resolves
-        // immediately and the indicator collapses too early).
+        // We await the first non-stale value so the spinner stays up
+        // until the network call returns.
         onRefresh: () async {
           ref.invalidate(subscribedProjectsProvider);
-          try {
-            await ref.read(refreshSubscribedProjectsProvider)();
-          } catch (_) {
-            // Errors land on the AsyncError branch below.
-          }
+          await ref.read(subscribedProjectsProvider.stream).firstWhere(
+                (cached) => !cached.isStale,
+              );
         },
         child: projects.when(
           data: (cached) {
