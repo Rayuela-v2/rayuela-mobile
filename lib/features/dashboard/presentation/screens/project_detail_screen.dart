@@ -1,5 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:convert';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,8 +8,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/router/routes.dart';
 import '../../../../features/auth/presentation/providers/auth_controller.dart';
 import '../../../../features/checkin/presentation/widgets/user_checkins_view.dart';
-import '../../../../features/leaderboard/presentation/widgets/leaderboard_view.dart';
 import '../../../../features/leaderboard/presentation/providers/leaderboard_providers.dart';
+import '../../../../features/leaderboard/presentation/widgets/leaderboard_view.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../domain/entities/project_detail.dart';
@@ -48,13 +49,14 @@ class ProjectDetailScreen extends ConsumerWidget {
 
     final title = Text(
       detailAsync.maybeWhen(
-        data: (d) => d.name,
+        data: (cached) => cached.value.name,
         orElse: () => fallbackName ?? t.project_detail_fallback_title,
       ),
     );
 
     return detailAsync.when(
-      data: (detail) {
+      data: (cached) {
+        final detail = cached.value;
         // Tabs are only meaningful once the user is subscribed — that's
         // the point at which "My check-ins" carries content. For the
         // unsubscribed flow we keep the simple single-pane layout to
@@ -64,8 +66,9 @@ class ProjectDetailScreen extends ConsumerWidget {
             appBar: AppBar(title: title),
             body: RefreshIndicator(
               onRefresh: () async {
-                ref.invalidate(projectDetailProvider(projectId));
-                await ref.read(projectDetailProvider(projectId).future);
+                try {
+                  await ref.read(refreshProjectDetailProvider)(projectId);
+                } catch (_) {/* surfaces via AsyncError below */}
               },
               child: _OverviewTab(detail: detail),
             ),
@@ -77,7 +80,6 @@ class ProjectDetailScreen extends ConsumerWidget {
             appBar: AppBar(
               title: title,
               bottom: TabBar(
-                isScrollable: false,
                 tabs: [
                   Tab(
                     icon: const Icon(Icons.info_outline),
@@ -102,8 +104,9 @@ class ProjectDetailScreen extends ConsumerWidget {
               children: [
                 RefreshIndicator(
                   onRefresh: () async {
-                    ref.invalidate(projectDetailProvider(projectId));
-                    await ref.read(projectDetailProvider(projectId).future);
+                    try {
+                      await ref.read(refreshProjectDetailProvider)(projectId);
+                    } catch (_) {/* surfaces via AsyncError elsewhere */}
                   },
                   child: _OverviewTab(detail: detail),
                 ),
@@ -246,11 +249,9 @@ class _ProgressTab extends ConsumerWidget {
     return RefreshIndicator(
       onRefresh: () async {
         ref.invalidate(leaderboardProvider(detail.id));
-        ref.invalidate(projectDetailProvider(detail.id));
-        await Future.wait([
-          ref.read(leaderboardProvider(detail.id).future),
-          ref.read(projectDetailProvider(detail.id).future),
-        ]);
+        try {
+          await ref.read(refreshProjectDetailProvider)(detail.id);
+        } catch (_) {/* surfaced as AsyncError elsewhere */}
       },
       child: ListView(
         padding: const EdgeInsets.fromLTRB(16, 20, 16, 32),
@@ -348,13 +349,13 @@ class _StatsRow extends ConsumerWidget {
     final leaderboardAsync = ref.watch(leaderboardProvider(projectId));
     final auth = ref.watch(authControllerProvider);
     final liveRank = leaderboardAsync.maybeWhen(
-      data: (board) {
+      data: (cached) {
         final userId = switch (auth) {
           AuthStateAuthenticated(:final user) => user.id,
           _ => null,
         };
         if (userId == null) return null;
-        return board.entryForUser(userId)?.rank;
+        return cached.value.entryForUser(userId)?.rank;
       },
       orElse: () => null,
     );
@@ -521,11 +522,11 @@ class _BadgesSectionState extends State<_BadgesSection> {
                 showSelectedIcon: false,
                 onSelectionChanged: (s) =>
                     setState(() => _showGraph = s.first),
-                style: ButtonStyle(
+                style: const ButtonStyle(
                   visualDensity: VisualDensity.compact,
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   padding: WidgetStatePropertyAll(
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                    EdgeInsets.symmetric(horizontal: 8),
                   ),
                 ),
               ),
@@ -779,7 +780,6 @@ class _BadgeTile extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
                 width: 96,
@@ -803,7 +803,7 @@ class _BadgeTile extends StatelessWidget {
               const SizedBox(height: 4),
               Container(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 12, vertical: 4),
+                    horizontal: 12, vertical: 4,),
                 decoration: BoxDecoration(
                   color: earned
                       ? theme.colorScheme.tertiaryContainer

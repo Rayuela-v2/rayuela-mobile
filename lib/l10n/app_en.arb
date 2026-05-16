@@ -211,6 +211,106 @@
   "checkin_back_to_dashboard": "Back to dashboard",
   "checkin_back_to_project": "Back to project",
 
+  "checkin_result_queued_title": "Saved — will sync when you have signal",
+  "checkin_result_queued_subtitle": "We'll send your check-in automatically as soon as you're back online. You can keep working in the meantime.",
+  "checkin_result_queued_at": "Captured at {time}",
+  "@checkin_result_queued_at": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "checkin_offline_chip": "No connection — we'll send it when you're back online",
+
+  "cache_just_now": "just now",
+  "cache_seconds_ago": "{count} s ago",
+  "@cache_seconds_ago": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cache_minutes_ago": "{count} m ago",
+  "@cache_minutes_ago": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cache_hours_ago": "{count} h ago",
+  "@cache_hours_ago": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cache_days_ago": "{count} d ago",
+  "@cache_days_ago": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cache_updated_chip": "Updated {age}",
+  "@cache_updated_chip": {
+    "placeholders": { "age": { "type": "String" } }
+  },
+  "cache_offline_chip": "Showing offline copy · last updated {age}",
+  "@cache_offline_chip": {
+    "placeholders": { "age": { "type": "String" } }
+  },
+
+  "map_download_offline_tooltip": "Download maps for offline use",
+  "map_download_offline_title": "Download maps?",
+  "map_download_offline_body": "We'll save the project's tiles to this device so the map keeps working without a connection. May download up to 30 MB.",
+  "map_download_offline_cta": "Download",
+  "map_download_offline_starting": "Preparing download…",
+  "map_download_offline_progress": "Downloading maps · {percent}%",
+  "@map_download_offline_progress": {
+    "placeholders": { "percent": { "type": "int" } }
+  },
+  "map_download_offline_done": "Maps ready ({count} tiles)",
+  "@map_download_offline_done": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "map_download_offline_too_large": "Project area too large ({estimated} tiles, max {cap})",
+  "@map_download_offline_too_large": {
+    "placeholders": {
+      "estimated": { "type": "int" },
+      "cap": { "type": "int" }
+    }
+  },
+  "map_download_offline_cancelled": "Map download cancelled",
+  "map_clear_cache_tooltip": "Clear offline maps",
+  "map_clear_cache_title": "Clear offline maps?",
+  "map_clear_cache_body": "This removes every cached map tile. The maps will keep working when online and re-download as needed.",
+  "map_clear_cache_cta": "Clear",
+  "map_clear_cache_done": "Offline maps cleared",
+
+  "outbox_status_pending": "Pending",
+  "outbox_status_retrying": "Retrying…",
+  "outbox_status_inflight": "Sending…",
+  "outbox_status_failed": "Failed — tap to retry",
+  "outbox_action_retry": "Retry now",
+  "outbox_action_discard": "Discard",
+  "outbox_action_retry_all": "Retry all",
+  "outbox_section_pending": "Waiting to sync",
+  "outbox_pending_at": "Captured at {time}",
+  "@outbox_pending_at": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "outbox_attempt_count": "Attempt #{count}",
+  "@outbox_attempt_count": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "outbox_discard_confirm_title": "Discard pending check-in?",
+  "outbox_discard_confirm_body": "The photos and details will be removed from this device. This cannot be undone.",
+  "outbox_discard_confirm_cta": "Discard",
+  "outbox_cancel": "Cancel",
+
+  "dashboard_outbox_banner_one": "1 check-in waiting to sync",
+  "dashboard_outbox_banner_many": "{count} check-ins waiting to sync",
+  "@dashboard_outbox_banner_many": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "dashboard_outbox_banner_action": "View",
+  "dashboard_sync_status_offline": "Offline",
+  "dashboard_sync_status_syncing": "Syncing…",
+  "dashboard_sync_status_error": "Sync issues",
+
+  "pending_data_title": "Pending data",
+  "pending_data_empty_title": "Nothing waiting",
+  "pending_data_empty_body": "Check-ins you create offline will appear here while we wait for a connection.",
+  "pending_data_project_label": "Project: {projectId}",
+  "@pending_data_project_label": {
+    "placeholders": { "projectId": { "type": "String" } }
+  },
+
   "checkins_empty_title": "No check-ins yet",
   "checkins_empty_body": "Your check-ins for this project will appear here. Open a task and add your first one to start earning points.",
   "checkins_card_default_kind": "Check-in",

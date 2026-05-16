@@ -473,6 +473,188 @@ class AppLocalizationsEn extends AppLocalizations {
   String get checkin_back_to_project => 'Back to project';
 
   @override
+  String get checkin_result_queued_title =>
+      'Saved — will sync when you have signal';
+
+  @override
+  String get checkin_result_queued_subtitle =>
+      'We\'ll send your check-in automatically as soon as you\'re back online. You can keep working in the meantime.';
+
+  @override
+  String checkin_result_queued_at(String time) {
+    return 'Captured at $time';
+  }
+
+  @override
+  String get checkin_offline_chip =>
+      'No connection — we\'ll send it when you\'re back online';
+
+  @override
+  String get cache_just_now => 'just now';
+
+  @override
+  String cache_seconds_ago(int count) {
+    return '$count s ago';
+  }
+
+  @override
+  String cache_minutes_ago(int count) {
+    return '$count m ago';
+  }
+
+  @override
+  String cache_hours_ago(int count) {
+    return '$count h ago';
+  }
+
+  @override
+  String cache_days_ago(int count) {
+    return '$count d ago';
+  }
+
+  @override
+  String cache_updated_chip(String age) {
+    return 'Updated $age';
+  }
+
+  @override
+  String cache_offline_chip(String age) {
+    return 'Showing offline copy · last updated $age';
+  }
+
+  @override
+  String get map_download_offline_tooltip => 'Download maps for offline use';
+
+  @override
+  String get map_download_offline_title => 'Download maps?';
+
+  @override
+  String get map_download_offline_body =>
+      'We\'ll save the project\'s tiles to this device so the map keeps working without a connection. May download up to 30 MB.';
+
+  @override
+  String get map_download_offline_cta => 'Download';
+
+  @override
+  String get map_download_offline_starting => 'Preparing download…';
+
+  @override
+  String map_download_offline_progress(int percent) {
+    return 'Downloading maps · $percent%';
+  }
+
+  @override
+  String map_download_offline_done(int count) {
+    return 'Maps ready ($count tiles)';
+  }
+
+  @override
+  String map_download_offline_too_large(int estimated, int cap) {
+    return 'Project area too large ($estimated tiles, max $cap)';
+  }
+
+  @override
+  String get map_download_offline_cancelled => 'Map download cancelled';
+
+  @override
+  String get map_clear_cache_tooltip => 'Clear offline maps';
+
+  @override
+  String get map_clear_cache_title => 'Clear offline maps?';
+
+  @override
+  String get map_clear_cache_body =>
+      'This removes every cached map tile. The maps will keep working when online and re-download as needed.';
+
+  @override
+  String get map_clear_cache_cta => 'Clear';
+
+  @override
+  String get map_clear_cache_done => 'Offline maps cleared';
+
+  @override
+  String get outbox_status_pending => 'Pending';
+
+  @override
+  String get outbox_status_retrying => 'Retrying…';
+
+  @override
+  String get outbox_status_inflight => 'Sending…';
+
+  @override
+  String get outbox_status_failed => 'Failed — tap to retry';
+
+  @override
+  String get outbox_action_retry => 'Retry now';
+
+  @override
+  String get outbox_action_discard => 'Discard';
+
+  @override
+  String get outbox_action_retry_all => 'Retry all';
+
+  @override
+  String get outbox_section_pending => 'Waiting to sync';
+
+  @override
+  String outbox_pending_at(String time) {
+    return 'Captured at $time';
+  }
+
+  @override
+  String outbox_attempt_count(int count) {
+    return 'Attempt #$count';
+  }
+
+  @override
+  String get outbox_discard_confirm_title => 'Discard pending check-in?';
+
+  @override
+  String get outbox_discard_confirm_body =>
+      'The photos and details will be removed from this device. This cannot be undone.';
+
+  @override
+  String get outbox_discard_confirm_cta => 'Discard';
+
+  @override
+  String get outbox_cancel => 'Cancel';
+
+  @override
+  String get dashboard_outbox_banner_one => '1 check-in waiting to sync';
+
+  @override
+  String dashboard_outbox_banner_many(int count) {
+    return '$count check-ins waiting to sync';
+  }
+
+  @override
+  String get dashboard_outbox_banner_action => 'View';
+
+  @override
+  String get dashboard_sync_status_offline => 'Offline';
+
+  @override
+  String get dashboard_sync_status_syncing => 'Syncing…';
+
+  @override
+  String get dashboard_sync_status_error => 'Sync issues';
+
+  @override
+  String get pending_data_title => 'Pending data';
+
+  @override
+  String get pending_data_empty_title => 'Nothing waiting';
+
+  @override
+  String get pending_data_empty_body =>
+      'Check-ins you create offline will appear here while we wait for a connection.';
+
+  @override
+  String pending_data_project_label(String projectId) {
+    return 'Project: $projectId';
+  }
+
+  @override
   String get checkins_empty_title => 'No check-ins yet';
 
   @override

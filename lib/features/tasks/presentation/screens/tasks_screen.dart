@@ -65,11 +65,13 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
       body: RefreshIndicator(
         onRefresh: () async {
           ref.invalidate(projectTasksProvider(widget.projectId));
-          await ref.read(projectTasksProvider(widget.projectId).future);
+          await ref
+              .read(projectTasksProvider(widget.projectId).stream)
+              .firstWhere((cached) => !cached.isStale);
         },
         child: tasks.when(
-          data: (list) => _TasksList(
-            tasks: _applyFilter(list),
+          data: (cached) => _TasksList(
+            tasks: _applyFilter(cached.value),
             areaFilter: _areaFilter,
             onClearFilter: _areaFilter == null
                 ? null

@@ -61,8 +61,8 @@ class GoogleAuthService {
       final auth = await account.authentication;
       final idToken = auth.idToken;
       if (idToken == null || idToken.isEmpty) {
-        return Failure<String>(
-          const ServerException(
+        return const Failure<String>(
+          ServerException(
             message:
                 'Google did not return an ID token. Make sure '
                 'GOOGLE_CLIENT_ID_WEB is set to a Web-type OAuth client ID '

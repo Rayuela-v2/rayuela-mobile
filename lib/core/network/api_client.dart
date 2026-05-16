@@ -26,7 +26,6 @@ class ApiClient {
                 connectTimeout: const Duration(seconds: 15),
                 receiveTimeout: const Duration(seconds: 30),
                 sendTimeout: const Duration(seconds: 30),
-                responseType: ResponseType.json,
                 contentType: Headers.jsonContentType,
                 headers: {
                   HttpHeaders.acceptHeader: 'application/json',
@@ -44,12 +43,7 @@ class ApiClient {
     if (Env.logHttp) {
       _dio.interceptors.add(
         PrettyDioLogger(
-          requestHeader: false,
           requestBody: true,
-          responseHeader: false,
-          responseBody: true,
-          error: true,
-          compact: true,
           maxWidth: 120,
           filter: (options, args) {
             // Never log auth bodies.
@@ -105,7 +99,7 @@ class ApiClient {
           return NetworkException(cause: e);
         }
         return UnknownException(
-            message: e.message ?? 'Unknown error', cause: e);
+            message: e.message ?? 'Unknown error', cause: e,);
       case DioExceptionType.badResponse:
         return _mapBadResponse(e);
     }
@@ -129,6 +123,8 @@ class ApiClient {
         return ForbiddenException(message: message, cause: e);
       case 404:
         return NotFoundException(message: message, cause: e);
+      case 409:
+        return ConflictException(message: message, cause: e);
       case >= 500:
         return ServerException(message: message, statusCode: status, cause: e);
       default:

@@ -14,37 +14,50 @@ sealed class AppException implements Exception {
 
 class NetworkException extends AppException {
   const NetworkException({
-    String message = 'No internet connection',
+    super.message = 'No internet connection',
     super.cause,
-  }) : super(message: message);
+  });
 }
 
 class TimeoutException extends AppException {
   const TimeoutException({
-    String message = 'The server took too long to respond',
+    super.message = 'The server took too long to respond',
     super.cause,
-  }) : super(message: message);
+  });
 }
 
 class UnauthorizedException extends AppException {
   const UnauthorizedException({
-    String message = 'You need to log in to continue',
+    super.message = 'You need to log in to continue',
     super.cause,
-  }) : super(message: message);
+  });
 }
 
 class ForbiddenException extends AppException {
   const ForbiddenException({
-    String message = 'You do not have permission to do that',
+    super.message = 'You do not have permission to do that',
     super.cause,
-  }) : super(message: message);
+  });
 }
 
 class NotFoundException extends AppException {
   const NotFoundException({
-    String message = 'Not found',
+    super.message = 'Not found',
     super.cause,
-  }) : super(message: message);
+  });
+}
+
+/// HTTP 409 Conflict.
+///
+/// Phase 2 outbox uses this on `POST /checkin` with an Idempotency-Key:
+/// the backend returns 409 when it has already stored a checkin under
+/// that key (a previous attempt actually landed despite the client
+/// thinking it failed). The drainer treats it as success.
+class ConflictException extends AppException {
+  const ConflictException({
+    super.message = 'Resource already exists',
+    super.cause,
+  });
 }
 
 class ValidationException extends AppException {
@@ -60,10 +73,10 @@ class ValidationException extends AppException {
 
 class ServerException extends AppException {
   const ServerException({
-    String message = 'Something went wrong on our side',
+    super.message = 'Something went wrong on our side',
     this.statusCode,
     super.cause,
-  }) : super(message: message);
+  });
 
   final int? statusCode;
 }
@@ -73,10 +86,10 @@ class ServerException extends AppException {
 /// retry the call.
 class GoogleSignupRequiresUsernameException extends AppException {
   const GoogleSignupRequiresUsernameException({
-    String message = 'Username is required for new Google signup',
+    super.message = 'Username is required for new Google signup',
     this.suggestedUsername,
     super.cause,
-  }) : super(message: message);
+  });
 
   final String? suggestedUsername;
 }
@@ -90,7 +103,7 @@ class GoogleSignInCancelledException extends AppException {
 
 class UnknownException extends AppException {
   const UnknownException({
-    String message = 'Unexpected error',
+    super.message = 'Unexpected error',
     super.cause,
-  }) : super(message: message);
+  });
 }

@@ -5,7 +5,10 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../../../core/maps/cached_tile_provider.dart';
+import '../../../../core/maps/tile_prefetcher.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/providers/core_providers.dart';
 import '../../../checkin/domain/entities/checkin_history_item.dart';
 import '../../../checkin/presentation/providers/checkin_providers.dart';
 import '../../../tasks/domain/entities/task_item.dart';
@@ -106,6 +109,84 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
     );
   }
 
+  /// Warm the OSM tile cache for the project's areas. Confirms with
+  /// the user first because the loop downloads up to ~30 MB of tiles
+  /// (controlled by [TilePrefetchConfig.maxTiles]).
+  Future<void> _downloadOfflineMaps() async {
+    final t = AppLocalizations.of(context)!;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(t.map_download_offline_title),
+        content: Text(t.map_download_offline_body),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(t.outbox_cancel),
+          ),
+          FilledButton.tonal(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(t.map_download_offline_cta),
+          ),
+        ],
+      ),
+    );
+    if (ok != true || !mounted) return;
+
+    final prefetcher = ref.read(tilePrefetcherProvider);
+    final messenger = ScaffoldMessenger.of(context);
+    final progressNotifier = ValueNotifier<double>(0);
+    // Light feedback in a snackbar — the prefetch is short enough that
+    // a dedicated screen would be overkill.
+    final controller = messenger.showSnackBar(
+      SnackBar(
+        duration: const Duration(days: 1), // we dismiss manually
+        content: ValueListenableBuilder<double>(
+          valueListenable: progressNotifier,
+          builder: (_, fraction, __) => Row(
+            children: [
+              Expanded(
+                child: Text(
+                  fraction <= 0
+                      ? t.map_download_offline_starting
+                      : t.map_download_offline_progress(
+                          (fraction * 100).round(),
+                        ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              SizedBox(
+                width: 64,
+                child: LinearProgressIndicator(
+                  value: fraction <= 0 ? null : fraction,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    final outcome = await prefetcher.prefetchAreas(
+      rings: widget.areas.expand((a) => a.rings),
+      onProgress: (p) {
+        progressNotifier.value = p.fraction;
+      },
+    );
+    controller.close();
+    progressNotifier.dispose();
+    if (!mounted) return;
+
+    final summary = switch (outcome) {
+      TilePrefetchSucceeded(:final tiles) =>
+        t.map_download_offline_done(tiles),
+      TilePrefetchTooLarge(:final estimated, :final cap) =>
+        t.map_download_offline_too_large(estimated, cap),
+      TilePrefetchCancelled() => t.map_download_offline_cancelled,
+    };
+    messenger.showSnackBar(SnackBar(content: Text(summary)));
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -114,7 +195,7 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
     final checkinsAsync = ref.watch(userCheckinsProvider(widget.projectId));
 
     final tasks = tasksAsync.maybeWhen(
-      data: (list) => list,
+      data: (cached) => cached.value,
       orElse: () => const <TaskItem>[],
     );
     final checkins = checkinsAsync.maybeWhen(
@@ -172,6 +253,14 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
                   urlTemplate:
                       'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                   userAgentPackageName: 'com.rayuela.mobile',
+                  // Tiles flow through the disk cache so a project's
+                  // map keeps working offline once it's been opened
+                  // online at least once. The pre-cache action below
+                  // warms it ahead of time when the user asks.
+                  tileProvider: CachedTileProvider(
+                    cache: ref.read(tileCacheServiceProvider),
+                    userAgentPackageName: 'com.rayuela.mobile',
+                  ),
                 ),
                 PolygonLayer(
                   polygons: _buildPolygons(
@@ -253,6 +342,13 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
                     tooltip: t.map_fit_to_areas,
                     onPressed:
                         widget.areas.isEmpty ? null : _fitToAreas,
+                  ),
+                  const SizedBox(height: 6),
+                  _MapButton(
+                    icon: Icons.download_for_offline_outlined,
+                    tooltip: t.map_download_offline_tooltip,
+                    onPressed:
+                        widget.areas.isEmpty ? null : _downloadOfflineMaps,
                   ),
                 ],
               ),

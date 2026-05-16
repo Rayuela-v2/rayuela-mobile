@@ -211,6 +211,106 @@
   "checkin_back_to_dashboard": "Volver al panel",
   "checkin_back_to_project": "Volver al proyecto",
 
+  "checkin_result_queued_title": "Guardado — se enviará cuando tengas señal",
+  "checkin_result_queued_subtitle": "Enviaremos tu check-in automáticamente apenas vuelvas a tener conexión. Puedes seguir usando la app mientras tanto.",
+  "checkin_result_queued_at": "Capturado a las {time}",
+  "@checkin_result_queued_at": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "checkin_offline_chip": "Sin conexión — lo enviaremos cuando vuelvas a tener red",
+
+  "cache_just_now": "ahora mismo",
+  "cache_seconds_ago": "hace {count} s",
+  "@cache_seconds_ago": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cache_minutes_ago": "hace {count} min",
+  "@cache_minutes_ago": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cache_hours_ago": "hace {count} h",
+  "@cache_hours_ago": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cache_days_ago": "hace {count} d",
+  "@cache_days_ago": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cache_updated_chip": "Actualizado {age}",
+  "@cache_updated_chip": {
+    "placeholders": { "age": { "type": "String" } }
+  },
+  "cache_offline_chip": "Mostrando copia sin conexión · última actualización {age}",
+  "@cache_offline_chip": {
+    "placeholders": { "age": { "type": "String" } }
+  },
+
+  "map_download_offline_tooltip": "Descargar mapas para uso sin conexión",
+  "map_download_offline_title": "¿Descargar mapas?",
+  "map_download_offline_body": "Vamos a guardar las baldosas del proyecto en este dispositivo para que el mapa funcione sin conexión. Puede descargar hasta 30 MB.",
+  "map_download_offline_cta": "Descargar",
+  "map_download_offline_starting": "Preparando la descarga…",
+  "map_download_offline_progress": "Descargando mapas · {percent}%",
+  "@map_download_offline_progress": {
+    "placeholders": { "percent": { "type": "int" } }
+  },
+  "map_download_offline_done": "Mapas listos ({count} baldosas)",
+  "@map_download_offline_done": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "map_download_offline_too_large": "Área del proyecto demasiado grande ({estimated} baldosas, máx {cap})",
+  "@map_download_offline_too_large": {
+    "placeholders": {
+      "estimated": { "type": "int" },
+      "cap": { "type": "int" }
+    }
+  },
+  "map_download_offline_cancelled": "Descarga de mapas cancelada",
+  "map_clear_cache_tooltip": "Borrar mapas sin conexión",
+  "map_clear_cache_title": "¿Borrar mapas sin conexión?",
+  "map_clear_cache_body": "Se eliminarán todas las baldosas en caché. Los mapas seguirán funcionando online y se redescargarán cuando haga falta.",
+  "map_clear_cache_cta": "Borrar",
+  "map_clear_cache_done": "Mapas sin conexión borrados",
+
+  "outbox_status_pending": "Pendiente",
+  "outbox_status_retrying": "Reintentando…",
+  "outbox_status_inflight": "Enviando…",
+  "outbox_status_failed": "Falló — toca para reintentar",
+  "outbox_action_retry": "Reintentar ahora",
+  "outbox_action_discard": "Descartar",
+  "outbox_action_retry_all": "Reintentar todos",
+  "outbox_section_pending": "Por enviar",
+  "outbox_pending_at": "Capturado a las {time}",
+  "@outbox_pending_at": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+  "outbox_attempt_count": "Intento N° {count}",
+  "@outbox_attempt_count": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "outbox_discard_confirm_title": "¿Descartar el check-in pendiente?",
+  "outbox_discard_confirm_body": "Las fotos y los datos se borrarán de este dispositivo. Esta acción no se puede deshacer.",
+  "outbox_discard_confirm_cta": "Descartar",
+  "outbox_cancel": "Cancelar",
+
+  "dashboard_outbox_banner_one": "1 check-in por enviar",
+  "dashboard_outbox_banner_many": "{count} check-ins por enviar",
+  "@dashboard_outbox_banner_many": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "dashboard_outbox_banner_action": "Ver",
+  "dashboard_sync_status_offline": "Sin conexión",
+  "dashboard_sync_status_syncing": "Sincronizando…",
+  "dashboard_sync_status_error": "Problemas de sincronización",
+
+  "pending_data_title": "Datos pendientes",
+  "pending_data_empty_title": "Nada por sincronizar",
+  "pending_data_empty_body": "Los check-ins que crees sin conexión aparecerán acá mientras esperamos red.",
+  "pending_data_project_label": "Proyecto: {projectId}",
+  "@pending_data_project_label": {
+    "placeholders": { "projectId": { "type": "String" } }
+  },
+
   "checkins_empty_title": "Aún no hay check-ins",
   "checkins_empty_body": "Tus check-ins para este proyecto aparecerán aquí. Abrí una tarea y agregá el primero para empezar a ganar puntos.",
   "checkins_card_default_kind": "Check-in",

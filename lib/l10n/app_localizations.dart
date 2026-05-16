@@ -904,6 +904,300 @@ abstract class AppLocalizations {
   /// **'Back to project'**
   String get checkin_back_to_project;
 
+  /// No description provided for @checkin_result_queued_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved — will sync when you have signal'**
+  String get checkin_result_queued_title;
+
+  /// No description provided for @checkin_result_queued_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll send your check-in automatically as soon as you\'re back online. You can keep working in the meantime.'**
+  String get checkin_result_queued_subtitle;
+
+  /// No description provided for @checkin_result_queued_at.
+  ///
+  /// In en, this message translates to:
+  /// **'Captured at {time}'**
+  String checkin_result_queued_at(String time);
+
+  /// No description provided for @checkin_offline_chip.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection — we\'ll send it when you\'re back online'**
+  String get checkin_offline_chip;
+
+  /// No description provided for @cache_just_now.
+  ///
+  /// In en, this message translates to:
+  /// **'just now'**
+  String get cache_just_now;
+
+  /// No description provided for @cache_seconds_ago.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} s ago'**
+  String cache_seconds_ago(int count);
+
+  /// No description provided for @cache_minutes_ago.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} m ago'**
+  String cache_minutes_ago(int count);
+
+  /// No description provided for @cache_hours_ago.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} h ago'**
+  String cache_hours_ago(int count);
+
+  /// No description provided for @cache_days_ago.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} d ago'**
+  String cache_days_ago(int count);
+
+  /// No description provided for @cache_updated_chip.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated {age}'**
+  String cache_updated_chip(String age);
+
+  /// No description provided for @cache_offline_chip.
+  ///
+  /// In en, this message translates to:
+  /// **'Showing offline copy · last updated {age}'**
+  String cache_offline_chip(String age);
+
+  /// No description provided for @map_download_offline_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Download maps for offline use'**
+  String get map_download_offline_tooltip;
+
+  /// No description provided for @map_download_offline_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Download maps?'**
+  String get map_download_offline_title;
+
+  /// No description provided for @map_download_offline_body.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll save the project\'s tiles to this device so the map keeps working without a connection. May download up to 30 MB.'**
+  String get map_download_offline_body;
+
+  /// No description provided for @map_download_offline_cta.
+  ///
+  /// In en, this message translates to:
+  /// **'Download'**
+  String get map_download_offline_cta;
+
+  /// No description provided for @map_download_offline_starting.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing download…'**
+  String get map_download_offline_starting;
+
+  /// No description provided for @map_download_offline_progress.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading maps · {percent}%'**
+  String map_download_offline_progress(int percent);
+
+  /// No description provided for @map_download_offline_done.
+  ///
+  /// In en, this message translates to:
+  /// **'Maps ready ({count} tiles)'**
+  String map_download_offline_done(int count);
+
+  /// No description provided for @map_download_offline_too_large.
+  ///
+  /// In en, this message translates to:
+  /// **'Project area too large ({estimated} tiles, max {cap})'**
+  String map_download_offline_too_large(int estimated, int cap);
+
+  /// No description provided for @map_download_offline_cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Map download cancelled'**
+  String get map_download_offline_cancelled;
+
+  /// No description provided for @map_clear_cache_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear offline maps'**
+  String get map_clear_cache_tooltip;
+
+  /// No description provided for @map_clear_cache_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear offline maps?'**
+  String get map_clear_cache_title;
+
+  /// No description provided for @map_clear_cache_body.
+  ///
+  /// In en, this message translates to:
+  /// **'This removes every cached map tile. The maps will keep working when online and re-download as needed.'**
+  String get map_clear_cache_body;
+
+  /// No description provided for @map_clear_cache_cta.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get map_clear_cache_cta;
+
+  /// No description provided for @map_clear_cache_done.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline maps cleared'**
+  String get map_clear_cache_done;
+
+  /// No description provided for @outbox_status_pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get outbox_status_pending;
+
+  /// No description provided for @outbox_status_retrying.
+  ///
+  /// In en, this message translates to:
+  /// **'Retrying…'**
+  String get outbox_status_retrying;
+
+  /// No description provided for @outbox_status_inflight.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending…'**
+  String get outbox_status_inflight;
+
+  /// No description provided for @outbox_status_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed — tap to retry'**
+  String get outbox_status_failed;
+
+  /// No description provided for @outbox_action_retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry now'**
+  String get outbox_action_retry;
+
+  /// No description provided for @outbox_action_discard.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get outbox_action_discard;
+
+  /// No description provided for @outbox_action_retry_all.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry all'**
+  String get outbox_action_retry_all;
+
+  /// No description provided for @outbox_section_pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting to sync'**
+  String get outbox_section_pending;
+
+  /// No description provided for @outbox_pending_at.
+  ///
+  /// In en, this message translates to:
+  /// **'Captured at {time}'**
+  String outbox_pending_at(String time);
+
+  /// No description provided for @outbox_attempt_count.
+  ///
+  /// In en, this message translates to:
+  /// **'Attempt #{count}'**
+  String outbox_attempt_count(int count);
+
+  /// No description provided for @outbox_discard_confirm_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard pending check-in?'**
+  String get outbox_discard_confirm_title;
+
+  /// No description provided for @outbox_discard_confirm_body.
+  ///
+  /// In en, this message translates to:
+  /// **'The photos and details will be removed from this device. This cannot be undone.'**
+  String get outbox_discard_confirm_body;
+
+  /// No description provided for @outbox_discard_confirm_cta.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get outbox_discard_confirm_cta;
+
+  /// No description provided for @outbox_cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get outbox_cancel;
+
+  /// No description provided for @dashboard_outbox_banner_one.
+  ///
+  /// In en, this message translates to:
+  /// **'1 check-in waiting to sync'**
+  String get dashboard_outbox_banner_one;
+
+  /// No description provided for @dashboard_outbox_banner_many.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} check-ins waiting to sync'**
+  String dashboard_outbox_banner_many(int count);
+
+  /// No description provided for @dashboard_outbox_banner_action.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get dashboard_outbox_banner_action;
+
+  /// No description provided for @dashboard_sync_status_offline.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get dashboard_sync_status_offline;
+
+  /// No description provided for @dashboard_sync_status_syncing.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing…'**
+  String get dashboard_sync_status_syncing;
+
+  /// No description provided for @dashboard_sync_status_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync issues'**
+  String get dashboard_sync_status_error;
+
+  /// No description provided for @pending_data_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending data'**
+  String get pending_data_title;
+
+  /// No description provided for @pending_data_empty_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing waiting'**
+  String get pending_data_empty_title;
+
+  /// No description provided for @pending_data_empty_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-ins you create offline will appear here while we wait for a connection.'**
+  String get pending_data_empty_body;
+
+  /// No description provided for @pending_data_project_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Project: {projectId}'**
+  String pending_data_project_label(String projectId);
+
   /// No description provided for @checkins_empty_title.
   ///
   /// In en, this message translates to:

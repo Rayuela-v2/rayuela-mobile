@@ -22,9 +22,20 @@ class CheckinsRemoteSource {
 
   static const String _imageFieldName = 'image';
   static const int _maxImages = 3;
+  static const String _idempotencyHeader = 'Idempotency-Key';
 
   /// POST /checkin (multipart/form-data, max 3 image files).
-  Future<Result<CheckinResultDto>> submit(CheckinRequest req) async {
+  ///
+  /// When [idempotencyKey] is non-null we send it as the
+  /// `Idempotency-Key` header. The backend (after §8 #1 of
+  /// `docs/OFFLINE_SYNC_PLAN.md` lands) recognises a key already seen
+  /// and either returns the original response with 200 OK or surfaces
+  /// 409 — which the API client maps to [ConflictException], handled
+  /// by the outbox drainer as "already created, drop the row".
+  Future<Result<CheckinResultDto>> submit(
+    CheckinRequest req, {
+    String? idempotencyKey,
+  }) async {
     final form = FormData();
 
     // Body fields. Backend's CreateCheckinDto expects: latitude, longitude,
@@ -51,6 +62,10 @@ class CheckinsRemoteSource {
       );
     }
 
+    final headers = <String, dynamic>{
+      if (idempotencyKey != null) _idempotencyHeader: idempotencyKey,
+    };
+
     return _api.request(
       (d) => d.post<Map<String, dynamic>>(
         ApiPaths.checkins,
@@ -61,9 +76,36 @@ class CheckinsRemoteSource {
           // Long checkins (3 photos, slow network) need extra headroom.
           sendTimeout: const Duration(seconds: 90),
           receiveTimeout: const Duration(seconds: 60),
+          headers: headers.isEmpty ? null : headers,
         ),
       ),
       parse: CheckinResultDto.fromJson,
+    );
+  }
+
+  /// Convenience wrapper for the outbox drainer: builds the multipart
+  /// payload directly from disk-resident image paths instead of going
+  /// through [CheckinRequest]/[XFile]. Functionally equivalent to
+  /// [submit], it just sidesteps the conversion.
+  Future<Result<CheckinResultDto>> submitFromDisk({
+    required String idempotencyKey,
+    required String projectId,
+    required String taskType,
+    required String latitude,
+    required String longitude,
+    required DateTime datetime,
+    required List<String> imagePaths,
+  }) {
+    return submit(
+      CheckinRequest(
+        projectId: projectId,
+        taskType: taskType,
+        latitude: latitude,
+        longitude: longitude,
+        datetime: datetime,
+        imagePaths: imagePaths,
+      ),
+      idempotencyKey: idempotencyKey,
     );
   }
 

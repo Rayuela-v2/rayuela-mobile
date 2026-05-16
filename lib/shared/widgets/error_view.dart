@@ -74,6 +74,7 @@ String localizeAppException(
     GoogleSignupRequiresUsernameException(:final message) => message,
     NotFoundException(:final message) => message,
     ForbiddenException(:final message) => message,
+    ConflictException(:final message) => message,
     UnknownException(:final message) => message,
   };
 }

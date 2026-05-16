@@ -3,13 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/sync/outbox/outbox_entry.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/providers/core_providers.dart';
 import '../../../../shared/widgets/empty_state.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../domain/entities/checkin_history_item.dart';
 import '../providers/checkin_providers.dart';
+import '../providers/outbox_providers.dart';
 import '../utils/checkin_image_url.dart';
 import 'checkin_image_viewer.dart';
+import 'pending_checkin_tile.dart';
 
 /// "My check-ins" tab body for the project detail screen. Pulls
 /// `userCheckinsProvider(projectId)` and renders one [_CheckinCard] per
@@ -25,6 +29,12 @@ class UserCheckinsView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(userCheckinsProvider(projectId));
+    // Pending stream is scoped to this project so the section above the
+    // server-synced history only shows the rows the user expects to see
+    // here. It auto-disposes when the tab is dismissed.
+    final pending =
+        ref.watch(pendingCheckinsProvider(projectId)).valueOrNull ??
+            const <OutboxEntry>[];
 
     return RefreshIndicator(
       onRefresh: () async {
@@ -32,7 +42,11 @@ class UserCheckinsView extends ConsumerWidget {
         await ref.read(userCheckinsProvider(projectId).future);
       },
       child: async.when(
-        data: (items) => _Body(projectId: projectId, items: items),
+        data: (items) => _Body(
+          projectId: projectId,
+          items: items,
+          pending: pending,
+        ),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => LayoutBuilder(
           builder: (context, c) => SingleChildScrollView(
@@ -51,16 +65,21 @@ class UserCheckinsView extends ConsumerWidget {
   }
 }
 
-class _Body extends StatelessWidget {
-  const _Body({required this.projectId, required this.items});
+class _Body extends ConsumerWidget {
+  const _Body({
+    required this.projectId,
+    required this.items,
+    required this.pending,
+  });
 
   final String projectId;
   final List<CheckinHistoryItem> items;
+  final List<OutboxEntry> pending;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final t = AppLocalizations.of(context)!;
-    if (items.isEmpty) {
+    if (items.isEmpty && pending.isEmpty) {
       return LayoutBuilder(
         builder: (context, c) => SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -76,8 +95,9 @@ class _Body extends StatelessWidget {
       );
     }
 
-    // Group by day for a friendlier scan. The frontend doesn't bother but
-    // mobile screens are skinny and a date header helps keep the eye anchored.
+    // Group synced items by day for a friendlier scan. The frontend
+    // doesn't bother but mobile screens are skinny and a date header
+    // helps keep the eye anchored.
     final byDay = <String, List<CheckinHistoryItem>>{};
     final dayLabel = DateFormat.yMMMMd();
     for (final item in items) {
@@ -85,17 +105,43 @@ class _Body extends StatelessWidget {
       (byDay[key] ??= []).add(item);
     }
     final sections = byDay.entries.toList(growable: false);
+    final hasPending = pending.isNotEmpty;
+    // 1 leading section for "Waiting to sync" if pending, plus one per
+    // synced day.
+    final totalSections = sections.length + (hasPending ? 1 : 0);
 
     return ListView.builder(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
       physics: const AlwaysScrollableScrollPhysics(),
-      itemCount: sections.length,
-      itemBuilder: (context, sectionIndex) {
+      itemCount: totalSections,
+      itemBuilder: (context, index) {
+        if (hasPending && index == 0) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _DateHeader(label: t.outbox_section_pending),
+              const SizedBox(height: 8),
+              for (final entry in pending) ...[
+                PendingCheckinTile(
+                  entry: entry,
+                  onRetry: entry.status == OutboxStatus.dead
+                      ? () => _retry(ref, entry.id)
+                      : null,
+                  onDiscard: entry.status == OutboxStatus.dead
+                      ? () => _confirmDiscard(context, ref, entry.id)
+                      : null,
+                ),
+                const SizedBox(height: 12),
+              ],
+            ],
+          );
+        }
+        final sectionIndex = hasPending ? index - 1 : index;
         final section = sections[sectionIndex];
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (sectionIndex > 0) const SizedBox(height: 12),
+            if (sectionIndex > 0 || hasPending) const SizedBox(height: 12),
             _DateHeader(label: section.key),
             const SizedBox(height: 8),
             for (final item in section.value) ...[
@@ -106,6 +152,41 @@ class _Body extends StatelessWidget {
         );
       },
     );
+  }
+
+  void _retry(WidgetRef ref, String id) {
+    // Fire-and-forget: the pendingCheckinsProvider stream will pick up
+    // the resulting state change and rebuild the tile.
+    // ignore: unawaited_futures
+    ref.read(outboxServiceProvider).retry(id);
+  }
+
+  Future<void> _confirmDiscard(
+    BuildContext context,
+    WidgetRef ref,
+    String id,
+  ) async {
+    final t = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(t.outbox_discard_confirm_title),
+        content: Text(t.outbox_discard_confirm_body),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(t.outbox_cancel),
+          ),
+          FilledButton.tonal(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(t.outbox_discard_confirm_cta),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true) {
+      await ref.read(outboxServiceProvider).discard(id);
+    }
   }
 }
 
