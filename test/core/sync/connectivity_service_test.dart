@@ -124,4 +124,21 @@ void main() {
 
     await svc.dispose();
   });
+
+  test('seedInitialState completes even when probe is invoked immediately', () async {
+    final raw = _MockConnectivity();
+    when(() => raw.onConnectivityChanged)
+        .thenAnswer((_) => const Stream.empty());
+    when(() => raw.checkConnectivity())
+        .thenAnswer((_) async => [ConnectivityResult.wifi]);
+
+    final svc = ConnectivityService(
+      connectivity: raw,
+      probe: () async => throw StateError('apiClient not ready'),
+    );
+    await Future<void>.delayed(Duration.zero);
+    await svc.refresh(force: true);
+    expect(svc.current, NetworkReachability.interfaceUp);
+    await svc.dispose();
+  });
 }

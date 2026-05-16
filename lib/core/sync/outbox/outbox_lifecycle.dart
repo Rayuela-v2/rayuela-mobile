@@ -76,8 +76,8 @@ class OutboxLifecycle with WidgetsBindingObserver {
   void _maybeDrain() {
     final uid = _userId;
     if (uid == null || uid.isEmpty) return;
-    // Fire-and-forget; OutboxService serialises concurrent drains
-    // internally via its mutex.
+    // Fire-and-forget; OutboxService handles concurrent drains
+    // internally via its single-flight flag.
     // ignore: unawaited_futures
     _outbox.drain(userId: uid);
   }

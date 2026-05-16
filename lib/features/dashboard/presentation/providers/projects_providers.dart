@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/cache/cached_value.dart';
-import '../../../../core/error/result.dart';
 import '../../../../shared/providers/core_providers.dart';
 import '../../../auth/domain/entities/auth_user.dart';
 import '../../../auth/presentation/providers/auth_controller.dart';
@@ -67,16 +66,3 @@ final subscribedProjectsValueProvider =
   return ref.watch(subscribedProjectsProvider).whenData((c) => c.value);
 });
 
-/// One-shot fetch used by pull-to-refresh and explicit retries. Bypasses
-/// the cache layer to force a network round-trip.
-final refreshSubscribedProjectsProvider =
-    Provider<Future<void> Function()>((ref) {
-  final repo = ref.read(projectsRepositoryProvider);
-  return () async {
-    final res = await repo.getSubscribedProjects();
-    if (res is Failure<List<ProjectSummary>>) throw res.error;
-    // Invalidating the SWR provider re-runs `watchSubscribedProjects`
-    // so the UI sees the fresh cache + fresh remote.
-    ref.invalidate(subscribedProjectsProvider);
-  };
-});

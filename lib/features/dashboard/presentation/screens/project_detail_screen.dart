@@ -104,8 +104,9 @@ class ProjectDetailScreen extends ConsumerWidget {
               children: [
                 RefreshIndicator(
                   onRefresh: () async {
-                    ref.invalidate(projectDetailProvider(projectId));
-                    await ref.read(projectDetailProvider(projectId).future);
+                    try {
+                      await ref.read(refreshProjectDetailProvider)(projectId);
+                    } catch (_) {/* surfaces via AsyncError elsewhere */}
                   },
                   child: _OverviewTab(detail: detail),
                 ),

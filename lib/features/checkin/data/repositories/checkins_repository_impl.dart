@@ -1,3 +1,5 @@
+import 'package:uuid/uuid.dart';
+
 import '../../../../core/error/app_exception.dart';
 import '../../../../core/error/result.dart';
 import '../../../../core/sync/connectivity_service.dart';
@@ -29,17 +31,20 @@ class CheckinsRepositoryImpl implements CheckinsRepository {
     required OutboxDao outboxDao,
     required ConnectivityService connectivity,
     required String Function() currentUserId,
+    Uuid? uuid,
   })  : _remote = remote,
         _outbox = outbox,
         _outboxDao = outboxDao,
         _connectivity = connectivity,
-        _currentUserId = currentUserId;
+        _currentUserId = currentUserId,
+        _uuid = uuid ?? const Uuid();
 
   final CheckinsRemoteSource _remote;
   final OutboxService _outbox;
   final OutboxDao _outboxDao;
   final ConnectivityService _connectivity;
   final String Function() _currentUserId;
+  final Uuid _uuid;
 
   @override
   Future<Result<CheckinSubmissionOutcome>> submitCheckin(
@@ -57,14 +62,16 @@ class CheckinsRepositoryImpl implements CheckinsRepository {
     final pending = await _outboxDao.pendingCount(userId);
     final online = await _connectivity.isOnlineForReal();
 
+    // Mint the idempotency key up-front so the same value is reused
+    // when we fall back to enqueueing after a network blip.
+    final idempotencyKey = _uuid.v4();
+
     if (online && pending == 0) {
-      // Mint the idempotency key up-front so the same value is reused
-      // when we fall back to enqueueing after a network blip.
-      final outcome = await _trySendDirect(request);
+      final outcome = await _trySendDirect(request, idempotencyKey);
       if (outcome != null) return Success(outcome);
     }
 
-    return Success(await _enqueue(request, userId));
+    return Success(await _enqueue(request, userId, idempotencyKey));
   }
 
   /// Returns null when the direct send was a transient failure → the
@@ -73,8 +80,9 @@ class CheckinsRepositoryImpl implements CheckinsRepository {
   /// see right away.
   Future<CheckinSubmissionOutcome?> _trySendDirect(
     CheckinRequest request,
+    String idempotencyKey,
   ) async {
-    final res = await _remote.submit(request);
+    final res = await _remote.submit(request, idempotencyKey: idempotencyKey);
     if (res case Success(:final value)) {
       return CheckinSubmissionAccepted(value.toEntity());
     }
@@ -99,8 +107,10 @@ class CheckinsRepositoryImpl implements CheckinsRepository {
   Future<CheckinSubmissionQueued> _enqueue(
     CheckinRequest request,
     String userId,
+    String idempotencyKey,
   ) async {
     final entry = await _outbox.enqueue(
+      id: idempotencyKey,
       userId: userId,
       projectId: request.projectId,
       taskId: request.taskId,

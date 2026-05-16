@@ -37,6 +37,19 @@ class _ScriptedSender implements OutboxSender {
   }
 }
 
+class _GatedSender implements OutboxSender {
+  _GatedSender(this.gate);
+  final Future<void> gate;
+  int sentCount = 0;
+
+  @override
+  Future<OutboxSendOutcome> send(OutboxEntry entry) async {
+    sentCount++;
+    await gate;
+    return const OutboxSendSucceeded();
+  }
+}
+
 void main() {
   setUpAll(sqfliteFfiInit);
 
@@ -350,6 +363,88 @@ void main() {
       expect(sender.sent, isEmpty);
       expect(svc.status, SyncStatus.offline);
       expect(await dao.pendingCount('u1'), 1);
+    });
+
+    test('concurrent drain triggers result in at most one drain cycle',
+        () async {
+      final gate = Completer<void>();
+      final sender = _GatedSender(gate.future);
+      final svc = OutboxService(
+        dao: dao,
+        imageStore: imageStore,
+        connectivity: connectivity,
+        sender: sender,
+      );
+      addTearDown(svc.dispose);
+
+      final src = await writeFakeJpeg('g.jpg');
+      await svc.enqueue(
+        userId: 'u1',
+        projectId: 'p1',
+        taskType: 'observation',
+        latitude: '0',
+        longitude: '0',
+        datetime: DateTime.utc(2026, 5, 16, 12),
+        sourceImagePaths: [src],
+      );
+
+      final firstDrain = svc.drain(userId: 'u1');
+      // No yield here.
+
+      final start = DateTime.now();
+      await svc.drain(userId: 'u1');
+      final elapsed = DateTime.now().difference(start);
+      expect(elapsed.inMilliseconds, lessThan(100),
+          reason: 'second drain must skip, not block on the in-flight one');
+
+      gate.complete();
+      await firstDrain;
+      expect(sender.sentCount, 1,
+          reason: 'only one drain cycle should have run');
+    });
+  });
+
+  group('retry', () {
+    test(
+        'clears prior error fields and resets eligibility (does not overwrite with debug string)',
+        () async {
+      final sender = _ScriptedSender([]);
+      final svc = OutboxService(
+        dao: dao,
+        imageStore: imageStore,
+        connectivity: connectivity,
+        sender: sender,
+        clock: () => DateTime.utc(2026, 5, 16, 12),
+      );
+      addTearDown(svc.dispose);
+
+      final src = await writeFakeJpeg('r.jpg');
+      final entry = await svc.enqueue(
+        userId: 'u1',
+        projectId: 'p1',
+        taskType: 'observation',
+        latitude: '0',
+        longitude: '0',
+        datetime: DateTime.utc(2026, 5, 16, 12),
+        sourceImagePaths: [src],
+      );
+      await dao.markFailed(
+        entry.id,
+        attemptCount: 2,
+        nextAttemptAt: DateTime.utc(2027),
+        errorCode: 'http_503',
+        errorMessage: 'Server unavailable',
+      );
+
+      final ok = await svc.retry(entry.id);
+      expect(ok, isTrue);
+
+      final row = await dao.findById(entry.id);
+      expect(row!.lastErrorMessage, isNull,
+          reason: 'retry must not surface an internal debug string to the UI');
+      expect(row.lastErrorCode, isNull);
+      expect(row.nextAttemptAt!.isBefore(DateTime.utc(2026, 5, 16, 13)), isTrue,
+          reason: 'row must be eligible immediately');
     });
   });
 }

@@ -24,16 +24,16 @@ final projectDetailValueProvider = Provider.autoDispose
   return ref.watch(projectDetailProvider(projectId)).whenData((c) => c.value);
 });
 
-/// One-shot refresh used by pull-to-refresh handlers. Bypasses the SWR
-/// stream to force a remote round-trip and re-emits the new cache, so
-/// the spinner stays up until the network call resolves.
+/// One-shot refresh used by pull-to-refresh handlers. Invalidate the SWR
+/// stream and await the first non-stale value so the spinner stays up
+/// until the network call returns.
 final refreshProjectDetailProvider =
     Provider<Future<void> Function(String)>((ref) {
   return (projectId) async {
-    final repo = ref.read(projectsRepositoryProvider);
-    final res = await repo.getProjectDetail(projectId);
-    if (res is Failure<ProjectDetail>) throw res.error;
     ref.invalidate(projectDetailProvider(projectId));
+    await ref.read(projectDetailProvider(projectId).stream).firstWhere(
+          (cached) => !cached.isStale,
+        );
   };
 });
 

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:mutex/mutex.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../storage/image_store.dart';
@@ -16,9 +15,10 @@ import 'sync_status.dart';
 /// Two responsibilities:
 ///   * **enqueue** a freshly-composed check-in: persist images via
 ///     [ImageStore], insert a row in [OutboxDao].
-///   * **drain** eligible rows in FIFO order, sending one at a time
-///     under a [Mutex] so concurrent triggers (lifecycle resume,
-///     connectivity stream, manual retry) don't race.
+///   * **drain** eligible rows in FIFO order, sending one at a time.
+///     Concurrent triggers (lifecycle resume, connectivity stream,
+///     manual retry) are handled via a single-flight flag so they
+///     don't race.
 ///
 /// The "how do I actually upload this" step is delegated to an
 /// [OutboxSender] so the `core/` layer stays free of feature-specific
@@ -53,7 +53,7 @@ class OutboxService {
   final BackoffStrategy _backoff;
   final DateTime Function() _clock;
 
-  final Mutex _drainLock = Mutex();
+  bool _draining = false;
   final StreamController<SyncStatus> _statusController =
       StreamController<SyncStatus>.broadcast();
   SyncStatus _status = SyncStatus.idle;
@@ -90,6 +90,7 @@ class OutboxService {
   /// lose them) before the SQLite row is inserted. If anything fails
   /// we roll back the on-disk folder and rethrow.
   Future<OutboxEntry> enqueue({
+    String? id,
     required String userId,
     required String projectId,
     String? taskId,
@@ -100,11 +101,11 @@ class OutboxService {
     String? notes,
     required List<String> sourceImagePaths,
   }) async {
-    final id = _uuid.v4();
+    final entryId = id ?? _uuid.v4();
     final now = _clock().toUtc();
 
     final stored = await _imageStore.persist(
-      outboxId: id,
+      outboxId: entryId,
       sourcePaths: sourceImagePaths,
     );
     final images = [
@@ -118,7 +119,7 @@ class OutboxService {
     ];
 
     final entry = OutboxEntry(
-      id: id,
+      id: entryId,
       userId: userId,
       projectId: projectId,
       taskId: taskId,
@@ -139,10 +140,10 @@ class OutboxService {
       await _dao.insert(entry);
     } catch (e) {
       // Roll back the orphan folder so a retry doesn't pile up bytes.
-      await _imageStore.deleteForOutbox(id);
+      await _imageStore.deleteForOutbox(entryId);
       rethrow;
     }
-    _changesController.add(id);
+    _changesController.add(entryId);
     return entry;
   }
 
@@ -154,15 +155,20 @@ class OutboxService {
   /// network drops, or [maxPerCycle] sends have completed.
   ///
   /// Safe to call from multiple triggers — concurrent invocations are
-  /// serialised by [_drainLock]. A second call while the first is still
-  /// running returns immediately (the work-in-progress will pick up
-  /// any new rows enqueued in the meantime).
+  /// handled by a single-flight flag. A second call while the first is
+  /// still running returns immediately (the work-in-progress will pick
+  /// up any new rows enqueued in the meantime).
   Future<void> drain({
     required String userId,
     int maxPerCycle = 50,
   }) async {
-    if (_drainLock.isLocked) return;
-    await _drainLock.protect(() => _drainLoop(userId, maxPerCycle));
+    if (_draining) return;
+    _draining = true;
+    try {
+      await _drainLoop(userId, maxPerCycle);
+    } finally {
+      _draining = false;
+    }
   }
 
   Future<void> _drainLoop(String userId, int maxPerCycle) async {
@@ -247,13 +253,7 @@ class OutboxService {
   Future<bool> retry(String id) async {
     final row = await _dao.findById(id);
     if (row == null) return false;
-    await _dao.markFailed(
-      id,
-      attemptCount: row.attemptCount,
-      nextAttemptAt: _clock(),
-      errorCode: 'manual_retry',
-      errorMessage: 'User requested immediate retry',
-    );
+    await _dao.clearErrorAndMakeEligible(id, now: _clock());
     _changesController.add(id);
     return true;
   }
