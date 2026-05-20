@@ -16,6 +16,48 @@ class RayuelaColors {
   static const Color onSurface = Color(0xFF1B2B26);
 }
 
+/// Theme extension for the Check-in Wizard UI.
+@immutable
+class RayuelaWizardColors extends ThemeExtension<RayuelaWizardColors> {
+  const RayuelaWizardColors({
+    required this.wizardProgress,
+    required this.wizardBackground,
+    required this.wizardStepText,
+  });
+
+  final Color? wizardProgress;
+  final Color? wizardBackground;
+  final Color? wizardStepText;
+
+  @override
+  RayuelaWizardColors copyWith({
+    Color? wizardProgress,
+    Color? wizardBackground,
+    Color? wizardStepText,
+  }) {
+    return RayuelaWizardColors(
+      wizardProgress: wizardProgress ?? this.wizardProgress,
+      wizardBackground: wizardBackground ?? this.wizardBackground,
+      wizardStepText: wizardStepText ?? this.wizardStepText,
+    );
+  }
+
+  @override
+  RayuelaWizardColors lerp(
+    ThemeExtension<RayuelaWizardColors>? other,
+    double t,
+  ) {
+    if (other is! RayuelaWizardColors) {
+      return this;
+    }
+    return RayuelaWizardColors(
+      wizardProgress: Color.lerp(wizardProgress, other.wizardProgress, t),
+      wizardBackground: Color.lerp(wizardBackground, other.wizardBackground, t),
+      wizardStepText: Color.lerp(wizardStepText, other.wizardStepText, t),
+    );
+  }
+}
+
 class AppTheme {
   const AppTheme._();
 
@@ -46,6 +88,13 @@ class AppTheme {
     );
 
     return base.copyWith(
+      extensions: [
+        const RayuelaWizardColors(
+          wizardProgress: Color(0xFF4DBA87),
+          wizardBackground: Color(0xFF1E3A2F),
+          wizardStepText: Color(0xFFF5EDD6),
+        ),
+      ],
       appBarTheme: AppBarTheme(
         backgroundColor: scheme.surface,
         foregroundColor: scheme.onSurface,

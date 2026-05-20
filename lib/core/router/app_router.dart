@@ -8,8 +8,9 @@ import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/checkin/domain/entities/checkin_result.dart';
 import '../../features/checkin/domain/entities/checkin_submission_outcome.dart';
+import '../../features/checkin/presentation/providers/checkin_wizard_controller.dart';
 import '../../features/checkin/presentation/screens/checkin_result_screen.dart';
-import '../../features/checkin/presentation/screens/checkin_screen.dart';
+import '../../features/checkin/presentation/screens/checkin_wizard_screen.dart';
 import '../../features/checkin/presentation/screens/pending_data_screen.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/dashboard/presentation/screens/project_detail_screen.dart';
@@ -100,28 +101,20 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             );
           }
           final qp = state.uri.queryParameters;
-          // taskType is optional now: when launched from a specific Task
-          // it's pre-set, when launched from "Add a check-in" on the
-          // project detail the user picks from `taskTypes` (extra).
-          final taskType = qp['taskType'];
-          // The project's taskType catalog comes through `extra` because
-          // it's a list. Falls back to an empty list — the screen renders
-          // a free-text input in that case.
           final extra = state.extra;
           final taskTypes = extra is List<String>
               ? extra
               : (extra is List
                   ? extra.map((e) => e.toString()).toList(growable: false)
                   : const <String>[]);
-          return CheckinScreen(
-            projectId: projectId,
-            taskType: (taskType != null && taskType.isNotEmpty)
-                ? taskType
-                : null,
-            availableTaskTypes: taskTypes,
-            taskId: qp['taskId'],
-            taskName: qp['taskName'],
-            projectName: qp['projectName'],
+          
+          return CheckinWizardScreen(
+            args: CheckinWizardArgs(
+              projectId: projectId,
+              taskId: qp['taskId'],
+              initialTaskType: qp['taskType'],
+              availableTaskTypes: taskTypes,
+            ),
           );
         },
       ),

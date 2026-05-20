@@ -118,7 +118,6 @@ class CheckinsRepositoryImpl implements CheckinsRepository {
       latitude: request.latitude,
       longitude: request.longitude,
       datetime: request.datetime,
-      notes: request.notes,
       sourceImagePaths: request.imagePaths,
     );
     // Best-effort: kick the drainer right away in case we miscounted
