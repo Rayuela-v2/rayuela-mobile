@@ -12,7 +12,6 @@ class CheckinRequest {
     required this.datetime,
     required this.imagePaths,
     this.taskId,
-    this.notes,
   });
 
   final String projectId;
@@ -28,8 +27,4 @@ class CheckinRequest {
   /// Not part of the wire shape today, but useful for the UI to remember
   /// which task triggered this check-in.
   final String? taskId;
-
-  /// Optional volunteer notes. Backend ignores them today; we keep them
-  /// client-side until backend §4.1 ships an extra field.
-  final String? notes;
 }

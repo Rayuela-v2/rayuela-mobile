@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 import '../../../../core/router/routes.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/checkin_result.dart';
 import '../../domain/entities/checkin_submission_outcome.dart';
+import '../providers/checkin_wizard_controller.dart';
+import '../widgets/wizard/companion_avatar.dart';
+import '../widgets/wizard/companion_bubble.dart';
 
-/// Two-faced screen reached after the volunteer hits "Submit":
-///
-///   * **Accepted** — backend processed the check-in synchronously.
-///     We celebrate the points/badges with the elastic hero animation.
-///   * **Queued** — the device was offline (or had a non-empty queue).
-///     We show a "we'll send it as soon as we have signal" panel
-///     instead of the reward to set the right expectation. The drainer
-///     will fire whenever connectivity comes back.
 class CheckinResultScreen extends StatefulWidget {
   const CheckinResultScreen({
     super.key,
@@ -50,52 +44,109 @@ class _CheckinResultScreenState extends State<CheckinResultScreen>
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;
+    // Scoped args forced to step 3 (final) for progress bar
+    final args = CheckinWizardArgs(projectId: widget.projectId);
+
     return Scaffold(
+      backgroundColor: const Color(0xFF1E3A2F), // dark green background
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: () {
-            if (Navigator.of(context).canPop()) {
-              Navigator.of(context).pop();
-            } else {
-              context.goNamed(AppRoute.dashboard);
-            }
-          },
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        foregroundColor: Colors.white,
+        leading: const SizedBox.shrink(), // hide back
+        title: const Text(
+          "¡LISTO!",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
-        title: Text(t.checkin_result_title),
+        centerTitle: true,
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(right: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            decoration: BoxDecoration(
+              color: const Color(0xFFC97B2E).withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: const Color(0xFFC97B2E).withValues(alpha: 0.5)),
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.check, size: 12, color: Color(0xFFC97B2E)),
+                SizedBox(width: 4),
+                Text(
+                  "Completo",
+                  style: TextStyle(color: Color(0xFFC97B2E), fontWeight: FontWeight.bold, fontSize: 10),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: switch (widget.outcome) {
-            CheckinSubmissionAccepted(:final result) => _AcceptedView(
-                result: result,
-                animation: _controller,
-                projectId: widget.projectId,
+        child: Column(
+          children: [
+            _ForcedProgressBar(args: args),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: switch (widget.outcome) {
+                  CheckinSubmissionAccepted(:final result) => _AcceptedView(
+                      result: result,
+                      animation: _controller,
+                      projectId: widget.projectId,
+                    ),
+                  CheckinSubmissionQueued(:final outboxId, :final queuedAt) =>
+                    _QueuedView(
+                      outboxId: outboxId,
+                      queuedAt: queuedAt,
+                      projectId: widget.projectId,
+                    ),
+                  CheckinSubmissionRejected(:final error) => _RejectedView(
+                      error: error.message,
+                      projectId: widget.projectId,
+                    ),
+                },
               ),
-            CheckinSubmissionQueued(:final outboxId, :final queuedAt) =>
-              _QueuedView(
-                outboxId: outboxId,
-                queuedAt: queuedAt,
-                projectId: widget.projectId,
-              ),
-            // Should not happen — Rejected outcomes never navigate here.
-            CheckinSubmissionRejected() => _QueuedView(
-                outboxId: '',
-                queuedAt: DateTime.now(),
-                projectId: widget.projectId,
-              ),
-          },
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-// -----------------------------------------------------------------------------
-// Accepted view — original celebratory layout
-// -----------------------------------------------------------------------------
+class _ForcedProgressBar extends StatelessWidget {
+  const _ForcedProgressBar({required this.args});
+  final CheckinWizardArgs args;
+
+  @override
+  Widget build(BuildContext context) {
+    const totalSteps = 4;
+    const step = 3; // Forced last step
+    const progressColor = Color(0xFFC97B2E);
+    final backgroundColor = Colors.white.withValues(alpha: 0.1);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      child: Row(
+        children: List.generate(totalSteps, (index) {
+          final isCompleted = index <= step;
+          return Expanded(
+            child: Container(
+              height: 4,
+              margin: EdgeInsets.only(
+                right: index == totalSteps - 1 ? 0 : 6,
+              ),
+              decoration: BoxDecoration(
+                color: isCompleted ? progressColor : backgroundColor,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          );
+        }),
+      ),
+    );
+  }
+}
 
 class _AcceptedView extends StatelessWidget {
   const _AcceptedView({
@@ -110,66 +161,75 @@ class _AcceptedView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final t = AppLocalizations.of(context)!;
-    final hasBadges = result.newBadges.isNotEmpty;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SizedBox(height: 12),
+        const Text(
+          "¡Colaboración\nregistrada!",
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 24),
+        ),
+        const SizedBox(height: 24),
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CompanionAvatar(size: 64, ringColor: Colors.transparent),
+          ],
+        ),
+        const SizedBox(height: 16),
+        const CompanionBubble(
+          child: Text(
+            "¡Excelente trabajo! Ya sumaste tu colaboración 🎉",
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Color(0xFF3A2810), fontWeight: FontWeight.bold, fontSize: 14),
+          ),
+        ),
+        const Spacer(),
         ScaleTransition(
           scale: CurvedAnimation(
             parent: animation,
             curve: Curves.elasticOut,
           ),
-          child: _PointsHero(points: result.pointsAwarded),
+          child: _PointsCircle(points: result.pointsAwarded),
         ),
-        if (result.contributesTo != null) ...[
-          const SizedBox(height: 16),
-          Center(
-            child: Text(
-              t.checkin_result_contributed_to(result.contributesTo!.name),
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+        const Spacer(),
+        const Text(
+          "¡Ya colaboraste!",
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+        ),
+        const Text(
+          "Check-in finalizado",
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.white60, fontSize: 12),
+        ),
+        const SizedBox(height: 12),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("🔥", style: TextStyle(fontSize: 16)),
+              SizedBox(width: 8),
+              Text(
+                "¡Nueva colaboración!",
+                style: TextStyle(color: Color(0xFFE8973A), fontWeight: FontWeight.bold, fontSize: 12),
               ),
-            ),
+            ],
           ),
-        ],
-        if (result.message != null) ...[
-          const SizedBox(height: 8),
-          Center(
-            child: Text(result.message!, style: theme.textTheme.bodyMedium),
-          ),
-        ],
+        ),
         const SizedBox(height: 32),
-        if (hasBadges) ...[
-          Text(
-            t.checkin_result_new_badges,
-            style: theme.textTheme.titleMedium
-                ?.copyWith(fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 12),
-          Expanded(
-            child: ListView.separated(
-              itemCount: result.newBadges.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 8),
-              itemBuilder: (_, i) => _BadgeTile(badge: result.newBadges[i]),
-            ),
-          ),
-        ] else
-          const Spacer(),
-        const SizedBox(height: 16),
         _BackButtons(projectId: projectId),
+        const SizedBox(height: 16),
       ],
     );
   }
 }
-
-// -----------------------------------------------------------------------------
-// Queued view — informational, no reward
-// -----------------------------------------------------------------------------
 
 class _QueuedView extends StatelessWidget {
   const _QueuedView({
@@ -184,82 +244,88 @@ class _QueuedView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final t = AppLocalizations.of(context)!;
-    final formatter = DateFormat.Hm(Localizations.localeOf(context).toString());
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SizedBox(height: 12),
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.tertiaryContainer,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Column(
-            children: [
-              Icon(
-                Icons.cloud_queue_outlined,
-                size: 48,
-                color: theme.colorScheme.onTertiaryContainer,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                t.checkin_result_queued_title,
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  color: theme.colorScheme.onTertiaryContainer,
-                  fontWeight: FontWeight.w800,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                t.checkin_result_queued_subtitle,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onTertiaryContainer,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
+        const Text(
+          "¡Colaboración\npendiente!",
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 24),
+        ),
+        const SizedBox(height: 24),
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CompanionAvatar(size: 64, ringColor: Colors.transparent),
+          ],
         ),
         const SizedBox(height: 16),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHighest
-                .withValues(alpha: 0.5),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            children: [
-              const Icon(Icons.schedule_outlined),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  t.checkin_result_queued_at(formatter.format(queuedAt)),
-                  style: theme.textTheme.bodyMedium,
-                ),
-              ),
-            ],
+        const CompanionBubble(
+          child: Text(
+            "¡Buen trabajo! La enviaremos apenas tengas conexión.",
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Color(0xFF3A2810), fontWeight: FontWeight.bold, fontSize: 14),
           ),
         ),
         const Spacer(),
-        _BackButtons(projectId: projectId),
+        const Icon(Icons.cloud_upload_outlined, size: 80, color: Colors.white24),
+        const Spacer(),
+        _BackButtons(projectId: projectId, label: t.common_continue),
+        const SizedBox(height: 16),
       ],
     );
   }
 }
 
-// -----------------------------------------------------------------------------
-// Shared bits
-// -----------------------------------------------------------------------------
+class _RejectedView extends StatelessWidget {
+  const _RejectedView({
+    required this.error,
+    required this.projectId,
+  });
+
+  final String error;
+  final String projectId;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const Text(
+          "¡Algo salió mal!",
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 24),
+        ),
+        const SizedBox(height: 24),
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CompanionAvatar(size: 64, ringColor: Colors.red),
+          ],
+        ),
+        const SizedBox(height: 16),
+        CompanionBubble(
+          child: Text(
+            error,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Color(0xFF3A2810), fontWeight: FontWeight.bold, fontSize: 14),
+          ),
+        ),
+        const Spacer(),
+        const Icon(Icons.error_outline, size: 80, color: Colors.white24),
+        const Spacer(),
+        _BackButtons(projectId: projectId),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+}
 
 class _BackButtons extends StatelessWidget {
-  const _BackButtons({required this.projectId});
+  const _BackButtons({required this.projectId, this.label});
   final String projectId;
+  final String? label;
 
   @override
   Widget build(BuildContext context) {
@@ -270,24 +336,26 @@ class _BackButtons extends StatelessWidget {
         FilledButton(
           onPressed: () => context.goNamed(AppRoute.dashboard),
           style: FilledButton.styleFrom(
+            backgroundColor: const Color(0xFF4DBA87),
+            foregroundColor: Colors.white,
             padding: const EdgeInsets.symmetric(vertical: 16),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
           ),
-          child: Text(t.checkin_back_to_dashboard),
+          child: Text(label ?? "Seguir explorando →"),
         ),
         const SizedBox(height: 8),
         OutlinedButton(
           onPressed: () {
-            if (Navigator.of(context).canPop()) {
-              Navigator.of(context).pop();
-            } else {
-              context.goNamed(
-                AppRoute.projectDetail,
-                pathParameters: {'projectId': projectId},
-              );
-            }
+            context.goNamed(
+              AppRoute.projectDetail,
+              pathParameters: {'projectId': projectId},
+            );
           },
           style: OutlinedButton.styleFrom(
+            side: const BorderSide(color: Colors.white24),
+            foregroundColor: Colors.white,
             padding: const EdgeInsets.symmetric(vertical: 14),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
           ),
           child: Text(t.checkin_back_to_project),
         ),
@@ -296,89 +364,39 @@ class _BackButtons extends StatelessWidget {
   }
 }
 
-class _PointsHero extends StatelessWidget {
-  const _PointsHero({required this.points});
+class _PointsCircle extends StatelessWidget {
+  const _PointsCircle({required this.points});
   final int points;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final t = AppLocalizations.of(context)!;
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.primaryContainer,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        children: [
-          Icon(
-            Icons.celebration_outlined,
-            size: 48,
-            color: theme.colorScheme.onPrimaryContainer,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            t.checkin_result_points_label(points),
-            style: theme.textTheme.displaySmall?.copyWith(
-              color: theme.colorScheme.onPrimaryContainer,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          Text(
-            points == 0
-                ? t.checkin_result_recorded
-                : t.checkin_result_earned,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onPrimaryContainer,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _BadgeTile extends StatelessWidget {
-  const _BadgeTile({required this.badge});
-  final BadgeAward badge;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.emoji_events_outlined,
-              color: theme.colorScheme.primary, size: 32,),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  badge.name,
-                  style: theme.textTheme.titleSmall
-                      ?.copyWith(fontWeight: FontWeight.w600),
+    return Center(
+      child: Container(
+        width: 140,
+        height: 140,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: const Color(0xFF4DBA87).withValues(alpha: 0.3), width: 8),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '+$points',
+                style: const TextStyle(
+                  color: Color(0xFF4DBA87),
+                  fontSize: 40,
+                  fontWeight: FontWeight.w900,
                 ),
-                if (badge.description != null) ...[
-                  const SizedBox(height: 2),
-                  Text(
-                    badge.description!,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ],
-            ),
+              ),
+              const Text(
+                "PUNTOS",
+                style: TextStyle(color: Color(0xFF4DBA87), fontWeight: FontWeight.bold, fontSize: 10, letterSpacing: 1.2),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

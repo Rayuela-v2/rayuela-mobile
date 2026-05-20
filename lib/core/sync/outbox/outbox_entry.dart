@@ -64,7 +64,6 @@ class OutboxEntry {
     required this.createdAt,
     required this.updatedAt,
     this.taskId,
-    this.notes,
     this.nextAttemptAt,
     this.lastErrorCode,
     this.lastErrorMessage,
@@ -89,8 +88,6 @@ class OutboxEntry {
   /// backend tell apart "captured offline 6 h ago, synced now" from
   /// "captured and synced just now" if it ever needs to.
   final DateTime clientCapturedAt;
-
-  final String? notes;
 
   final List<OutboxImage> images;
 
@@ -130,7 +127,6 @@ class OutboxEntry {
       longitude: longitude,
       datetime: datetime,
       clientCapturedAt: clientCapturedAt,
-      notes: notes,
       images: images ?? this.images,
       status: status ?? this.status,
       attemptCount: attemptCount ?? this.attemptCount,

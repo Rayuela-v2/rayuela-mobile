@@ -98,7 +98,6 @@ class OutboxService {
     required String latitude,
     required String longitude,
     required DateTime datetime,
-    String? notes,
     required List<String> sourceImagePaths,
   }) async {
     final entryId = id ?? _uuid.v4();
@@ -128,7 +127,6 @@ class OutboxService {
       longitude: longitude,
       datetime: datetime.toUtc(),
       clientCapturedAt: now,
-      notes: notes,
       images: images,
       status: OutboxStatus.pending,
       attemptCount: 0,
