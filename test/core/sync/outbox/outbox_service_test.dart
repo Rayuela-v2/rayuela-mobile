@@ -152,7 +152,8 @@ void main() {
           attemptCount: 0,
           createdAt: DateTime.utc(2026, 5),
           updatedAt: DateTime.utc(2026, 5),
-        )
+        ),
+      );
 
       final stubUuid = _MockUuid();
       when(stubUuid.v4).thenReturn(fixedId);

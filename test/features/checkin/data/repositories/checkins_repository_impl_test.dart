@@ -90,6 +90,7 @@ void main() {
         createdAt: DateTime.utc(2026, 5, 16, 12),
         updatedAt: DateTime.utc(2026, 5, 16, 12),
       );
+    });
     when(() => outbox.drain(userId: any(named: 'userId'))).thenAnswer((_) async {});
   }
 
@@ -131,6 +132,7 @@ void main() {
         createdAt: DateTime.utc(2026, 5, 16, 12),
         updatedAt: DateTime.utc(2026, 5, 16, 12),
       );
+    });
     when(() => outbox.drain(userId: any(named: 'userId')))
         .thenAnswer((_) async {});
 
