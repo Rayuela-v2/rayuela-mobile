@@ -17,6 +17,7 @@ class CheckinWizardState {
     this.resolvingLocation = false,
     this.isSubmitting = false,
     this.error,
+    this.customDateTime,
   });
 
   final String projectId;
@@ -30,6 +31,7 @@ class CheckinWizardState {
   final bool resolvingLocation;
   final bool isSubmitting;
   final String? error;
+  final DateTime? customDateTime;
 
   CheckinWizardState copyWith({
     String? projectId,
@@ -43,6 +45,8 @@ class CheckinWizardState {
     bool? resolvingLocation,
     bool? isSubmitting,
     String? error,
+    DateTime? customDateTime,
+    bool clearCustomDateTime = false,
   }) {
     return CheckinWizardState(
       projectId: projectId ?? this.projectId,
@@ -56,6 +60,7 @@ class CheckinWizardState {
       resolvingLocation: resolvingLocation ?? this.resolvingLocation,
       isSubmitting: isSubmitting ?? this.isSubmitting,
       error: error ?? this.error,
+      customDateTime: clearCustomDateTime ? null : (customDateTime ?? this.customDateTime),
     );
   }
 }

@@ -105,6 +105,17 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
     state = state.copyWith(manualLatLng: null);
   }
 
+  void setCustomDateTime(DateTime dateTime) {
+    state = state.copyWith(
+      customDateTime: dateTime,
+      error: null,
+    );
+  }
+
+  void clearCustomDateTime() {
+    state = state.copyWith(clearCustomDateTime: true);
+  }
+
   Future<CheckinSubmissionOutcome?> submit() async {
     if (state.isSubmitting) return null;
 
@@ -139,7 +150,7 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
         taskId: state.taskId,
         latitude: coords.latitude.toString(),
         longitude: coords.longitude.toString(),
-        datetime: DateTime.now(),
+        datetime: state.customDateTime ?? DateTime.now(),
         imagePaths: state.images.map((x) => x.path).toList(growable: false),
       );
       

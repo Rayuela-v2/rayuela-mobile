@@ -98,35 +98,21 @@ class Step3Location extends ConsumerWidget {
               SizedBox(
                 width: double.infinity,
                 child: FilledButton(
-                  onPressed: canSubmit
-                      ? () async {
-                          final result = await notifier.submit();
-                          if (result != null) {
-                            onSubmitted(result);
-                          }
-                        }
-                      : null,
+                  onPressed: canSubmit ? notifier.nextStep : null,
                   style: FilledButton.styleFrom(
-                    backgroundColor: const Color(0xFFE8973A),
+                    backgroundColor: const Color(0xFF4DBA87),
                     foregroundColor: Colors.white,
                     disabledBackgroundColor: Colors.white.withValues(alpha: 0.1),
                     disabledForegroundColor: Colors.white.withValues(alpha: 0.3),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: state.isSubmitting
-                      ? const SizedBox.square(
-                          dimension: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                        )
-                      : const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.bolt, size: 18),
-                            SizedBox(width: 8),
-                            Text("¡COLABORAR!", style: TextStyle(fontWeight: FontWeight.bold)),
-                          ],
-                        ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Siguiente →", style: TextStyle(fontWeight: FontWeight.bold)),
+                    ],
+                  ),
                 ),
               ),
             ],

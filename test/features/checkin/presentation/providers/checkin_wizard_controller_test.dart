@@ -146,4 +146,40 @@ void main() {
     expect(captured.longitude, '-58.3816');
     expect(captured.imagePaths, isEmpty);
   });
+
+  test('setCustomDateTime and clearCustomDateTime update customDateTime state', () async {
+    final controller = build();
+    await Future<void>.delayed(Duration.zero);
+
+    expect(controller.state.customDateTime, isNull);
+
+    final targetDateTime = DateTime.utc(2026, 6, 1, 10, 30);
+    controller.setCustomDateTime(targetDateTime);
+    expect(controller.state.customDateTime, targetDateTime);
+
+    controller.clearCustomDateTime();
+    expect(controller.state.customDateTime, isNull);
+  });
+
+  test('successful submit with customDateTime uses customDateTime in CheckinRequest', () async {
+    final controller = build(taskId: 't1', initialTaskType: 'obs');
+    await Future<void>.delayed(Duration.zero);
+
+    final targetDateTime = DateTime.utc(2026, 6, 1, 10, 30);
+    controller.setCustomDateTime(targetDateTime);
+
+    final outcomeResult = CheckinSubmissionQueued(
+      outboxId: 'q1',
+      queuedAt: DateTime.utc(2026, 5, 16),
+    );
+
+    when(() => repository.submitCheckin(any()))
+        .thenAnswer((_) async => Success(outcomeResult));
+
+    final outcome = await controller.submit();
+    expect(outcome, isA<CheckinSubmissionQueued>());
+
+    final captured = verify(() => repository.submitCheckin(captureAny())).captured.single as CheckinRequest;
+    expect(captured.datetime, targetDateTime);
+  });
 }

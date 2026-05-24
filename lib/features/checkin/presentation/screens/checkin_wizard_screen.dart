@@ -7,6 +7,7 @@ import '../providers/checkin_wizard_controller.dart';
 import '../steps/step1_task_type.dart';
 import '../steps/step2_evidence.dart';
 import '../steps/step3_location.dart';
+import '../steps/step4_datetime.dart';
 import '../widgets/wizard/wizard_appbar.dart';
 import '../widgets/wizard/wizard_progress_bar.dart';
 
@@ -80,7 +81,8 @@ class _CheckinWizardScreenState extends ConsumerState<CheckinWizardScreen> {
                   children: [
                     Step1TaskType(args: widget.args),
                     Step2Evidence(args: widget.args),
-                    Step3Location(
+                    Step3Location(args: widget.args),
+                    Step4DateTime(
                       args: widget.args,
                       onSubmitted: (outcome) {
                         context.pushReplacementNamed(
@@ -90,7 +92,6 @@ class _CheckinWizardScreenState extends ConsumerState<CheckinWizardScreen> {
                         );
                       },
                     ),
-                    const Center(child: Text('Step 4: Review')),
                   ],
                 ),
               ),
