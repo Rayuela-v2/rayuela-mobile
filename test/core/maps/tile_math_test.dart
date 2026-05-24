@@ -13,8 +13,8 @@ void main() {
       // https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
       // for (-34.6037, -58.3816, z=14).
       final t = latLngToTile(const LatLng(-34.6037, -58.3816), 14);
-      expect(t.x, 5573);
-      expect(t.y, 9786);
+      expect(t.x, 5534);
+      expect(t.y, 9872);
       expect(t.z, 14);
     });
 
