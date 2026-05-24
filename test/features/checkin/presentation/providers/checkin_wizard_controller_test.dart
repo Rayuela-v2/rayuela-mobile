@@ -1,0 +1,149 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:rayuela_mobile/core/error/result.dart';
+import 'package:rayuela_mobile/features/checkin/domain/entities/checkin_request.dart';
+import 'package:rayuela_mobile/features/checkin/domain/entities/checkin_submission_outcome.dart';
+import 'package:rayuela_mobile/features/checkin/domain/repositories/checkins_repository.dart';
+import 'package:rayuela_mobile/features/checkin/presentation/providers/checkin_wizard_controller.dart';
+import 'package:rayuela_mobile/features/checkin/presentation/services/location_service.dart';
+
+class _MockCheckinsRepository extends Mock implements CheckinsRepository {}
+class _MockLocationService extends Mock implements LocationService {}
+class _FakeCheckinRequest extends Fake implements CheckinRequest {}
+
+void main() {
+  setUpAll(() {
+    registerFallbackValue(_FakeCheckinRequest());
+  });
+
+  late _MockCheckinsRepository repository;
+  late _MockLocationService locationService;
+  late Position fakePosition;
+
+  setUp(() {
+    repository = _MockCheckinsRepository();
+    locationService = _MockLocationService();
+    fakePosition = Position(
+      latitude: -34.6037,
+      longitude: -58.3816,
+      timestamp: DateTime.utc(2026, 5, 16),
+      accuracy: 10,
+      altitude: 0,
+      altitudeAccuracy: 0,
+      heading: 0,
+      headingAccuracy: 0,
+      speed: 0,
+      speedAccuracy: 0,
+    );
+
+    when(() => locationService.currentPosition())
+        .thenAnswer((_) async => fakePosition);
+  });
+
+  CheckinWizardController build({
+    String projectId = 'p1',
+    String? taskId,
+    String? initialTaskType,
+    List<String> availableTaskTypes = const ['obs', 'pic'],
+  }) {
+    return CheckinWizardController(
+      repository: repository,
+      locationService: locationService,
+      projectId: projectId,
+      taskId: taskId,
+      initialTaskType: initialTaskType,
+      availableTaskTypes: availableTaskTypes,
+    );
+  }
+
+  test('initialization resolves location and sets state', () async {
+    final controller = build();
+    
+    // Wait for the asynchronous location loading in controller constructor
+    await Future<void>.delayed(Duration.zero);
+
+    expect(controller.state.projectId, 'p1');
+    expect(controller.state.position?.latitude, -34.6037);
+    expect(controller.state.position?.longitude, -58.3816);
+    expect(controller.state.step, 0);
+    expect(controller.state.resolvingLocation, false);
+  });
+
+  test('nextStep and previousStep navigate steps', () async {
+    final controller = build();
+    await Future<void>.delayed(Duration.zero);
+
+    expect(controller.state.step, 0);
+
+    controller.nextStep();
+    expect(controller.state.step, 1);
+
+    controller.previousStep();
+    expect(controller.state.step, 0);
+
+    // Cannot go below step 0
+    controller.previousStep();
+    expect(controller.state.step, 0);
+  });
+
+  test('setTaskType updates task type in state', () async {
+    final controller = build();
+    await Future<void>.delayed(Duration.zero);
+
+    expect(controller.state.taskType, isNull);
+
+    controller.setTaskType('obs');
+    expect(controller.state.taskType, 'obs');
+  });
+
+  test('submit fails if taskType is null', () async {
+    final controller = build();
+    await Future<void>.delayed(Duration.zero);
+
+    final outcome = await controller.submit();
+    expect(outcome, isNull);
+    expect(controller.state.error, 'Elegí qué tipo de check-in es.');
+  });
+
+  test('submit fails if location is not resolved', () async {
+    // Stub location service to throw an exception
+    when(() => locationService.currentPosition())
+        .thenThrow(const LocationDisabledException());
+
+    final controller = build();
+    await Future<void>.delayed(Duration.zero);
+
+    controller.setTaskType('obs');
+
+    final outcome = await controller.submit();
+    expect(outcome, isNull);
+    expect(controller.state.error, 'Esperando tu ubicación.');
+  });
+
+  test('successful submit invokes repository with correct payload (excluding notes)', () async {
+    final controller = build(taskId: 't1', initialTaskType: 'obs');
+    await Future<void>.delayed(Duration.zero);
+
+    final outcomeResult = CheckinSubmissionQueued(
+      outboxId: 'q1',
+      queuedAt: DateTime.utc(2026, 5, 16),
+    );
+
+    when(() => repository.submitCheckin(any()))
+        .thenAnswer((_) async => Success(outcomeResult));
+
+    final outcome = await controller.submit();
+    expect(outcome, isA<CheckinSubmissionQueued>());
+    expect(controller.state.isSubmitting, false);
+    expect(controller.state.error, isNull);
+
+    final captured = verify(() => repository.submitCheckin(captureAny())).captured.single as CheckinRequest;
+    expect(captured.projectId, 'p1');
+    expect(captured.taskId, 't1');
+    expect(captured.taskType, 'obs');
+    expect(captured.latitude, '-34.6037');
+    expect(captured.longitude, '-58.3816');
+    expect(captured.imagePaths, isEmpty);
+  });
+}
