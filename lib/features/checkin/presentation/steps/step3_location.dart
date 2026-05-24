@@ -10,11 +10,9 @@ class Step3Location extends ConsumerWidget {
   const Step3Location({
     super.key,
     required this.args,
-    required this.onSubmitted,
   });
 
   final CheckinWizardArgs args;
-  final void Function(dynamic) onSubmitted;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
