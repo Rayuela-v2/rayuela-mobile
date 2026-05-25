@@ -25,6 +25,7 @@ class Step4DateTime extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final isCustom = state.customDateTime != null;
     final DateTime activeDateTime = state.customDateTime ?? DateTime.now();
+    final localError = _localizeError(context, state.error);
 
     final formatted = DateFormat.yMMMd().add_jm().format(activeDateTime.toLocal());
     final companionText = isCustom
@@ -158,11 +159,11 @@ class Step4DateTime extends ConsumerWidget {
           ),
         ],
         const Spacer(),
-        if (state.error != null)
+        if (localError != null)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
             child: Text(
-              _localizeError(context, state.error),
+              localError,
               style: theme.textTheme.bodySmall?.copyWith(color: Colors.red),
               textAlign: TextAlign.center,
             ),
@@ -220,8 +221,8 @@ class Step4DateTime extends ConsumerWidget {
     );
   }
 
-  String _localizeError(BuildContext context, String? error) {
-    if (error == null) return '';
+  String? _localizeError(BuildContext context, String? error) {
+    if (error == null || error.isEmpty) return null;
     final l10n = AppLocalizations.of(context)!;
     return switch (error) {
       'wizard_error_select_type' => l10n.wizard_error_select_type,

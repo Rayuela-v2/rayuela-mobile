@@ -31,6 +31,7 @@ class Step3Location extends ConsumerWidget {
     }
 
     final canSubmit = effectiveLatLng != null && !state.isSubmitting;
+    final localError = _localizeError(context, state.error);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -62,7 +63,7 @@ class Step3Location extends ConsumerWidget {
             position: state.position,
             manualLatLng: state.manualLatLng,
             resolving: state.resolvingLocation,
-            errorMessage: _localizeError(context, state.error),
+            errorMessage: localError,
             onRetry: notifier.initLocation,
             onPickOnMap: () async {
               final picked = await LocationPickerSheet.show(context, initial: effectiveLatLng);
@@ -74,11 +75,11 @@ class Step3Location extends ConsumerWidget {
           ),
         ),
         const Spacer(),
-        if (state.error != null)
+        if (localError != null)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
             child: Text(
-              _localizeError(context, state.error),
+              localError,
               style: theme.textTheme.bodySmall?.copyWith(color: Colors.red),
               textAlign: TextAlign.center,
             ),
@@ -122,8 +123,8 @@ class Step3Location extends ConsumerWidget {
     );
   }
 
-  String _localizeError(BuildContext context, String? error) {
-    if (error == null) return '';
+  String? _localizeError(BuildContext context, String? error) {
+    if (error == null || error.isEmpty) return null;
     final l10n = AppLocalizations.of(context)!;
     return switch (error) {
       'wizard_error_select_type' => l10n.wizard_error_select_type,

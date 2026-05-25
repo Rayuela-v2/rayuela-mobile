@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../../../core/error/app_exception.dart';
 import '../../domain/entities/checkin_request.dart';
 import '../../domain/entities/checkin_submission_outcome.dart';
 import '../../domain/repositories/checkins_repository.dart';
@@ -41,7 +42,10 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
         resolvingLocation: false,
       );
     } catch (e) {
-      state = state.copyWith(resolvingLocation: false);
+      state = state.copyWith(
+        resolvingLocation: false,
+        error: e is AppException ? e.message : e.toString(),
+      );
     }
   }
 
