@@ -804,4 +804,77 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get error_timeout =>
       'El servidor está tardando en responder. Probá en un momento.';
+
+  @override
+  String get wizard_step1_guide =>
+      '¡Hola! ¿Qué tipo de tarea querés registrar hoy?';
+
+  @override
+  String get wizard_step1_title => 'TIPO DE TAREA';
+
+  @override
+  String get wizard_step1_empty =>
+      'No hay tipos de tareas disponibles para este proyecto.';
+
+  @override
+  String get wizard_step1_empty_back => 'Volver';
+
+  @override
+  String get wizard_next => 'Siguiente →';
+
+  @override
+  String get wizard_submit => '¡COLABORAR!';
+
+  @override
+  String get wizard_step4_guide_custom =>
+      'Estableciste una fecha y hora personalizada para esta colaboración.';
+
+  @override
+  String get wizard_step4_guide_current =>
+      'Estamos usando la fecha y hora actual para este check-in. ¿Querés modificarla?';
+
+  @override
+  String get wizard_step4_title => 'FECHA Y HORA';
+
+  @override
+  String get wizard_step4_subtitle_custom => 'Fecha/hora modificada';
+
+  @override
+  String get wizard_step4_subtitle_current => 'Fecha/hora actual';
+
+  @override
+  String get wizard_step4_restore => 'Restablecer a la hora actual';
+
+  @override
+  String get wizard_error_select_type => 'Elegí qué tipo de check-in es.';
+
+  @override
+  String get wizard_error_waiting_location => 'Esperando tu ubicación.';
+
+  @override
+  String get wizard_error_future_date =>
+      'La fecha y hora no pueden ser futuras.';
+
+  @override
+  String get wizard_step2_guide =>
+      '¿Tenés evidencia para agregar? Podés subir hasta 3 fotos.';
+
+  @override
+  String get wizard_step2_title => 'EVIDENCIA';
+
+  @override
+  String get wizard_step2_cam => 'Cámara';
+
+  @override
+  String get wizard_step2_gal => 'Galería';
+
+  @override
+  String get wizard_step2_skip => 'saltear si no tenés fotos';
+
+  @override
+  String get wizard_step3_guide =>
+      'Estamos usando tu ubicación actual. ¿Querés modificarla?';
+
+  @override
+  String get wizard_step3_title => 'COORDENADAS';
 }

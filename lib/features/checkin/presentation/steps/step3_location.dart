@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../providers/checkin_wizard_controller.dart';
 import '../widgets/location_picker_sheet.dart';
 import '../widgets/wizard/location_summary_card.dart';
@@ -19,6 +20,7 @@ class Step3Location extends ConsumerWidget {
     final state = ref.watch(checkinWizardProvider(args));
     final notifier = ref.read(checkinWizardProvider(args).notifier);
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     // Derived effective LatLng
     LatLng? effectiveLatLng;
@@ -33,8 +35,8 @@ class Step3Location extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const WizardCompanionGuide(
-          text: "Estamos usando tu ubicación actual. ¿Querés modificarla?",
+        WizardCompanionGuide(
+          text: l10n.wizard_step3_guide,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -43,7 +45,7 @@ class Step3Location extends ConsumerWidget {
               Container(width: 12, height: 2, color: const Color(0xFFC97B2E)),
               const SizedBox(width: 8),
               Text(
-                "COORDENADAS",
+                l10n.wizard_step3_title,
                 style: theme.textTheme.labelSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.2,
@@ -60,7 +62,7 @@ class Step3Location extends ConsumerWidget {
             position: state.position,
             manualLatLng: state.manualLatLng,
             resolving: state.resolvingLocation,
-            errorMessage: state.error,
+            errorMessage: _localizeError(context, state.error),
             onRetry: notifier.initLocation,
             onPickOnMap: () async {
               final picked = await LocationPickerSheet.show(context, initial: effectiveLatLng);
@@ -76,7 +78,7 @@ class Step3Location extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
             child: Text(
-              state.error!,
+              _localizeError(context, state.error),
               style: theme.textTheme.bodySmall?.copyWith(color: Colors.red),
               textAlign: TextAlign.center,
             ),
@@ -105,10 +107,10 @@ class Step3Location extends ConsumerWidget {
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Siguiente →", style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(l10n.wizard_next, style: const TextStyle(fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
@@ -118,5 +120,16 @@ class Step3Location extends ConsumerWidget {
         ),
       ],
     );
+  }
+
+  String _localizeError(BuildContext context, String? error) {
+    if (error == null) return '';
+    final l10n = AppLocalizations.of(context)!;
+    return switch (error) {
+      'wizard_error_select_type' => l10n.wizard_error_select_type,
+      'wizard_error_waiting_location' => l10n.wizard_error_waiting_location,
+      'wizard_error_future_date' => l10n.wizard_error_future_date,
+      _ => error,
+    };
   }
 }

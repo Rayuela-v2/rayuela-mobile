@@ -47,6 +47,8 @@ class CheckinWizardState {
     String? error,
     DateTime? customDateTime,
     bool clearCustomDateTime = false,
+    bool clearManualLatLng = false,
+    bool clearError = false,
   }) {
     return CheckinWizardState(
       projectId: projectId ?? this.projectId,
@@ -56,10 +58,10 @@ class CheckinWizardState {
       availableTaskTypes: availableTaskTypes ?? this.availableTaskTypes,
       images: images ?? this.images,
       position: position ?? this.position,
-      manualLatLng: manualLatLng ?? this.manualLatLng,
+      manualLatLng: clearManualLatLng ? null : (manualLatLng ?? this.manualLatLng),
       resolvingLocation: resolvingLocation ?? this.resolvingLocation,
       isSubmitting: isSubmitting ?? this.isSubmitting,
-      error: error ?? this.error,
+      error: clearError ? null : (error ?? this.error),
       customDateTime: clearCustomDateTime ? null : (customDateTime ?? this.customDateTime),
     );
   }

@@ -1437,6 +1437,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The server is slow to respond. Try again in a moment.'**
   String get error_timeout;
+
+  /// No description provided for @wizard_step1_guide.
+  ///
+  /// In en, this message translates to:
+  /// **'Hello! What type of task would you like to register today?'**
+  String get wizard_step1_guide;
+
+  /// No description provided for @wizard_step1_title.
+  ///
+  /// In en, this message translates to:
+  /// **'TASK TYPE'**
+  String get wizard_step1_title;
+
+  /// No description provided for @wizard_step1_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'There are no task types available for this project.'**
+  String get wizard_step1_empty;
+
+  /// No description provided for @wizard_step1_empty_back.
+  ///
+  /// In en, this message translates to:
+  /// **'Go Back'**
+  String get wizard_step1_empty_back;
+
+  /// No description provided for @wizard_next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next →'**
+  String get wizard_next;
+
+  /// No description provided for @wizard_submit.
+  ///
+  /// In en, this message translates to:
+  /// **'COLLABORATE!'**
+  String get wizard_submit;
+
+  /// No description provided for @wizard_step4_guide_custom.
+  ///
+  /// In en, this message translates to:
+  /// **'You have set a custom date and time for this collaboration.'**
+  String get wizard_step4_guide_custom;
+
+  /// No description provided for @wizard_step4_guide_current.
+  ///
+  /// In en, this message translates to:
+  /// **'We are using the current date and time for this check-in. Would you like to modify it?'**
+  String get wizard_step4_guide_current;
+
+  /// No description provided for @wizard_step4_title.
+  ///
+  /// In en, this message translates to:
+  /// **'DATE & TIME'**
+  String get wizard_step4_title;
+
+  /// No description provided for @wizard_step4_subtitle_custom.
+  ///
+  /// In en, this message translates to:
+  /// **'Modified date/time'**
+  String get wizard_step4_subtitle_custom;
+
+  /// No description provided for @wizard_step4_subtitle_current.
+  ///
+  /// In en, this message translates to:
+  /// **'Current date/time'**
+  String get wizard_step4_subtitle_current;
+
+  /// No description provided for @wizard_step4_restore.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset to current time'**
+  String get wizard_step4_restore;
+
+  /// No description provided for @wizard_error_select_type.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a check-in type.'**
+  String get wizard_error_select_type;
+
+  /// No description provided for @wizard_error_waiting_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for your location.'**
+  String get wizard_error_waiting_location;
+
+  /// No description provided for @wizard_error_future_date.
+  ///
+  /// In en, this message translates to:
+  /// **'The date and time cannot be in the future.'**
+  String get wizard_error_future_date;
+
+  /// No description provided for @wizard_step2_guide.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you have evidence to add? You can upload up to 3 photos.'**
+  String get wizard_step2_guide;
+
+  /// No description provided for @wizard_step2_title.
+  ///
+  /// In en, this message translates to:
+  /// **'EVIDENCE'**
+  String get wizard_step2_title;
+
+  /// No description provided for @wizard_step2_cam.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera'**
+  String get wizard_step2_cam;
+
+  /// No description provided for @wizard_step2_gal.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get wizard_step2_gal;
+
+  /// No description provided for @wizard_step2_skip.
+  ///
+  /// In en, this message translates to:
+  /// **'skip if you don\'t have photos'**
+  String get wizard_step2_skip;
+
+  /// No description provided for @wizard_step3_guide.
+  ///
+  /// In en, this message translates to:
+  /// **'We are using your current location. Would you like to modify it?'**
+  String get wizard_step3_guide;
+
+  /// No description provided for @wizard_step3_title.
+  ///
+  /// In en, this message translates to:
+  /// **'COORDINATES'**
+  String get wizard_step3_title;
 }
 
 class _AppLocalizationsDelegate

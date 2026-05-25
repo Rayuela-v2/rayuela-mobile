@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../providers/checkin_wizard_controller.dart';
 import '../widgets/wizard/photo_thumb.dart';
 import '../widgets/wizard/wizard_companion_guide.dart';
@@ -15,12 +16,13 @@ class Step2Evidence extends ConsumerWidget {
     final state = ref.watch(checkinWizardProvider(args));
     final notifier = ref.read(checkinWizardProvider(args).notifier);
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const WizardCompanionGuide(
-          text: "¿Tenés evidencia para agregar? Podés subir hasta 3 fotos.",
+        WizardCompanionGuide(
+          text: l10n.wizard_step2_guide,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -29,7 +31,7 @@ class Step2Evidence extends ConsumerWidget {
               Container(width: 12, height: 2, color: const Color(0xFFC97B2E)),
               const SizedBox(width: 8),
               Text(
-                "EVIDENCIA · ${state.images.length} FOTO${state.images.length == 1 ? '' : 'S'}",
+                "${l10n.wizard_step2_title} · ${state.images.length} ${state.images.length == 1 ? 'FOTO' : 'FOTOS'}",
                 style: theme.textTheme.labelSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.2,
@@ -66,13 +68,13 @@ class Step2Evidence extends ConsumerWidget {
                       _AddActionButton(
                         onPressed: () => notifier.pickImage(ImageSource.camera),
                         icon: Icons.photo_camera,
-                        label: "Cámara",
+                        label: l10n.wizard_step2_cam,
                       ),
                       const SizedBox(width: 24),
                       _AddActionButton(
                         onPressed: () => notifier.pickImage(ImageSource.gallery),
                         icon: Icons.photo_library,
-                        label: "Galería",
+                        label: l10n.wizard_step2_gal,
                       ),
                     ],
                   ),
@@ -103,15 +105,15 @@ class Step2Evidence extends ConsumerWidget {
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text("Siguiente →", style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: Text(l10n.wizard_next, style: const TextStyle(fontWeight: FontWeight.bold)),
                 ),
               ),
               if (state.images.isEmpty)
                 TextButton(
                   onPressed: notifier.nextStep,
-                  child: const Text(
-                    "saltear si no tenés fotos",
-                    style: TextStyle(
+                  child: Text(
+                    l10n.wizard_step2_skip,
+                    style: const TextStyle(
                       color: Color(0xFFF5EDD6),
                       fontSize: 12,
                       decoration: TextDecoration.underline,

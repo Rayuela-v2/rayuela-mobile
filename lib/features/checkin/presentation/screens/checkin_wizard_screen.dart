@@ -31,6 +31,11 @@ class _CheckinWizardScreenState extends ConsumerState<CheckinWizardScreen> {
     super.initState();
     final initialStep = ref.read(checkinWizardProvider(widget.args)).step;
     _pageController = PageController(initialPage: initialStep);
+    
+    // Trigger location initialization asynchronously after build to avoid blocking construction/init
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(checkinWizardProvider(widget.args).notifier).initLocation();
+    });
   }
 
   @override

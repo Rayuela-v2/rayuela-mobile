@@ -69,8 +69,11 @@ Future<bool> runOutboxBackgroundCycle({
       sender: sender,
     );
 
-    await service.drain(userId: userId);
-    await service.dispose();
+    try {
+      await service.drain(userId: userId);
+    } finally {
+      await service.dispose();
+    }
     return true;
   } catch (_) {
     return false;

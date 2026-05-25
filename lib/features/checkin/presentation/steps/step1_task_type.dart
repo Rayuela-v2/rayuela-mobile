@@ -42,13 +42,41 @@ class _Step1TaskTypeState extends ConsumerState<Step1TaskType> {
   Widget build(BuildContext context) {
     final state = ref.watch(checkinWizardProvider(widget.args));
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final options = state.availableTaskTypes;
+
+    if (options.isEmpty) {
+      return Expanded(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.error_outline, size: 48, color: Colors.orange),
+                const SizedBox(height: 16),
+                Text(
+                  l10n.wizard_step1_empty,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black54),
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(l10n.wizard_step1_empty_back),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const WizardCompanionGuide(
-          text: "¡Hola! ¿Qué tipo de tarea querés registrar hoy?",
+        WizardCompanionGuide(
+          text: l10n.wizard_step1_guide,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -57,7 +85,7 @@ class _Step1TaskTypeState extends ConsumerState<Step1TaskType> {
               Container(width: 12, height: 2, color: const Color(0xFFC97B2E)),
               const SizedBox(width: 8),
               Text(
-                "TIPO DE TAREA",
+                l10n.wizard_step1_title,
                 style: theme.textTheme.labelSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.2,
@@ -134,7 +162,7 @@ class _Step1TaskTypeState extends ConsumerState<Step1TaskType> {
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text("Siguiente →", style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: Text(l10n.wizard_next, style: const TextStyle(fontWeight: FontWeight.bold)),
                 ),
               ),
             ],

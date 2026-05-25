@@ -25,9 +25,7 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
           taskId: taskId,
           taskType: initialTaskType,
           availableTaskTypes: availableTaskTypes,
-        )) {
-    initLocation();
-  }
+        ));
 
   final CheckinsRepository _repository;
   final LocationService _locationService;
@@ -35,7 +33,7 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
 
   Future<void> initLocation() async {
     if (state.resolvingLocation) return;
-    state = state.copyWith(resolvingLocation: true, error: null);
+    state = state.copyWith(resolvingLocation: true, clearError: true);
     try {
       final position = await _locationService.currentPosition();
       state = state.copyWith(
@@ -97,18 +95,24 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
   void setManualLocation(LatLng latLng) {
     state = state.copyWith(
       manualLatLng: latLng,
-      error: null,
+      clearError: true,
     );
   }
 
   void clearManualLocation() {
-    state = state.copyWith(manualLatLng: null);
+    state = state.copyWith(clearManualLatLng: true);
   }
 
   void setCustomDateTime(DateTime dateTime) {
+    if (dateTime.isAfter(DateTime.now())) {
+      state = state.copyWith(
+        error: "wizard_error_future_date",
+      );
+      return;
+    }
     state = state.copyWith(
       customDateTime: dateTime,
-      error: null,
+      clearError: true,
     );
   }
 
@@ -121,7 +125,7 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
 
     final taskType = state.taskType;
     if (taskType == null) {
-      state = state.copyWith(error: "Elegí qué tipo de check-in es.");
+      state = state.copyWith(error: "wizard_error_select_type");
       return null;
     }
 
@@ -133,13 +137,13 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
     }
 
     if (coords == null) {
-      state = state.copyWith(error: "Esperando tu ubicación.");
+      state = state.copyWith(error: "wizard_error_waiting_location");
       return null;
     }
 
     state = state.copyWith(
       isSubmitting: true,
-      error: null,
+      clearError: true,
     );
 
     debugPrint("[Wizard] Starting submission for project ${state.projectId}...");

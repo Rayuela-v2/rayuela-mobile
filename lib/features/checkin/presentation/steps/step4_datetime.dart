@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import '../../domain/entities/checkin_submission_outcome.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../providers/checkin_wizard_controller.dart';
 import '../widgets/wizard/wizard_companion_guide.dart';
 
@@ -12,7 +14,7 @@ class Step4DateTime extends ConsumerWidget {
   });
 
   final CheckinWizardArgs args;
-  final void Function(dynamic) onSubmitted;
+  final void Function(CheckinSubmissionOutcome?) onSubmitted;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,13 +22,14 @@ class Step4DateTime extends ConsumerWidget {
     final notifier = ref.read(checkinWizardProvider(args).notifier);
     final theme = Theme.of(context);
 
+    final l10n = AppLocalizations.of(context)!;
     final isCustom = state.customDateTime != null;
     final DateTime activeDateTime = state.customDateTime ?? DateTime.now();
 
     final formatted = DateFormat.yMMMd().add_jm().format(activeDateTime.toLocal());
     final companionText = isCustom
-        ? "Estableciste una fecha y hora personalizada para esta colaboración."
-        : "Estamos usando la fecha y hora actual para este check-in. ¿Querés modificarla?";
+        ? l10n.wizard_step4_guide_custom
+        : l10n.wizard_step4_guide_current;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -41,7 +44,7 @@ class Step4DateTime extends ConsumerWidget {
               Container(width: 12, height: 2, color: const Color(0xFFC97B2E)),
               const SizedBox(width: 8),
               Text(
-                "FECHA Y HORA",
+                l10n.wizard_step4_title,
                 style: theme.textTheme.labelSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.2,
@@ -74,7 +77,7 @@ class Step4DateTime extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        isCustom ? "Fecha/hora modificada" : "Fecha/hora actual",
+                        isCustom ? l10n.wizard_step4_subtitle_custom : l10n.wizard_step4_subtitle_current,
                         style: const TextStyle(
                           fontSize: 12,
                           color: Colors.black54,
@@ -100,11 +103,13 @@ class Step4DateTime extends ConsumerWidget {
                     child: const Icon(Icons.edit_outlined, size: 20, color: Color(0xFF3A2810)),
                   ),
                   onPressed: () async {
+                    final now = DateTime.now();
+                    final initialDate = activeDateTime.isAfter(now) ? now : activeDateTime;
                     final selectedDate = await showDatePicker(
                       context: context,
-                      initialDate: activeDateTime,
+                      initialDate: initialDate,
                       firstDate: DateTime(2000),
-                      lastDate: DateTime.now().add(const Duration(days: 365)),
+                      lastDate: now,
                     );
                     if (selectedDate == null) return;
 
@@ -137,9 +142,9 @@ class Step4DateTime extends ConsumerWidget {
             child: TextButton.icon(
               onPressed: notifier.clearCustomDateTime,
               icon: const Icon(Icons.restore, size: 16, color: Color(0xFFC97B2E)),
-              label: const Text(
-                "Restablecer a la hora actual",
-                style: TextStyle(
+              label: Text(
+                l10n.wizard_step4_restore,
+                style: const TextStyle(
                   color: Color(0xFFC97B2E),
                   fontWeight: FontWeight.bold,
                   fontSize: 12,
@@ -157,7 +162,7 @@ class Step4DateTime extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
             child: Text(
-              state.error!,
+              _localizeError(context, state.error),
               style: theme.textTheme.bodySmall?.copyWith(color: Colors.red),
               textAlign: TextAlign.center,
             ),
@@ -198,12 +203,12 @@ class Step4DateTime extends ConsumerWidget {
                           dimension: 20,
                           child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                         )
-                      : const Row(
+                      : Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.bolt, size: 18),
-                            SizedBox(width: 8),
-                            Text("¡COLABORAR!", style: TextStyle(fontWeight: FontWeight.bold)),
+                            const Icon(Icons.bolt, size: 18),
+                            const SizedBox(width: 8),
+                            Text(l10n.wizard_submit, style: const TextStyle(fontWeight: FontWeight.bold)),
                           ],
                         ),
                 ),
@@ -213,5 +218,16 @@ class Step4DateTime extends ConsumerWidget {
         ),
       ],
     );
+  }
+
+  String _localizeError(BuildContext context, String? error) {
+    if (error == null) return '';
+    final l10n = AppLocalizations.of(context)!;
+    return switch (error) {
+      'wizard_error_select_type' => l10n.wizard_error_select_type,
+      'wizard_error_waiting_location' => l10n.wizard_error_waiting_location,
+      'wizard_error_future_date' => l10n.wizard_error_future_date,
+      _ => error,
+    };
   }
 }

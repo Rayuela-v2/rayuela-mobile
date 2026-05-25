@@ -60,8 +60,8 @@ void main() {
   test('initialization resolves location and sets state', () async {
     final controller = build();
     
-    // Wait for the asynchronous location loading in controller constructor
-    await Future<void>.delayed(Duration.zero);
+    // Explicitly call initLocation since it is no longer called in constructor
+    await controller.initLocation();
 
     expect(controller.state.projectId, 'p1');
     expect(controller.state.position?.latitude, -34.6037);
@@ -72,7 +72,7 @@ void main() {
 
   test('nextStep and previousStep navigate steps', () async {
     final controller = build();
-    await Future<void>.delayed(Duration.zero);
+    await controller.initLocation();
 
     expect(controller.state.step, 0);
 
@@ -89,7 +89,7 @@ void main() {
 
   test('setTaskType updates task type in state', () async {
     final controller = build();
-    await Future<void>.delayed(Duration.zero);
+    await controller.initLocation();
 
     expect(controller.state.taskType, isNull);
 
@@ -99,11 +99,11 @@ void main() {
 
   test('submit fails if taskType is null', () async {
     final controller = build();
-    await Future<void>.delayed(Duration.zero);
+    await controller.initLocation();
 
     final outcome = await controller.submit();
     expect(outcome, isNull);
-    expect(controller.state.error, 'Elegí qué tipo de check-in es.');
+    expect(controller.state.error, 'wizard_error_select_type');
   });
 
   test('submit fails if location is not resolved', () async {
@@ -112,18 +112,18 @@ void main() {
         .thenThrow(const LocationDisabledException());
 
     final controller = build();
-    await Future<void>.delayed(Duration.zero);
+    await controller.initLocation();
 
     controller.setTaskType('obs');
 
     final outcome = await controller.submit();
     expect(outcome, isNull);
-    expect(controller.state.error, 'Esperando tu ubicación.');
+    expect(controller.state.error, 'wizard_error_waiting_location');
   });
 
   test('successful submit invokes repository with correct payload (excluding notes)', () async {
     final controller = build(taskId: 't1', initialTaskType: 'obs');
-    await Future<void>.delayed(Duration.zero);
+    await controller.initLocation();
 
     final outcomeResult = CheckinSubmissionQueued(
       outboxId: 'q1',
@@ -149,11 +149,12 @@ void main() {
 
   test('setCustomDateTime and clearCustomDateTime update customDateTime state', () async {
     final controller = build();
-    await Future<void>.delayed(Duration.zero);
+    await controller.initLocation();
 
     expect(controller.state.customDateTime, isNull);
 
-    final targetDateTime = DateTime.utc(2026, 6, 1, 10, 30);
+    // Use a past date (May 20, 2026) to avoid the future date restriction
+    final targetDateTime = DateTime.utc(2026, 5, 20, 10, 30);
     controller.setCustomDateTime(targetDateTime);
     expect(controller.state.customDateTime, targetDateTime);
 
@@ -163,9 +164,10 @@ void main() {
 
   test('successful submit with customDateTime uses customDateTime in CheckinRequest', () async {
     final controller = build(taskId: 't1', initialTaskType: 'obs');
-    await Future<void>.delayed(Duration.zero);
+    await controller.initLocation();
 
-    final targetDateTime = DateTime.utc(2026, 6, 1, 10, 30);
+    // Use a past date (May 20, 2026) to avoid the future date restriction
+    final targetDateTime = DateTime.utc(2026, 5, 20, 10, 30);
     controller.setCustomDateTime(targetDateTime);
 
     final outcomeResult = CheckinSubmissionQueued(
