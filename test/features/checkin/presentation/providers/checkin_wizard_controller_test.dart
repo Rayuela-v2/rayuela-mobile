@@ -184,4 +184,20 @@ void main() {
     final captured = verify(() => repository.submitCheckin(captureAny())).captured.single as CheckinRequest;
     expect(captured.datetime, targetDateTime);
   });
+
+  test('initLocation sets error state when location resolution fails', () async {
+    // Stub location service to throw a LocationDisabledException
+    when(() => locationService.currentPosition())
+        .thenThrow(const LocationDisabledException());
+
+    final controller = build();
+    await controller.initLocation();
+
+    expect(controller.state.position, isNull);
+    expect(controller.state.resolvingLocation, false);
+    expect(
+      controller.state.error,
+      'Location services are turned off. Enable them to check in.',
+    );
+  });
 }
