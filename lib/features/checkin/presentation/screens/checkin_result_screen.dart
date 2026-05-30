@@ -196,7 +196,7 @@ class _AcceptedView extends StatelessWidget {
               parent: animation,
               curve: Curves.elasticOut,
             ),
-            child: _PointsCircle(points: result.pointsAwarded),
+            child: _PointsCircle(points: result.pointsAwarded, label: t.project_stat_points.toUpperCase()),
           ),
           const Spacer(),
         ] else
@@ -410,8 +410,9 @@ class _BackButtons extends StatelessWidget {
 }
 
 class _PointsCircle extends StatelessWidget {
-  const _PointsCircle({required this.points});
+  const _PointsCircle({required this.points, required this.label});
   final int points;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
@@ -435,9 +436,9 @@ class _PointsCircle extends StatelessWidget {
                   fontWeight: FontWeight.w900,
                 ),
               ),
-              const Text(
-                "PUNTOS",
-                style: TextStyle(color: Color(0xFF4DBA87), fontWeight: FontWeight.bold, fontSize: 10, letterSpacing: 1.2),
+              Text(
+                label,
+                style: const TextStyle(color: Color(0xFF4DBA87), fontWeight: FontWeight.bold, fontSize: 10, letterSpacing: 1.2),
               ),
             ],
           ),
