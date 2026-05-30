@@ -164,9 +164,19 @@ class _AcceptedView extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
     final contributesTo = result.contributesTo;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
+    return SingleChildScrollView(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: MediaQuery.sizeOf(context).height -
+              MediaQuery.of(context).padding.top -
+              MediaQuery.of(context).padding.bottom -
+              kToolbarHeight -
+              56, // approx progress bar + safe-area
+        ),
+        child: IntrinsicHeight(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
         Text(
           t.checkin_result_accepted_heading,
           textAlign: TextAlign.center,
@@ -272,6 +282,9 @@ class _AcceptedView extends StatelessWidget {
         _BackButtons(projectId: projectId),
         const SizedBox(height: 16),
       ],
+          ),
+        ),
+      ),
     );
   }
 }
