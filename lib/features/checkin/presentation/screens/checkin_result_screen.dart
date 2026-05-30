@@ -385,7 +385,7 @@ class _BackButtons extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 16),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
           ),
-          child: Text(label ?? "Seguir explorando →"),
+          child: Text(label ?? t.checkin_back_to_dashboard),
         ),
         const SizedBox(height: 8),
         OutlinedButton(
