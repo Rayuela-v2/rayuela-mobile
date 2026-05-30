@@ -472,6 +472,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get checkin_result_new_badges => 'Nuevas insignias';
 
   @override
+  String checkin_result_task_completed(String name) {
+    return '¡Completaste la tarea \"$name\"! 🎉';
+  }
+
+  @override
+  String get checkin_result_generic_thanks =>
+      '¡Muchas gracias por tu colaboración! 🎉';
+
+  @override
   String get checkin_back_to_dashboard => 'Volver al panel';
 
   @override

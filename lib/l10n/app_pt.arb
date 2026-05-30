@@ -208,6 +208,11 @@
   "checkin_result_recorded": "Check-in registrado",
   "checkin_result_earned": "Conquistado por este check-in",
   "checkin_result_new_badges": "Novas medalhas",
+  "checkin_result_task_completed": "Você concluiu a tarefa \"{name}\"! 🎉",
+  "@checkin_result_task_completed": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "checkin_result_generic_thanks": "Muito obrigado pela sua colaboração! 🎉",
   "checkin_back_to_dashboard": "Voltar ao painel",
   "checkin_back_to_project": "Voltar ao projeto",
 

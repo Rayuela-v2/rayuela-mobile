@@ -892,6 +892,18 @@ abstract class AppLocalizations {
   /// **'New badges'**
   String get checkin_result_new_badges;
 
+  /// No description provided for @checkin_result_task_completed.
+  ///
+  /// In en, this message translates to:
+  /// **'You completed the task \"{name}\"! 🎉'**
+  String checkin_result_task_completed(String name);
+
+  /// No description provided for @checkin_result_generic_thanks.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you so much for your contribution! 🎉'**
+  String get checkin_result_generic_thanks;
+
   /// No description provided for @checkin_back_to_dashboard.
   ///
   /// In en, this message translates to:
