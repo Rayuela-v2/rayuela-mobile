@@ -167,10 +167,10 @@ class _AcceptedView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Text(
-          "¡Colaboración\nregistrada!",
+        Text(
+          t.checkin_result_accepted_heading,
           textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 24),
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 24),
         ),
         const SizedBox(height: 24),
         const Row(
@@ -238,15 +238,15 @@ class _AcceptedView extends StatelessWidget {
           ),
           const SizedBox(height: 8),
         ],
-        const Text(
-          "¡Ya colaboraste!",
+        Text(
+          t.checkin_result_accepted_done,
           textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
         ),
-        const Text(
-          "Check-in finalizado",
+        Text(
+          t.checkin_result_accepted_subtitle,
           textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.white60, fontSize: 12),
+          style: const TextStyle(color: Colors.white60, fontSize: 12),
         ),
         const SizedBox(height: 12),
         Container(
@@ -255,15 +255,15 @@ class _AcceptedView extends StatelessWidget {
             color: Colors.white.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: const Row(
+          child: Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("🔥", style: TextStyle(fontSize: 16)),
-              SizedBox(width: 8),
+              const Text("🔥", style: TextStyle(fontSize: 16)),
+              const SizedBox(width: 8),
               Text(
-                "¡Nueva colaboración!",
-                style: TextStyle(color: Color(0xFFE8973A), fontWeight: FontWeight.bold, fontSize: 12),
+                t.checkin_result_new_collab_label,
+                style: const TextStyle(color: Color(0xFFE8973A), fontWeight: FontWeight.bold, fontSize: 12),
               ),
             ],
           ),
