@@ -46,6 +46,7 @@ class _CheckinResultScreenState extends State<CheckinResultScreen>
   Widget build(BuildContext context) {
     // Scoped args forced to step 3 (final) for progress bar
     final args = CheckinWizardArgs(projectId: widget.projectId);
+    final t = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: const Color(0xFF1E3A2F), // dark green background
@@ -54,9 +55,9 @@ class _CheckinResultScreenState extends State<CheckinResultScreen>
         elevation: 0,
         foregroundColor: Colors.white,
         leading: const SizedBox.shrink(), // hide back
-        title: const Text(
-          "¡LISTO!",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        title: Text(
+          t.checkin_result_ready_title,
+          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         centerTitle: true,
         actions: [
@@ -68,13 +69,13 @@ class _CheckinResultScreenState extends State<CheckinResultScreen>
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: const Color(0xFFC97B2E).withValues(alpha: 0.5)),
             ),
-            child: const Row(
+            child: Row(
               children: [
-                Icon(Icons.check, size: 12, color: Color(0xFFC97B2E)),
-                SizedBox(width: 4),
+                const Icon(Icons.check, size: 12, color: Color(0xFFC97B2E)),
+                const SizedBox(width: 4),
                 Text(
-                  "Completo",
-                  style: TextStyle(color: Color(0xFFC97B2E), fontWeight: FontWeight.bold, fontSize: 10),
+                  t.checkin_result_complete_badge,
+                  style: const TextStyle(color: Color(0xFFC97B2E), fontWeight: FontWeight.bold, fontSize: 10),
                 ),
               ],
             ),
