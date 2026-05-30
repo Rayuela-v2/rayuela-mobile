@@ -200,6 +200,43 @@ class _AcceptedView extends StatelessWidget {
           const Spacer(),
         ] else
           const Spacer(),
+        if (result.newBadges.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          Text(
+            t.checkin_result_new_badges,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Colors.white70,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+              letterSpacing: 1.2,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 8,
+            runSpacing: 6,
+            children: result.newBadges
+                .map(
+                  (badge) => Chip(
+                    backgroundColor: const Color(0xFF4DBA87).withValues(alpha: 0.2),
+                    side: const BorderSide(color: Color(0xFF4DBA87), width: 0.5),
+                    avatar: const Icon(
+                      Icons.emoji_events_outlined,
+                      size: 14,
+                      color: Color(0xFF4DBA87),
+                    ),
+                    label: Text(
+                      badge.name,
+                      style: const TextStyle(color: Colors.white, fontSize: 11),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+          const SizedBox(height: 8),
+        ],
         const Text(
           "¡Ya colaboraste!",
           textAlign: TextAlign.center,
