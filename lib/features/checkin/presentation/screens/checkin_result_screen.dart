@@ -305,11 +305,11 @@ class _QueuedView extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16),
-        const CompanionBubble(
+        CompanionBubble(
           child: Text(
-            "¡Buen trabajo! La enviaremos apenas tengas conexión.",
+            t.checkin_result_queued_subtitle,
             textAlign: TextAlign.center,
-            style: TextStyle(color: Color(0xFF3A2810), fontWeight: FontWeight.bold, fontSize: 14),
+            style: const TextStyle(color: Color(0xFF3A2810), fontWeight: FontWeight.bold, fontSize: 14),
           ),
         ),
         const Spacer(),
