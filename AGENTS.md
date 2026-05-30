@@ -41,3 +41,7 @@ Configuration is managed via `--dart-define-from-file`.
 - **Defensive Parsing:** Hand-write DTO `fromJson` methods to handle backend wire-shape changes gracefully without crashing the app.
 - **Provider Scope:** Use `ProviderScope` at the root and prefer functional providers (`@riverpod` equivalent pattern but manual since we don't use code-gen yet).
 - **Lints:** Follow `flutter_lints` as defined in `analysis_options.yaml`.
+
+## Issue Tracking
+- All issues are tracked in the GitHub Project: [Rayuela Workspace Board](https://github.com/orgs/Rayuela-v2/projects/1).
+- **CRITICAL:** Note that the Project Board view is filtered to display issues from the `Rayuela-v2/rayuela-NodeBackend` repository. Therefore, even for Mobile tasks, always create the issue in `Rayuela-v2/rayuela-NodeBackend` and link it to the project board.
