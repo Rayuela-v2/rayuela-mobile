@@ -161,6 +161,8 @@ class _AcceptedView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    final contributesTo = result.contributesTo;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -177,22 +179,27 @@ class _AcceptedView extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16),
-        const CompanionBubble(
+        CompanionBubble(
           child: Text(
-            "¡Excelente trabajo! Ya sumaste tu colaboración 🎉",
+            contributesTo != null
+                ? t.checkin_result_task_completed(contributesTo.name)
+                : t.checkin_result_generic_thanks,
             textAlign: TextAlign.center,
-            style: TextStyle(color: Color(0xFF3A2810), fontWeight: FontWeight.bold, fontSize: 14),
+            style: const TextStyle(color: Color(0xFF3A2810), fontWeight: FontWeight.bold, fontSize: 14),
           ),
         ),
-        const Spacer(),
-        ScaleTransition(
-          scale: CurvedAnimation(
-            parent: animation,
-            curve: Curves.elasticOut,
+        if (result.pointsAwarded > 0) ...[
+          const Spacer(),
+          ScaleTransition(
+            scale: CurvedAnimation(
+              parent: animation,
+              curve: Curves.elasticOut,
+            ),
+            child: _PointsCircle(points: result.pointsAwarded),
           ),
-          child: _PointsCircle(points: result.pointsAwarded),
-        ),
-        const Spacer(),
+          const Spacer(),
+        ] else
+          const Spacer(),
         const Text(
           "¡Ya colaboraste!",
           textAlign: TextAlign.center,
