@@ -43,9 +43,9 @@ class CheckinResultDto {
 
   factory CheckinResultDto.fromJson(Object? raw) {
     final json = _asMap(raw);
-    final checkin = _asMap(json['checkin']);
-    final gameStatus = _asMap(json['gameStatus']);
-    final contributes = json['contributesTo'];
+    final checkin = _asMap(json['checkin'] ?? json['_checkin']);
+    final gameStatus = _asMap(json['gameStatus'] ?? json['_gameStatus']);
+    final contributes = json['contributesTo'] ?? json['_contributesTo'];
 
     final imageRefsRaw = checkin['imageRefs'] ?? json['imageRefs'];
     final imageRefs = imageRefsRaw is List
@@ -61,6 +61,7 @@ class CheckinResultDto {
         : const <BadgeAwardDto>[];
 
     final timestamp = _parseDate(json['timestamp']) ??
+        _parseDate(json['_timestamp']) ??
         _parseDate(checkin['date']) ??
         DateTime.now();
 
@@ -72,7 +73,7 @@ class CheckinResultDto {
       newBadges: newBadges,
       imageRefs: imageRefs,
       timestamp: timestamp,
-      score: _asInt(json['score']),
+      score: _asInt(json['score'] ?? json['_score']),
       contributesTo: TaskReferenceDto.tryParse(contributes),
     );
   }

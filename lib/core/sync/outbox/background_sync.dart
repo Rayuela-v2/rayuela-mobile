@@ -69,15 +69,21 @@ Future<bool> runOutboxBackgroundCycle({
       sender: sender,
     );
 
-    await service.drain(userId: userId);
-    await service.dispose();
+    try {
+      await service.drain(userId: userId);
+    } finally {
+      await service.dispose();
+    }
     return true;
   } catch (_) {
     return false;
   } finally {
-    try {
-      await db?.close();
-    } catch (_) {/* best-effort */}
+    // NOTE: We do NOT close the database connection (db?.close()) here.
+    // In sqflite, when running in the background isolate on Android/iOS,
+    // it shares the same native database connection/instance with the
+    // main isolate (as they run in the same OS process). Calling close()
+    // in the background task would close the native database handle,
+    // leading to DatabaseException(database_closed 1) in the main app.
     try {
       await connectivity?.dispose();
     } catch (_) {/* best-effort */}

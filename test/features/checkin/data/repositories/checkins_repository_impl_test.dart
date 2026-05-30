@@ -25,7 +25,6 @@ CheckinRequest _req() => CheckinRequest(
       latitude: '0',
       longitude: '0',
       datetime: DateTime.utc(2026, 5, 16, 12),
-      notes: null,
       imagePaths: const ['/tmp/x.jpg'],
     );
 
@@ -72,7 +71,6 @@ void main() {
           latitude: any(named: 'latitude'),
           longitude: any(named: 'longitude'),
           datetime: any(named: 'datetime'),
-          notes: any(named: 'notes'),
           sourceImagePaths: any(named: 'sourceImagePaths'),
         )).thenAnswer((inv) async {
       final id = (inv.namedArguments[#id] as String?) ?? 'gen-id';
@@ -114,7 +112,6 @@ void main() {
           latitude: any(named: 'latitude'),
           longitude: any(named: 'longitude'),
           datetime: any(named: 'datetime'),
-          notes: any(named: 'notes'),
           sourceImagePaths: any(named: 'sourceImagePaths'),
         )).thenAnswer((inv) async {
       final id = inv.namedArguments[#id] as String;
@@ -176,7 +173,6 @@ void main() {
           latitude: any(named: 'latitude'),
           longitude: any(named: 'longitude'),
           datetime: any(named: 'datetime'),
-          notes: any(named: 'notes'),
           sourceImagePaths: any(named: 'sourceImagePaths'),
         ));
   });
@@ -202,7 +198,6 @@ void main() {
           latitude: any(named: 'latitude'),
           longitude: any(named: 'longitude'),
           datetime: any(named: 'datetime'),
-          notes: any(named: 'notes'),
           sourceImagePaths: any(named: 'sourceImagePaths'),
         ));
   });

@@ -802,4 +802,76 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get error_timeout =>
       'O servidor está demorando para responder. Tente novamente em instantes.';
+
+  @override
+  String get wizard_step1_guide =>
+      'Olá! Que tipo de tarefa você quer registrar hoje?';
+
+  @override
+  String get wizard_step1_title => 'TIPO DE TAREFA';
+
+  @override
+  String get wizard_step1_empty =>
+      'Não há tipos de tarefas disponíveis para este projeto.';
+
+  @override
+  String get wizard_step1_empty_back => 'Voltar';
+
+  @override
+  String get wizard_next => 'Seguinte →';
+
+  @override
+  String get wizard_submit => 'COLABORAR!';
+
+  @override
+  String get wizard_step4_guide_custom =>
+      'Você definiu uma data e hora personalizada para esta colaboração.';
+
+  @override
+  String get wizard_step4_guide_current =>
+      'Estamos usando a data e hora atual para este check-in. Quer modificá-la?';
+
+  @override
+  String get wizard_step4_title => 'DATA E HORA';
+
+  @override
+  String get wizard_step4_subtitle_custom => 'Data/hora modificada';
+
+  @override
+  String get wizard_step4_subtitle_current => 'Data/hora atual';
+
+  @override
+  String get wizard_step4_restore => 'Restaurar para a hora atual';
+
+  @override
+  String get wizard_error_select_type => 'Escolha que tipo de check-in é.';
+
+  @override
+  String get wizard_error_waiting_location => 'Aguardando sua localização.';
+
+  @override
+  String get wizard_error_future_date => 'A data e hora não podem ser futuras.';
+
+  @override
+  String get wizard_step2_guide =>
+      'Você tem evidências para adicionar? Pode enviar até 3 fotos.';
+
+  @override
+  String get wizard_step2_title => 'EVIDÊNCIA';
+
+  @override
+  String get wizard_step2_cam => 'Câmera';
+
+  @override
+  String get wizard_step2_gal => 'Galeria';
+
+  @override
+  String get wizard_step2_skip => 'pular se não tiver fotos';
+
+  @override
+  String get wizard_step3_guide =>
+      'Estamos usando sua localização atual. Quer modificá-la?';
+
+  @override
+  String get wizard_step3_title => 'COORDENADAS';
 }
