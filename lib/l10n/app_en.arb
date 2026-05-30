@@ -216,6 +216,13 @@
   "checkin_back_to_dashboard": "Back to dashboard",
   "checkin_back_to_project": "Back to project",
 
+  "checkin_result_ready_title": "DONE!",
+  "checkin_result_complete_badge": "Complete",
+  "checkin_result_accepted_heading": "Collaboration\nrecorded!",
+  "checkin_result_accepted_done": "You collaborated!",
+  "checkin_result_accepted_subtitle": "Check-in complete",
+  "checkin_result_new_collab_label": "New collaboration!",
+
   "checkin_result_queued_title": "Saved — will sync when you have signal",
   "checkin_result_queued_subtitle": "We'll send your check-in automatically as soon as you're back online. You can keep working in the meantime.",
   "checkin_result_queued_at": "Captured at {time}",
