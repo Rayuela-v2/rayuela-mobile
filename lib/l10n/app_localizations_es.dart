@@ -487,6 +487,24 @@ class AppLocalizationsEs extends AppLocalizations {
   String get checkin_back_to_project => 'Volver al proyecto';
 
   @override
+  String get checkin_result_ready_title => '¡LISTO!';
+
+  @override
+  String get checkin_result_complete_badge => 'Completo';
+
+  @override
+  String get checkin_result_accepted_heading => '¡Colaboración\nregistrada!';
+
+  @override
+  String get checkin_result_accepted_done => '¡Ya colaboraste!';
+
+  @override
+  String get checkin_result_accepted_subtitle => 'Check-in finalizado';
+
+  @override
+  String get checkin_result_new_collab_label => '¡Nueva colaboración!';
+
+  @override
   String get checkin_result_queued_title =>
       'Guardado — se enviará cuando tengas señal';
 

@@ -916,6 +916,42 @@ abstract class AppLocalizations {
   /// **'Back to project'**
   String get checkin_back_to_project;
 
+  /// No description provided for @checkin_result_ready_title.
+  ///
+  /// In en, this message translates to:
+  /// **'DONE!'**
+  String get checkin_result_ready_title;
+
+  /// No description provided for @checkin_result_complete_badge.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get checkin_result_complete_badge;
+
+  /// No description provided for @checkin_result_accepted_heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Collaboration\nrecorded!'**
+  String get checkin_result_accepted_heading;
+
+  /// No description provided for @checkin_result_accepted_done.
+  ///
+  /// In en, this message translates to:
+  /// **'You collaborated!'**
+  String get checkin_result_accepted_done;
+
+  /// No description provided for @checkin_result_accepted_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in complete'**
+  String get checkin_result_accepted_subtitle;
+
+  /// No description provided for @checkin_result_new_collab_label.
+  ///
+  /// In en, this message translates to:
+  /// **'New collaboration!'**
+  String get checkin_result_new_collab_label;
+
   /// No description provided for @checkin_result_queued_title.
   ///
   /// In en, this message translates to:

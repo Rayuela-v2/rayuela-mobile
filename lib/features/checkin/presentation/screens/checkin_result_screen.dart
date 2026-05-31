@@ -223,30 +223,16 @@ class _AcceptedView extends StatelessWidget {
               letterSpacing: 1.2,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           Wrap(
             alignment: WrapAlignment.center,
-            spacing: 8,
-            runSpacing: 6,
+            spacing: 16,
+            runSpacing: 16,
             children: result.newBadges
-                .map(
-                  (badge) => Chip(
-                    backgroundColor: const Color(0xFF4DBA87).withValues(alpha: 0.2),
-                    side: const BorderSide(color: Color(0xFF4DBA87), width: 0.5),
-                    avatar: const Icon(
-                      Icons.emoji_events_outlined,
-                      size: 14,
-                      color: Color(0xFF4DBA87),
-                    ),
-                    label: Text(
-                      badge.name,
-                      style: const TextStyle(color: Colors.white, fontSize: 11),
-                    ),
-                  ),
-                )
+                .map((badge) => _BadgeCircle(badge: badge))
                 .toList(),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
         ],
         Text(
           t.checkin_result_accepted_done,
@@ -258,27 +244,7 @@ class _AcceptedView extends StatelessWidget {
           textAlign: TextAlign.center,
           style: const TextStyle(color: Colors.white60, fontSize: 12),
         ),
-        const SizedBox(height: 12),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.05),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text("🔥", style: TextStyle(fontSize: 16)),
-              const SizedBox(width: 8),
-              Text(
-                t.checkin_result_new_collab_label,
-                style: const TextStyle(color: Color(0xFFE8973A), fontWeight: FontWeight.bold, fontSize: 12),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 32),
+        const SizedBox(height: 24),
         _BackButtons(projectId: projectId),
         const SizedBox(height: 16),
       ],
@@ -388,36 +354,77 @@ class _BackButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
+    return SizedBox(
+      width: double.infinity,
+      child: FilledButton(
+        onPressed: () => context.goNamed(
+          AppRoute.projectDetail,
+          pathParameters: {'projectId': projectId},
+        ),
+        style: FilledButton.styleFrom(
+          backgroundColor: const Color(0xFF4DBA87),
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        ),
+        child: Text(label ?? t.checkin_back_to_project),
+      ),
+    );
+  }
+}
+
+class _BadgeCircle extends StatelessWidget {
+  const _BadgeCircle({required this.badge});
+  final BadgeAward badge;
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        FilledButton(
-          onPressed: () => context.goNamed(AppRoute.dashboard),
-          style: FilledButton.styleFrom(
-            backgroundColor: const Color(0xFF4DBA87),
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        Container(
+          width: 140,
+          height: 140,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: const Color(0xFF4DBA87), width: 8),
           ),
-          child: Text(label ?? t.checkin_back_to_dashboard),
+          child: ClipOval(
+            child: (badge.imageUrl != null && badge.imageUrl!.isNotEmpty)
+                ? Image.network(
+                    badge.imageUrl!,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => const _BadgeFallbackIcon(),
+                  )
+                : const _BadgeFallbackIcon(),
+          ),
         ),
         const SizedBox(height: 8),
-        OutlinedButton(
-          onPressed: () {
-            context.goNamed(
-              AppRoute.projectDetail,
-              pathParameters: {'projectId': projectId},
-            );
-          },
-          style: OutlinedButton.styleFrom(
-            side: const BorderSide(color: Colors.white24),
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 14),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        Text(
+          badge.name,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+            letterSpacing: 0.5,
           ),
-          child: Text(t.checkin_back_to_project),
         ),
       ],
+    );
+  }
+}
+
+class _BadgeFallbackIcon extends StatelessWidget {
+  const _BadgeFallbackIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return const ColoredBox(
+      color: Color(0xFF1E3A2F),
+      child: Center(
+        child: Icon(Icons.emoji_events_outlined, size: 60, color: Color(0xFF4DBA87)),
+      ),
     );
   }
 }

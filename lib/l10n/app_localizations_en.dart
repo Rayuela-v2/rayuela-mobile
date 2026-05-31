@@ -482,6 +482,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get checkin_back_to_project => 'Back to project';
 
   @override
+  String get checkin_result_ready_title => 'DONE!';
+
+  @override
+  String get checkin_result_complete_badge => 'Complete';
+
+  @override
+  String get checkin_result_accepted_heading => 'Collaboration\nrecorded!';
+
+  @override
+  String get checkin_result_accepted_done => 'You collaborated!';
+
+  @override
+  String get checkin_result_accepted_subtitle => 'Check-in complete';
+
+  @override
+  String get checkin_result_new_collab_label => 'New collaboration!';
+
+  @override
   String get checkin_result_queued_title =>
       'Saved — will sync when you have signal';
 
