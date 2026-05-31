@@ -208,8 +208,20 @@
   "checkin_result_recorded": "Check-in recorded",
   "checkin_result_earned": "Earned for this check-in",
   "checkin_result_new_badges": "New badges",
+  "checkin_result_task_completed": "You completed the task \"{name}\"! 🎉",
+  "@checkin_result_task_completed": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "checkin_result_generic_thanks": "Thank you so much for your contribution! 🎉",
   "checkin_back_to_dashboard": "Back to dashboard",
   "checkin_back_to_project": "Back to project",
+
+  "checkin_result_ready_title": "DONE!",
+  "checkin_result_complete_badge": "Complete",
+  "checkin_result_accepted_heading": "Collaboration\nrecorded!",
+  "checkin_result_accepted_done": "You collaborated!",
+  "checkin_result_accepted_subtitle": "Check-in complete",
+  "checkin_result_new_collab_label": "New collaboration!",
 
   "checkin_result_queued_title": "Saved — will sync when you have signal",
   "checkin_result_queued_subtitle": "We'll send your check-in automatically as soon as you're back online. You can keep working in the meantime.",

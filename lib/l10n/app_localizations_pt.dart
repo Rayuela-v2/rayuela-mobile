@@ -472,10 +472,37 @@ class AppLocalizationsPt extends AppLocalizations {
   String get checkin_result_new_badges => 'Novas medalhas';
 
   @override
+  String checkin_result_task_completed(String name) {
+    return 'Você concluiu a tarefa \"$name\"! 🎉';
+  }
+
+  @override
+  String get checkin_result_generic_thanks =>
+      'Muito obrigado pela sua colaboração! 🎉';
+
+  @override
   String get checkin_back_to_dashboard => 'Voltar ao painel';
 
   @override
   String get checkin_back_to_project => 'Voltar ao projeto';
+
+  @override
+  String get checkin_result_ready_title => 'PRONTO!';
+
+  @override
+  String get checkin_result_complete_badge => 'Completo';
+
+  @override
+  String get checkin_result_accepted_heading => 'Colaboração\nregistrada!';
+
+  @override
+  String get checkin_result_accepted_done => 'Você colaborou!';
+
+  @override
+  String get checkin_result_accepted_subtitle => 'Check-in finalizado';
+
+  @override
+  String get checkin_result_new_collab_label => 'Nova colaboração!';
 
   @override
   String get checkin_result_queued_title =>

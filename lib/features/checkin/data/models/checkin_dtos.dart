@@ -100,10 +100,11 @@ class CheckinResultDto {
 }
 
 class BadgeAwardDto {
-  const BadgeAwardDto({required this.name, this.description});
+  const BadgeAwardDto({required this.name, this.description, this.imageUrl});
 
   final String name;
   final String? description;
+  final String? imageUrl;
 
   static BadgeAwardDto? tryParse(Object? raw) {
     if (raw is String) {
@@ -118,12 +119,13 @@ class BadgeAwardDto {
       return BadgeAwardDto(
         name: name,
         description: _firstString(json, const ['description', '_description']),
+        imageUrl: _firstString(json, const ['imageUrl', 'image_url']),
       );
     }
     return null;
   }
 
-  BadgeAward toEntity() => BadgeAward(name: name, description: description);
+  BadgeAward toEntity() => BadgeAward(name: name, description: description, imageUrl: imageUrl);
 }
 
 class TaskReferenceDto {

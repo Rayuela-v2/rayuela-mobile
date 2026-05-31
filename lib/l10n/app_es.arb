@@ -208,8 +208,20 @@
   "checkin_result_recorded": "Check-in registrado",
   "checkin_result_earned": "Ganado por este check-in",
   "checkin_result_new_badges": "Nuevas insignias",
+  "checkin_result_task_completed": "¡Completaste la tarea \"{name}\"! 🎉",
+  "@checkin_result_task_completed": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "checkin_result_generic_thanks": "¡Muchas gracias por tu colaboración! 🎉",
   "checkin_back_to_dashboard": "Volver al panel",
   "checkin_back_to_project": "Volver al proyecto",
+
+  "checkin_result_ready_title": "¡LISTO!",
+  "checkin_result_complete_badge": "Completo",
+  "checkin_result_accepted_heading": "¡Colaboración\nregistrada!",
+  "checkin_result_accepted_done": "¡Ya colaboraste!",
+  "checkin_result_accepted_subtitle": "Check-in finalizado",
+  "checkin_result_new_collab_label": "¡Nueva colaboración!",
 
   "checkin_result_queued_title": "Guardado — se enviará cuando tengas señal",
   "checkin_result_queued_subtitle": "Enviaremos tu check-in automáticamente apenas vuelvas a tener conexión. Puedes seguir usando la app mientras tanto.",

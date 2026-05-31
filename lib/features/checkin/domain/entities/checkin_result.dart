@@ -33,10 +33,12 @@ class BadgeAward {
   const BadgeAward({
     required this.name,
     this.description,
+    this.imageUrl,
   });
 
   final String name;
   final String? description;
+  final String? imageUrl;
 }
 
 class TaskReference {
