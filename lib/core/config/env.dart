@@ -83,4 +83,23 @@ class Env {
   /// Needs to be enabled once backend §4.1 ships.
   static bool get useRefreshToken =>
       const bool.fromEnvironment('USE_REFRESH_TOKEN', defaultValue: true);
+
+  /// The duration after which cached data is considered stale.
+  /// Defaults to 30 seconds for local/development environments (when API_BASE_URL
+  /// contains 'localhost', '10.0.2.2', or '127.0.0.1'), and 15 minutes for production/test.
+  static Duration get cacheStaleDuration {
+    const int customSeconds = int.fromEnvironment('CACHE_STALE_SECONDS', defaultValue: -1);
+    if (customSeconds >= 0) {
+      return Duration(seconds: customSeconds);
+    }
+    const String apiBase = String.fromEnvironment('API_BASE_URL');
+    final isLocalUrl = apiBase.contains('localhost') ||
+        apiBase.contains('10.0.2.2') ||
+        apiBase.contains('127.0.0.1') ||
+        apiBase.isEmpty;
+    if (isLocalUrl) {
+      return const Duration(seconds: 30);
+    }
+    return const Duration(minutes: 15);
+  }
 }

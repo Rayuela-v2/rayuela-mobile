@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rayuela_mobile/features/dashboard/data/models/project_detail_dto.dart';
+import 'package:rayuela_mobile/features/dashboard/domain/entities/project_detail.dart';
 
 void main() {
   group('ProjectDetailDto', () {
@@ -40,7 +41,10 @@ void main() {
       expect(dto.gamificationStrategy, 'ELASTIC');
       expect(dto.recommendationStrategy, 'ADAPTIVE');
       expect(dto.leaderboardStrategy, 'POINTS_FIRST');
-      expect(dto.taskTypes, ['observation', 'photo']);
+      expect(dto.taskTypes, const [
+        TaskType(name: 'observation'),
+        TaskType(name: 'photo'),
+      ]);
 
       // We pulled badges from the user-stitched list (so .earned is set).
       expect(dto.badges, hasLength(2));
@@ -164,7 +168,10 @@ void main() {
           {'description': 'no name — dropped'},
         ],
       });
-      expect(dto.taskTypes, ['Observation', 'Photo report']);
+      expect(dto.taskTypes, const [
+        TaskType(name: 'Observation', description: '...'),
+        TaskType(name: 'Photo report'),
+      ]);
     });
 
     test('flows project areas through to the entity', () {

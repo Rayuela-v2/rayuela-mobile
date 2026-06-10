@@ -1498,6 +1498,12 @@ abstract class AppLocalizations {
   /// **'TASK TYPE'**
   String get wizard_step1_title;
 
+  /// No description provided for @wizard_step1_description.
+  ///
+  /// In en, this message translates to:
+  /// **'DESCRIPTION'**
+  String get wizard_step1_description;
+
   /// No description provided for @wizard_step1_empty.
   ///
   /// In en, this message translates to:

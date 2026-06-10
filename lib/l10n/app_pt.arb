@@ -393,6 +393,7 @@
   "error_timeout": "O servidor está demorando para responder. Tente novamente em instantes.",
   "wizard_step1_guide": "Olá! Que tipo de tarefa você quer registrar hoje?",
   "wizard_step1_title": "TIPO DE TAREFA",
+  "wizard_step1_description": "DESCRIÇÃO",
   "wizard_step1_empty": "Não há tipos de tarefas disponíveis para este projeto.",
   "wizard_step1_empty_back": "Voltar",
   "wizard_next": "Seguinte →",

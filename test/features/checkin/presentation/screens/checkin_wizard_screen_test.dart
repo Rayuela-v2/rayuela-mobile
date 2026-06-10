@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rayuela_mobile/core/error/result.dart';
 import 'package:rayuela_mobile/core/router/routes.dart';
+import 'package:rayuela_mobile/features/dashboard/domain/entities/project_detail.dart';
 import 'package:rayuela_mobile/features/checkin/domain/entities/checkin_request.dart';
 import 'package:rayuela_mobile/features/checkin/domain/entities/checkin_submission_outcome.dart';
 import 'package:rayuela_mobile/features/checkin/domain/repositories/checkins_repository.dart';
@@ -78,9 +79,12 @@ void main() {
   });
 
   testWidgets('CheckinWizardScreen full step flow integration', (tester) async {
-    const args = CheckinWizardArgs(
+    final args = CheckinWizardArgs(
       projectId: 'p1',
-      availableTaskTypes: ['Clean', 'Repair'],
+      availableTaskTypes: const [
+        TaskType(name: 'Clean'),
+        TaskType(name: 'Repair'),
+      ],
     );
 
     final outcomeResult = CheckinSubmissionQueued(
@@ -93,7 +97,7 @@ void main() {
 
     await tester.pumpWidget(
       _hostWith(
-        child: const CheckinWizardScreen(args: args),
+        child: CheckinWizardScreen(args: args),
         overrides: [
           checkinsRepositoryProvider.overrideWithValue(repository),
           locationServiceProvider.overrideWithValue(locationService),

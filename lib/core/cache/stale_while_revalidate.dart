@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import '../config/env.dart';
 import '../error/app_exception.dart';
 import 'cached_value.dart';
 
@@ -26,10 +27,11 @@ Stream<Cached<T>> staleWhileRevalidate<T>({
   required Future<Cached<T>?> Function() readLocal,
   required Future<T> Function() fetchRemote,
   required Future<void> Function(T value, DateTime fetchedAt) writeLocal,
-  Duration staleAfter = const Duration(minutes: 15),
+  Duration? staleAfter,
   DateTime Function()? clock,
 }) async* {
   final now = clock ?? DateTime.now;
+  final limit = staleAfter ?? Env.cacheStaleDuration;
 
   Cached<T>? cached;
   try {
@@ -43,7 +45,7 @@ Stream<Cached<T>> staleWhileRevalidate<T>({
     yield Cached(
       value: cached.value,
       fetchedAt: cached.fetchedAt,
-      isStale: age > staleAfter,
+      isStale: age > limit,
     );
   }
 

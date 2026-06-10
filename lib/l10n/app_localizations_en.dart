@@ -833,6 +833,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wizard_step1_title => 'TASK TYPE';
 
   @override
+  String get wizard_step1_description => 'DESCRIPTION';
+
+  @override
   String get wizard_step1_empty =>
       'There are no task types available for this project.';
 
