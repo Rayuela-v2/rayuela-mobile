@@ -145,7 +145,7 @@ Object _encodeDetail(ProjectDetail d) => {
       'recommendationStrategy': d.recommendationStrategy,
       'leaderboardStrategy': d.leaderboardStrategy,
       'badges': d.badges.map(_encodeBadge).toList(),
-      'taskTypes': d.taskTypes,
+      'taskTypes': d.taskTypes.map((t) => {'name': t.name, 'description': t.description}).toList(),
       'areas': d.areas.map(_encodeArea).toList(),
       'user': d.user == null ? null : _encodeUserStats(d.user!),
     };
@@ -170,10 +170,27 @@ ProjectDetail _decodeDetail(Object? raw) {
     recommendationStrategy: raw['recommendationStrategy']?.toString(),
     leaderboardStrategy: raw['leaderboardStrategy']?.toString(),
     badges: _decodeBadges(raw['badges']),
-    taskTypes: _decodeStringList(raw['taskTypes']),
+    taskTypes: _decodeTaskTypes(raw['taskTypes']),
     areas: _decodeAreas(raw['areas']),
     user: _decodeUserStats(raw['user']),
   );
+}
+
+List<TaskType> _decodeTaskTypes(Object? raw) {
+  if (raw is! List) return const [];
+  return raw.map((m) {
+    if (m is String) {
+      return TaskType(name: m);
+    }
+    if (m is Map) {
+      final mm = m.map((k, v) => MapEntry(k.toString(), v));
+      return TaskType(
+        name: (mm['name'] ?? mm['id'] ?? '').toString(),
+        description: mm['description']?.toString(),
+      );
+    }
+    return null;
+  }).whereType<TaskType>().toList(growable: false);
 }
 
 Map<String, Object?> _encodeBadge(ProjectBadge b) => {

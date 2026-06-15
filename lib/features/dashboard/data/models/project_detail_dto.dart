@@ -40,7 +40,7 @@ class ProjectDetailDto {
     this.recommendationStrategy,
     this.leaderboardStrategy,
     this.badges = const [],
-    this.taskTypes = const [],
+    this.taskTypes = const <TaskType>[],
     this.areas = const [],
     this.user,
   });
@@ -55,7 +55,7 @@ class ProjectDetailDto {
   final String? recommendationStrategy;
   final String? leaderboardStrategy;
   final List<ProjectBadgeDto> badges;
-  final List<String> taskTypes;
+  final List<TaskType> taskTypes;
   final List<ProjectAreaDto> areas;
   final ProjectUserStatsDto? user;
 
@@ -93,10 +93,10 @@ class ProjectDetailDto {
     final taskTypesRaw = json['taskTypes'];
     final taskTypes = taskTypesRaw is List
         ? taskTypesRaw
-            .map(_taskTypeName)
-            .whereType<String>()
+            .map(_parseTaskType)
+            .whereType<TaskType>()
             .toList(growable: false)
-        : const <String>[];
+        : const <TaskType>[];
 
     // `areas` is a GeoJSON FeatureCollection. We tolerate the field being
     // absent (older projects), an empty FeatureCollection, or a bare list
@@ -144,11 +144,16 @@ class ProjectDetailDto {
     );
   }
 
-  static String? _taskTypeName(Object? raw) {
-    if (raw is String) return raw.isEmpty ? null : raw;
+  static TaskType? _parseTaskType(Object? raw) {
+    if (raw is String) {
+      return raw.isEmpty ? null : TaskType(name: raw);
+    }
     if (raw is Map) {
       final m = raw.map((k, v) => MapEntry(k.toString(), v));
-      return _firstString(m, const ['name', 'label']);
+      final name = _firstString(m, const ['name', 'label']);
+      if (name == null || name.isEmpty) return null;
+      final description = _firstString(m, const ['description']);
+      return TaskType(name: name, description: description);
     }
     return null;
   }

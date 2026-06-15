@@ -838,6 +838,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get wizard_step1_title => 'TIPO DE TAREFA';
 
   @override
+  String get wizard_step1_description => 'DESCRIÇÃO';
+
+  @override
   String get wizard_step1_empty =>
       'Não há tipos de tarefas disponíveis para este projeto.';
 

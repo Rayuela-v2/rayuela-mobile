@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/linkified_text.dart';
 import '../providers/checkin_wizard_controller.dart';
 import '../widgets/wizard/task_type_card.dart';
 import '../widgets/wizard/wizard_companion_guide.dart';
@@ -112,7 +113,7 @@ class _Step1TaskTypeState extends ConsumerState<Step1TaskType> {
                   child: SizedBox(
                     width: 110,
                     child: TaskTypeCard(
-                      taskType: type,
+                      taskType: type.name,
                       isSelected: state.taskType == type,
                       onTap: () {
                         _carouselController.animateToPage(
@@ -135,6 +136,42 @@ class _Step1TaskTypeState extends ConsumerState<Step1TaskType> {
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 10, color: Colors.black38),
         ),
+        if (state.taskType?.description != null && state.taskType!.description!.isNotEmpty) ...[
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.wizard_step1_description,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                      color: const Color(0xFF3A2810).withValues(alpha: 0.6),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  LinkifiedText(
+                    text: state.taskType!.description!,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: Colors.black87,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
         const Spacer(),
         Container(
           padding: const EdgeInsets.all(24),

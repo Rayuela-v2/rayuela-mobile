@@ -80,7 +80,10 @@ void main() {
             previousBadges: ['Newbie'],
           ),
         ],
-        taskTypes: const ['observation', 'cleanup'],
+        taskTypes: const [
+          TaskType(name: 'observation'),
+          TaskType(name: 'cleanup'),
+        ],
         areas: [
           ProjectArea(
             id: 'North',

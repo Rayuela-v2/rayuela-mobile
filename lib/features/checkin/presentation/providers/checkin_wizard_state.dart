@@ -3,6 +3,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../../dashboard/domain/entities/project_detail.dart';
+
 @immutable
 class CheckinWizardState {
   const CheckinWizardState({
@@ -23,8 +25,8 @@ class CheckinWizardState {
   final String projectId;
   final String? taskId;
   final int step;
-  final String? taskType;
-  final List<String> availableTaskTypes;
+  final TaskType? taskType;
+  final List<TaskType> availableTaskTypes;
   final List<XFile> images;
   final Position? position;
   final LatLng? manualLatLng;
@@ -37,8 +39,8 @@ class CheckinWizardState {
     String? projectId,
     String? taskId,
     int? step,
-    String? taskType,
-    List<String>? availableTaskTypes,
+    TaskType? taskType,
+    List<TaskType>? availableTaskTypes,
     List<XFile>? images,
     Position? position,
     LatLng? manualLatLng,

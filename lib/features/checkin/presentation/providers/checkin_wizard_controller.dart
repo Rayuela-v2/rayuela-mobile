@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../../../core/error/app_exception.dart';
+import '../../../dashboard/domain/entities/project_detail.dart';
 import '../../domain/entities/checkin_request.dart';
 import '../../domain/entities/checkin_submission_outcome.dart';
 import '../../domain/repositories/checkins_repository.dart';
@@ -18,13 +19,19 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
     required String projectId,
     String? taskId,
     String? initialTaskType,
-    List<String> availableTaskTypes = const [],
+    List<TaskType> availableTaskTypes = const [],
   })  : _repository = repository,
         _locationService = locationService,
         super(CheckinWizardState(
           projectId: projectId,
           taskId: taskId,
-          taskType: initialTaskType,
+          taskType: () {
+            if (initialTaskType == null) return null;
+            for (final t in availableTaskTypes) {
+              if (t.name == initialTaskType) return t;
+            }
+            return TaskType(name: initialTaskType);
+          }(),
           availableTaskTypes: availableTaskTypes,
         ));
 
@@ -59,7 +66,7 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
     }
   }
 
-  void setTaskType(String type) {
+  void setTaskType(TaskType type) {
     state = state.copyWith(taskType: type);
   }
 
@@ -154,7 +161,7 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
     try {
       final request = CheckinRequest(
         projectId: state.projectId,
-        taskType: taskType,
+        taskType: taskType.name,
         taskId: state.taskId,
         latitude: coords.latitude.toString(),
         longitude: coords.longitude.toString(),
@@ -204,7 +211,7 @@ class CheckinWizardArgs {
   final String projectId;
   final String? taskId;
   final String? initialTaskType;
-  final List<String> availableTaskTypes;
+  final List<TaskType> availableTaskTypes;
 
   @override
   bool operator ==(Object other) =>

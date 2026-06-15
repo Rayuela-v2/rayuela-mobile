@@ -13,11 +13,13 @@ import '../../features/checkin/presentation/screens/checkin_result_screen.dart';
 import '../../features/checkin/presentation/screens/checkin_wizard_screen.dart';
 import '../../features/checkin/presentation/screens/pending_data_screen.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
+import '../../features/dashboard/domain/entities/project_detail.dart';
 import '../../features/dashboard/presentation/screens/project_detail_screen.dart';
 import '../../features/tasks/presentation/screens/tasks_screen.dart';
 import '../../l10n/app_localizations.dart';
 import '../../shared/widgets/admin_not_supported_screen.dart';
 import 'routes.dart';
+
 
 /// App-wide router, auth-aware via [authControllerProvider].
 final goRouterProvider = Provider<GoRouter>((ref) {
@@ -102,11 +104,20 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           }
           final qp = state.uri.queryParameters;
           final extra = state.extra;
-          final taskTypes = extra is List<String>
-              ? extra
-              : (extra is List
-                  ? extra.map((e) => e.toString()).toList(growable: false)
-                  : const <String>[]);
+          final List<TaskType> taskTypes;
+          if (extra is List<TaskType>) {
+            taskTypes = extra;
+          } else if (extra is List<String>) {
+            taskTypes = extra.map((e) => TaskType(name: e)).toList();
+          } else if (extra is List) {
+            taskTypes = extra.map((e) {
+              if (e is TaskType) return e;
+              return TaskType(name: e.toString());
+            }).toList();
+          } else {
+            taskTypes = const <TaskType>[];
+          }
+
           
           return CheckinWizardScreen(
             args: CheckinWizardArgs(

@@ -26,7 +26,7 @@ class ProjectDetail {
     this.recommendationStrategy,
     this.leaderboardStrategy,
     this.badges = const [],
-    this.taskTypes = const [],
+    this.taskTypes = const <TaskType>[],
     this.areas = const [],
     this.user,
   });
@@ -54,7 +54,7 @@ class ProjectDetail {
 
   /// Free-text labels the project lets check-ins use (e.g. "Observation",
   /// "Photo report"). Populated from project.taskTypes if backend exposes it.
-  final List<String> taskTypes;
+  final List<TaskType> taskTypes;
 
   /// GeoJSON polygons defining the project's working areas. Drives the
   /// Overview map; empty when the project hasn't been geo-configured.
@@ -83,6 +83,27 @@ class ProjectDetail {
       user: user ?? this.user,
     );
   }
+}
+
+class TaskType {
+  const TaskType({
+    required this.name,
+    this.description,
+  });
+
+  final String name;
+  final String? description;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TaskType &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          description == other.description;
+
+  @override
+  int get hashCode => name.hashCode ^ description.hashCode;
 }
 
 class ProjectBadge {

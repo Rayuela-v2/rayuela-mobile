@@ -840,6 +840,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get wizard_step1_title => 'TIPO DE TAREA';
 
   @override
+  String get wizard_step1_description => 'DESCRIPCIÓN';
+
+  @override
   String get wizard_step1_empty =>
       'No hay tipos de tareas disponibles para este proyecto.';
 

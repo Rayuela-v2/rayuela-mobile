@@ -393,6 +393,7 @@
   "error_timeout": "The server is slow to respond. Try again in a moment.",
   "wizard_step1_guide": "Hello! What type of task would you like to register today?",
   "wizard_step1_title": "TASK TYPE",
+  "wizard_step1_description": "DESCRIPTION",
   "wizard_step1_empty": "There are no task types available for this project.",
   "wizard_step1_empty_back": "Go Back",
   "wizard_next": "Next →",

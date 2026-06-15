@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rayuela_mobile/core/error/result.dart';
+import 'package:rayuela_mobile/features/dashboard/domain/entities/project_detail.dart';
 import 'package:rayuela_mobile/features/checkin/domain/entities/checkin_request.dart';
 import 'package:rayuela_mobile/features/checkin/domain/entities/checkin_submission_outcome.dart';
 import 'package:rayuela_mobile/features/checkin/domain/repositories/checkins_repository.dart';
@@ -45,7 +46,10 @@ void main() {
     String projectId = 'p1',
     String? taskId,
     String? initialTaskType,
-    List<String> availableTaskTypes = const ['obs', 'pic'],
+    List<TaskType> availableTaskTypes = const [
+      TaskType(name: 'obs'),
+      TaskType(name: 'pic'),
+    ],
   }) {
     return CheckinWizardController(
       repository: repository,
@@ -93,8 +97,8 @@ void main() {
 
     expect(controller.state.taskType, isNull);
 
-    controller.setTaskType('obs');
-    expect(controller.state.taskType, 'obs');
+    controller.setTaskType(const TaskType(name: 'obs'));
+    expect(controller.state.taskType, const TaskType(name: 'obs'));
   });
 
   test('submit fails if taskType is null', () async {
@@ -114,7 +118,7 @@ void main() {
     final controller = build();
     await controller.initLocation();
 
-    controller.setTaskType('obs');
+    controller.setTaskType(const TaskType(name: 'obs'));
 
     final outcome = await controller.submit();
     expect(outcome, isNull);
