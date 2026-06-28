@@ -1516,6 +1516,18 @@ abstract class AppLocalizations {
   /// **'Go Back'**
   String get wizard_step1_empty_back;
 
+  /// No description provided for @wizard_step1_search_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search task type…'**
+  String get wizard_step1_search_hint;
+
+  /// No description provided for @wizard_step1_no_matches.
+  ///
+  /// In en, this message translates to:
+  /// **'No task types match your search.'**
+  String get wizard_step1_no_matches;
+
   /// No description provided for @wizard_next.
   ///
   /// In en, this message translates to:

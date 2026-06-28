@@ -396,6 +396,8 @@
   "wizard_step1_description": "DESCRIPTION",
   "wizard_step1_empty": "There are no task types available for this project.",
   "wizard_step1_empty_back": "Go Back",
+  "wizard_step1_search_hint": "Search task type…",
+  "wizard_step1_no_matches": "No task types match your search.",
   "wizard_next": "Next →",
   "wizard_submit": "COLLABORATE!",
   "wizard_step4_guide_custom": "You have set a custom date and time for this collaboration.",

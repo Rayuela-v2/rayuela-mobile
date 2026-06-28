@@ -10,9 +10,10 @@ class WizardProgressBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final step = ref.watch(checkinWizardProvider(args).select((s) => s.step));
-    const totalSteps = 4;
-    
+    final state = ref.watch(checkinWizardProvider(args));
+    final totalSteps = state.visibleStepCount;
+    final currentIndex = state.visibleStepIndex;
+
     const progressColor = Color(0xFFC97B2E); // amber from design
     final backgroundColor = Colors.white.withValues(alpha: 0.1);
 
@@ -20,7 +21,7 @@ class WizardProgressBar extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       child: Row(
         children: List.generate(totalSteps, (index) {
-          final isCompleted = index <= step;
+          final isCompleted = index <= currentIndex;
           return Expanded(
             child: Container(
               height: 4,

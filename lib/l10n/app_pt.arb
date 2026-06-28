@@ -396,6 +396,8 @@
   "wizard_step1_description": "DESCRIÇÃO",
   "wizard_step1_empty": "Não há tipos de tarefas disponíveis para este projeto.",
   "wizard_step1_empty_back": "Voltar",
+  "wizard_step1_search_hint": "Buscar tipo de tarefa…",
+  "wizard_step1_no_matches": "Nenhum tipo de tarefa corresponde à sua busca.",
   "wizard_next": "Seguinte →",
   "wizard_submit": "COLABORAR!",
   "wizard_step4_guide_custom": "Você definiu uma data e hora personalizada para esta colaboração.",

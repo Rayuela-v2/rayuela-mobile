@@ -16,26 +16,12 @@ class Step1TaskType extends ConsumerStatefulWidget {
 }
 
 class _Step1TaskTypeState extends ConsumerState<Step1TaskType> {
-  late final PageController _carouselController;
-
-  @override
-  void initState() {
-    super.initState();
-    final state = ref.read(checkinWizardProvider(widget.args));
-    int initialPage = 0;
-    if (state.taskType != null) {
-      initialPage = state.availableTaskTypes.indexOf(state.taskType!);
-      if (initialPage == -1) initialPage = 0;
-    }
-    _carouselController = PageController(
-      viewportFraction: 0.45,
-      initialPage: initialPage,
-    );
-  }
+  final _searchController = TextEditingController();
+  String _query = '';
 
   @override
   void dispose() {
-    _carouselController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -73,12 +59,64 @@ class _Step1TaskTypeState extends ConsumerState<Step1TaskType> {
       );
     }
 
+    final query = _query.trim().toLowerCase();
+    final filtered = query.isEmpty
+        ? options
+        : options
+            .where((t) => t.name.toLowerCase().contains(query))
+            .toList(growable: false);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         WizardCompanionGuide(
           text: l10n.wizard_step1_guide,
         ),
+        // Search filter — only worth showing once there are enough options
+        // to scan that scrolling/typing beats eyeballing the grid.
+        if (options.length > 4)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+            child: TextField(
+              controller: _searchController,
+              onChanged: (value) => setState(() => _query = value),
+              textInputAction: TextInputAction.search,
+              decoration: InputDecoration(
+                isDense: true,
+                hintText: l10n.wizard_step1_search_hint,
+                prefixIcon: const Icon(Icons.search, size: 20),
+                suffixIcon: _query.isEmpty
+                    ? null
+                    : IconButton(
+                        icon: const Icon(Icons.close, size: 18),
+                        onPressed: () {
+                          _searchController.clear();
+                          setState(() => _query = '');
+                        },
+                      ),
+                filled: true,
+                fillColor: Colors.white,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Color(0xFF1E3A2F), width: 2),
+                ),
+              ),
+            ),
+          ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Row(
@@ -96,51 +134,49 @@ class _Step1TaskTypeState extends ConsumerState<Step1TaskType> {
             ],
           ),
         ),
-        const SizedBox(height: 16),
-        SizedBox(
-          height: 160,
-          child: PageView.builder(
-            controller: _carouselController,
-            itemCount: options.length,
-            onPageChanged: (index) {
-               ref.read(checkinWizardProvider(widget.args).notifier).setTaskType(options[index]);
-            },
-            itemBuilder: (context, index) {
-              final type = options[index];
-              return Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: SizedBox(
-                    width: 110,
-                    child: TaskTypeCard(
-                      taskType: type.name,
-                      isSelected: state.taskType == type,
-                      onTap: () {
-                        _carouselController.animateToPage(
-                          index,
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeOut,
-                        );
-                        ref.read(checkinWizardProvider(widget.args).notifier).setTaskType(type);
-                      },
+        const SizedBox(height: 12),
+        // The grid takes whatever vertical room is left and scrolls, so every
+        // task type is reachable regardless of how many the project has.
+        Expanded(
+          child: filtered.isEmpty
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Text(
+                      l10n.wizard_step1_no_matches,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.black54),
                     ),
                   ),
+                )
+              : GridView.builder(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+                  gridDelegate:
+                      const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 150,
+                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 12,
+                    childAspectRatio: 0.95,
+                  ),
+                  itemCount: filtered.length,
+                  itemBuilder: (context, index) {
+                    final type = filtered[index];
+                    return TaskTypeCard(
+                      taskType: type.name,
+                      isSelected: state.taskType == type,
+                      onTap: () => ref
+                          .read(checkinWizardProvider(widget.args).notifier)
+                          .setTaskType(type),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
         ),
-        const SizedBox(height: 8),
-        const Text(
-          "← deslizá →",
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 10, color: Colors.black38),
-        ),
-        if (state.taskType?.description != null && state.taskType!.description!.isNotEmpty) ...[
-          const SizedBox(height: 16),
+        if (state.taskType?.description != null &&
+            state.taskType!.description!.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
             child: Container(
+              constraints: const BoxConstraints(maxHeight: 120),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
@@ -149,30 +185,30 @@ class _Step1TaskTypeState extends ConsumerState<Step1TaskType> {
                   color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l10n.wizard_step1_description,
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2,
-                      color: const Color(0xFF3A2810).withValues(alpha: 0.6),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.wizard_step1_description,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                        color: const Color(0xFF3A2810).withValues(alpha: 0.6),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  LinkifiedText(
-                    text: state.taskType!.description!,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: Colors.black87,
+                    const SizedBox(height: 8),
+                    LinkifiedText(
+                      text: state.taskType!.description!,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: Colors.black87,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-        ],
-        const Spacer(),
         Container(
           padding: const EdgeInsets.all(24),
           decoration: const BoxDecoration(

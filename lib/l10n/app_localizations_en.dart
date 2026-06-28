@@ -843,6 +843,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wizard_step1_empty_back => 'Go Back';
 
   @override
+  String get wizard_step1_search_hint => 'Search task type…';
+
+  @override
+  String get wizard_step1_no_matches => 'No task types match your search.';
+
+  @override
   String get wizard_next => 'Next →';
 
   @override

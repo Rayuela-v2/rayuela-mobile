@@ -848,6 +848,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get wizard_step1_empty_back => 'Voltar';
 
   @override
+  String get wizard_step1_search_hint => 'Buscar tipo de tarefa…';
+
+  @override
+  String get wizard_step1_no_matches =>
+      'Nenhum tipo de tarefa corresponde à sua busca.';
+
+  @override
   String get wizard_next => 'Seguinte →';
 
   @override

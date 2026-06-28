@@ -115,6 +115,29 @@ void main() {
     expect(controller.state.availableTaskTypes, [const TaskType(name: 'obs')]);
   });
 
+  test('preselected task type locks and skips step 1', () async {
+    final controller = build(taskId: 't1', initialTaskType: 'obs');
+
+    expect(controller.state.taskTypeLocked, true);
+    expect(controller.state.step, 1);
+    expect(controller.state.firstStep, 1);
+    expect(controller.state.visibleStepCount, 3);
+    expect(controller.state.visibleStepIndex, 0);
+
+    // Cannot step back into the hidden task-type step.
+    controller.previousStep();
+    expect(controller.state.step, 1);
+  });
+
+  test('without preselection step 1 is shown and navigable', () async {
+    final controller = build();
+
+    expect(controller.state.taskTypeLocked, false);
+    expect(controller.state.step, 0);
+    expect(controller.state.firstStep, 0);
+    expect(controller.state.visibleStepCount, 4);
+  });
+
   test('submit fails if taskType is null', () async {
     final controller = build();
     await controller.initLocation();

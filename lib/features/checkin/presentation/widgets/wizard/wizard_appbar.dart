@@ -10,8 +10,8 @@ class WizardAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final step = ref.watch(checkinWizardProvider(args).select((s) => s.step));
-    
+    final state = ref.watch(checkinWizardProvider(args));
+
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -31,7 +31,7 @@ class WizardAppBar extends ConsumerWidget implements PreferredSizeWidget {
             border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
           ),
           child: Text(
-            "${step + 1}/4",
+            "${state.visibleStepIndex + 1}/${state.visibleStepCount}",
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,

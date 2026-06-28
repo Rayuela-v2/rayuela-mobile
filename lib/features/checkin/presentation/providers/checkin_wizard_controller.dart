@@ -25,6 +25,10 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
         super(CheckinWizardState(
           projectId: projectId,
           taskId: taskId,
+          // A preselected task type means the user already picked the task
+          // (deep-link from the tasks list), so start past step 1 and lock it.
+          step: initialTaskType != null ? 1 : 0,
+          taskTypeLocked: initialTaskType != null,
           taskType: _resolveTaskType(initialTaskType, availableTaskTypes),
           availableTaskTypes:
               _resolveAvailableTaskTypes(initialTaskType, availableTaskTypes),
@@ -84,7 +88,7 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
   }
 
   void previousStep() {
-    if (state.step > 0) {
+    if (state.step > state.firstStep) {
       state = state.copyWith(step: state.step - 1);
     }
   }

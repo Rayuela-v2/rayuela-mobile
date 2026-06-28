@@ -60,7 +60,7 @@ class _CheckinWizardScreenState extends ConsumerState<CheckinWizardScreen> {
     });
 
     return PopScope(
-      canPop: state.step == 0,
+      canPop: state.step == state.firstStep,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
         ref.read(checkinWizardProvider(widget.args).notifier).previousStep();
