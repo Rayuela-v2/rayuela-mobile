@@ -6,6 +6,7 @@ import '../providers/checkin_wizard_controller.dart';
 import '../widgets/location_picker_sheet.dart';
 import '../widgets/wizard/location_summary_card.dart';
 import '../widgets/wizard/wizard_companion_guide.dart';
+import '../widgets/wizard/wizard_step_scaffold.dart';
 
 class Step3Location extends ConsumerWidget {
   const Step3Location({
@@ -33,9 +34,8 @@ class Step3Location extends ConsumerWidget {
     final canSubmit = effectiveLatLng != null && !state.isSubmitting;
     final localError = _localizeError(context, state.error);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
+    return WizardStepScaffold(
+      content: [
         WizardCompanionGuide(
           text: l10n.wizard_step3_guide,
         ),
@@ -74,52 +74,43 @@ class Step3Location extends ConsumerWidget {
             onClearManual: notifier.clearManualLocation,
           ),
         ),
-        const Spacer(),
-        if (localError != null)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-            child: Text(
-              localError,
-              style: theme.textTheme.bodySmall?.copyWith(color: Colors.red),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        Container(
-          padding: const EdgeInsets.all(24),
-          decoration: const BoxDecoration(
-            color: Color(0xFF1E3A2F),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(24),
-              topRight: Radius.circular(24),
-            ),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: canSubmit ? notifier.nextStep : null,
-                  style: FilledButton.styleFrom(
-                    backgroundColor: const Color(0xFF4DBA87),
-                    foregroundColor: Colors.white,
-                    disabledBackgroundColor: Colors.white.withValues(alpha: 0.1),
-                    disabledForegroundColor: Colors.white.withValues(alpha: 0.3),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(l10n.wizard_next, style: const TextStyle(fontWeight: FontWeight.bold)),
-                    ],
-                  ),
+      ],
+      footer: WizardFooter(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (localError != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Text(
+                  localError,
+                  style: theme.textTheme.bodySmall?.copyWith(color: Colors.red[200]),
+                  textAlign: TextAlign.center,
                 ),
               ),
-            ],
-          ),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: canSubmit ? notifier.nextStep : null,
+                style: FilledButton.styleFrom(
+                  backgroundColor: const Color(0xFF4DBA87),
+                  foregroundColor: Colors.white,
+                  disabledBackgroundColor: Colors.white.withValues(alpha: 0.1),
+                  disabledForegroundColor: Colors.white.withValues(alpha: 0.3),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(l10n.wizard_next, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 

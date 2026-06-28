@@ -5,6 +5,7 @@ import '../../../../shared/widgets/linkified_text.dart';
 import '../providers/checkin_wizard_controller.dart';
 import '../widgets/wizard/task_type_card.dart';
 import '../widgets/wizard/wizard_companion_guide.dart';
+import '../widgets/wizard/wizard_step_scaffold.dart';
 
 class Step1TaskType extends ConsumerStatefulWidget {
   const Step1TaskType({super.key, required this.args});
@@ -209,36 +210,23 @@ class _Step1TaskTypeState extends ConsumerState<Step1TaskType> {
               ),
             ),
           ),
-        Container(
-          padding: const EdgeInsets.all(24),
-          decoration: const BoxDecoration(
-            color: Color(0xFF1E3A2F),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(24),
-              topRight: Radius.circular(24),
-            ),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: state.taskType != null
-                      ? () => ref.read(checkinWizardProvider(widget.args).notifier).nextStep()
-                      : null,
-                  style: FilledButton.styleFrom(
-                    backgroundColor: const Color(0xFF4DBA87),
-                    foregroundColor: Colors.white,
-                    disabledBackgroundColor: Colors.white.withValues(alpha: 0.1),
-                    disabledForegroundColor: Colors.white.withValues(alpha: 0.3),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                  child: Text(l10n.wizard_next, style: const TextStyle(fontWeight: FontWeight.bold)),
-                ),
+        WizardFooter(
+          child: SizedBox(
+            width: double.infinity,
+            child: FilledButton(
+              onPressed: state.taskType != null
+                  ? () => ref.read(checkinWizardProvider(widget.args).notifier).nextStep()
+                  : null,
+              style: FilledButton.styleFrom(
+                backgroundColor: const Color(0xFF4DBA87),
+                foregroundColor: Colors.white,
+                disabledBackgroundColor: Colors.white.withValues(alpha: 0.1),
+                disabledForegroundColor: Colors.white.withValues(alpha: 0.3),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-            ],
+              child: Text(l10n.wizard_next, style: const TextStyle(fontWeight: FontWeight.bold)),
+            ),
           ),
         ),
       ],

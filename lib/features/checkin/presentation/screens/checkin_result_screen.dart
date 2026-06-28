@@ -86,26 +86,34 @@ class _CheckinResultScreenState extends State<CheckinResultScreen>
         child: Column(
           children: [
             _ForcedProgressBar(args: args),
+            // Content scrolls when it doesn't fit; the back button below stays
+            // pinned and always reachable.
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
                 child: switch (widget.outcome) {
                   CheckinSubmissionAccepted(:final result) => _AcceptedView(
                       result: result,
                       animation: _controller,
-                      projectId: widget.projectId,
                     ),
                   CheckinSubmissionQueued(:final outboxId, :final queuedAt) =>
                     _QueuedView(
                       outboxId: outboxId,
                       queuedAt: queuedAt,
-                      projectId: widget.projectId,
                     ),
                   CheckinSubmissionRejected(:final error) => _RejectedView(
                       error: error.message,
-                      projectId: widget.projectId,
                     ),
                 },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+              child: _BackButtons(
+                projectId: widget.projectId,
+                label: widget.outcome is CheckinSubmissionQueued
+                    ? t.common_continue
+                    : t.checkin_back_to_project,
               ),
             ),
           ],
@@ -153,30 +161,18 @@ class _AcceptedView extends StatelessWidget {
   const _AcceptedView({
     required this.result,
     required this.animation,
-    required this.projectId,
   });
 
   final CheckinResult result;
   final AnimationController animation;
-  final String projectId;
 
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
     final contributesTo = result.contributesTo;
-    return SingleChildScrollView(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          minHeight: MediaQuery.sizeOf(context).height -
-              MediaQuery.of(context).padding.top -
-              MediaQuery.of(context).padding.bottom -
-              kToolbarHeight -
-              56, // approx progress bar + safe-area
-        ),
-        child: IntrinsicHeight(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
         Text(
           t.checkin_result_accepted_heading,
           textAlign: TextAlign.center,
@@ -200,7 +196,7 @@ class _AcceptedView extends StatelessWidget {
           ),
         ),
         if (result.pointsAwarded > 0) ...[
-          const Spacer(),
+          const SizedBox(height: 32),
           ScaleTransition(
             scale: CurvedAnimation(
               parent: animation,
@@ -208,11 +204,10 @@ class _AcceptedView extends StatelessWidget {
             ),
             child: _PointsCircle(points: result.pointsAwarded, label: t.project_stat_points.toUpperCase()),
           ),
-          const Spacer(),
+          const SizedBox(height: 32),
         ] else
-          const Spacer(),
+          const SizedBox(height: 32),
         if (result.newBadges.isNotEmpty) ...[
-          const SizedBox(height: 12),
           Text(
             t.checkin_result_new_badges,
             textAlign: TextAlign.center,
@@ -232,7 +227,7 @@ class _AcceptedView extends StatelessWidget {
                 .map((badge) => _BadgeCircle(badge: badge))
                 .toList(),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 24),
         ],
         Text(
           t.checkin_result_accepted_done,
@@ -244,13 +239,7 @@ class _AcceptedView extends StatelessWidget {
           textAlign: TextAlign.center,
           style: const TextStyle(color: Colors.white60, fontSize: 12),
         ),
-        const SizedBox(height: 24),
-        _BackButtons(projectId: projectId),
-        const SizedBox(height: 16),
       ],
-          ),
-        ),
-      ),
     );
   }
 }
@@ -259,12 +248,10 @@ class _QueuedView extends StatelessWidget {
   const _QueuedView({
     required this.outboxId,
     required this.queuedAt,
-    required this.projectId,
   });
 
   final String outboxId;
   final DateTime queuedAt;
-  final String projectId;
 
   @override
   Widget build(BuildContext context) {
@@ -292,11 +279,8 @@ class _QueuedView extends StatelessWidget {
             style: const TextStyle(color: Color(0xFF3A2810), fontWeight: FontWeight.bold, fontSize: 14),
           ),
         ),
-        const Spacer(),
+        const SizedBox(height: 40),
         const Icon(Icons.cloud_upload_outlined, size: 80, color: Colors.white24),
-        const Spacer(),
-        _BackButtons(projectId: projectId, label: t.common_continue),
-        const SizedBox(height: 16),
       ],
     );
   }
@@ -305,11 +289,9 @@ class _QueuedView extends StatelessWidget {
 class _RejectedView extends StatelessWidget {
   const _RejectedView({
     required this.error,
-    required this.projectId,
   });
 
   final String error;
-  final String projectId;
 
   @override
   Widget build(BuildContext context) {
@@ -336,11 +318,8 @@ class _RejectedView extends StatelessWidget {
             style: const TextStyle(color: Color(0xFF3A2810), fontWeight: FontWeight.bold, fontSize: 14),
           ),
         ),
-        const Spacer(),
+        const SizedBox(height: 40),
         const Icon(Icons.error_outline, size: 80, color: Colors.white24),
-        const Spacer(),
-        _BackButtons(projectId: projectId),
-        const SizedBox(height: 16),
       ],
     );
   }

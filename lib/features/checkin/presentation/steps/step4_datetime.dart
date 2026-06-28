@@ -6,6 +6,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/checkin_submission_outcome.dart';
 import '../providers/checkin_wizard_controller.dart';
 import '../widgets/wizard/wizard_companion_guide.dart';
+import '../widgets/wizard/wizard_step_scaffold.dart';
 
 class Step4DateTime extends ConsumerWidget {
   const Step4DateTime({
@@ -33,9 +34,8 @@ class Step4DateTime extends ConsumerWidget {
         ? l10n.wizard_step4_guide_custom
         : l10n.wizard_step4_guide_current;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
+    return WizardStepScaffold(
+      content: [
         WizardCompanionGuide(
           text: companionText,
         ),
@@ -159,66 +159,57 @@ class Step4DateTime extends ConsumerWidget {
             ),
           ),
         ],
-        const Spacer(),
-        if (localError != null)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-            child: Text(
-              localError,
-              style: theme.textTheme.bodySmall?.copyWith(color: Colors.red),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        Container(
-          padding: const EdgeInsets.all(24),
-          decoration: const BoxDecoration(
-            color: Color(0xFF1E3A2F),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(24),
-              topRight: Radius.circular(24),
-            ),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: !state.isSubmitting
-                      ? () async {
-                          final result = await notifier.submit();
-                          if (result != null) {
-                            onSubmitted(result);
-                          }
-                        }
-                      : null,
-                  style: FilledButton.styleFrom(
-                    backgroundColor: const Color(0xFFE8973A),
-                    foregroundColor: Colors.white,
-                    disabledBackgroundColor: Colors.white.withValues(alpha: 0.1),
-                    disabledForegroundColor: Colors.white.withValues(alpha: 0.3),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                  child: state.isSubmitting
-                      ? const SizedBox.square(
-                          dimension: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                        )
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.bolt, size: 18),
-                            const SizedBox(width: 8),
-                            Text(l10n.wizard_submit, style: const TextStyle(fontWeight: FontWeight.bold)),
-                          ],
-                        ),
+      ],
+      footer: WizardFooter(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (localError != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Text(
+                  localError,
+                  style: theme.textTheme.bodySmall?.copyWith(color: Colors.red[200]),
+                  textAlign: TextAlign.center,
                 ),
               ),
-            ],
-          ),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: !state.isSubmitting
+                    ? () async {
+                        final result = await notifier.submit();
+                        if (result != null) {
+                          onSubmitted(result);
+                        }
+                      }
+                    : null,
+                style: FilledButton.styleFrom(
+                  backgroundColor: const Color(0xFFE8973A),
+                  foregroundColor: Colors.white,
+                  disabledBackgroundColor: Colors.white.withValues(alpha: 0.1),
+                  disabledForegroundColor: Colors.white.withValues(alpha: 0.3),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                child: state.isSubmitting
+                    ? const SizedBox.square(
+                        dimension: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.bolt, size: 18),
+                          const SizedBox(width: 8),
+                          Text(l10n.wizard_submit, style: const TextStyle(fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 

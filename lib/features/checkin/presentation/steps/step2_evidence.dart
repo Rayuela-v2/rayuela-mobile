@@ -5,6 +5,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../providers/checkin_wizard_controller.dart';
 import '../widgets/wizard/photo_thumb.dart';
 import '../widgets/wizard/wizard_companion_guide.dart';
+import '../widgets/wizard/wizard_step_scaffold.dart';
 
 class Step2Evidence extends ConsumerWidget {
   const Step2Evidence({super.key, required this.args});
@@ -18,9 +19,8 @@ class Step2Evidence extends ConsumerWidget {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
+    return WizardStepScaffold(
+      content: [
         WizardCompanionGuide(
           text: l10n.wizard_step2_guide,
         ),
@@ -42,88 +42,78 @@ class Step2Evidence extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 16),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              children: [
-                Wrap(
-                  spacing: 12,
-                  runSpacing: 12,
-                  alignment: WrapAlignment.center,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            children: [
+              Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                alignment: WrapAlignment.center,
+                children: [
+                  ...state.images.asMap().entries.map((entry) {
+                    return PhotoThumb(
+                      image: entry.value,
+                      onRemove: () => notifier.removeImage(entry.key),
+                    );
+                  }),
+                ],
+              ),
+              if (state.images.length < 3) ...[
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ...state.images.asMap().entries.map((entry) {
-                      return PhotoThumb(
-                        image: entry.value,
-                        onRemove: () => notifier.removeImage(entry.key),
-                      );
-                    }),
+                    _AddActionButton(
+                      onPressed: () => notifier.pickImage(ImageSource.camera),
+                      icon: Icons.photo_camera,
+                      label: l10n.wizard_step2_cam,
+                    ),
+                    const SizedBox(width: 24),
+                    _AddActionButton(
+                      onPressed: () => notifier.pickImage(ImageSource.gallery),
+                      icon: Icons.photo_library,
+                      label: l10n.wizard_step2_gal,
+                    ),
                   ],
                 ),
-                if (state.images.length < 3) ...[
-                  const SizedBox(height: 24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _AddActionButton(
-                        onPressed: () => notifier.pickImage(ImageSource.camera),
-                        icon: Icons.photo_camera,
-                        label: l10n.wizard_step2_cam,
-                      ),
-                      const SizedBox(width: 24),
-                      _AddActionButton(
-                        onPressed: () => notifier.pickImage(ImageSource.gallery),
-                        icon: Icons.photo_library,
-                        label: l10n.wizard_step2_gal,
-                      ),
-                    ],
-                  ),
-                ],
               ],
-            ),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.all(24),
-          decoration: const BoxDecoration(
-            color: Color(0xFF1E3A2F),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(24),
-              topRight: Radius.circular(24),
-            ),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: notifier.nextStep,
-                  style: FilledButton.styleFrom(
-                    backgroundColor: const Color(0xFF4DBA87),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                  child: Text(l10n.wizard_next, style: const TextStyle(fontWeight: FontWeight.bold)),
-                ),
-              ),
-              if (state.images.isEmpty)
-                TextButton(
-                  onPressed: notifier.nextStep,
-                  child: Text(
-                    l10n.wizard_step2_skip,
-                    style: const TextStyle(
-                      color: Color(0xFFF5EDD6),
-                      fontSize: 12,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ),
             ],
           ),
         ),
       ],
+      footer: WizardFooter(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: notifier.nextStep,
+                style: FilledButton.styleFrom(
+                  backgroundColor: const Color(0xFF4DBA87),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                child: Text(l10n.wizard_next, style: const TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ),
+            if (state.images.isEmpty)
+              TextButton(
+                onPressed: notifier.nextStep,
+                child: Text(
+                  l10n.wizard_step2_skip,
+                  style: const TextStyle(
+                    color: Color(0xFFF5EDD6),
+                    fontSize: 12,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
 }
