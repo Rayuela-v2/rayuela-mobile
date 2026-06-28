@@ -25,15 +25,38 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
         super(CheckinWizardState(
           projectId: projectId,
           taskId: taskId,
-          taskType: () {
-            if (initialTaskType == null) return null;
-            for (final t in availableTaskTypes) {
-              if (t.name == initialTaskType) return t;
-            }
-            return TaskType(name: initialTaskType);
-          }(),
-          availableTaskTypes: availableTaskTypes,
-        ));
+          taskType: _resolveTaskType(initialTaskType, availableTaskTypes),
+          availableTaskTypes:
+              _resolveAvailableTaskTypes(initialTaskType, availableTaskTypes),
+        ),);
+
+  /// Resolves the preselected task type from the [initialTaskType] name,
+  /// preferring the matching entry in [available] (which carries the
+  /// description) and falling back to a name-only [TaskType].
+  static TaskType? _resolveTaskType(
+    String? initialTaskType,
+    List<TaskType> available,
+  ) {
+    if (initialTaskType == null) return null;
+    for (final t in available) {
+      if (t.name == initialTaskType) return t;
+    }
+    return TaskType(name: initialTaskType);
+  }
+
+  /// The list backing step 1's picker. When the catalog is empty but a task
+  /// type is preselected — e.g. deep-linked from the tasks list, which passes
+  /// a `taskType` without the project's catalog — fall back to that single
+  /// type so step 1 has something to show instead of the "no task types"
+  /// empty state.
+  static List<TaskType> _resolveAvailableTaskTypes(
+    String? initialTaskType,
+    List<TaskType> available,
+  ) {
+    if (available.isNotEmpty) return available;
+    final resolved = _resolveTaskType(initialTaskType, available);
+    return resolved == null ? const [] : [resolved];
+  }
 
   final CheckinsRepository _repository;
   final LocationService _locationService;

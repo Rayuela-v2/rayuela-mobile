@@ -101,6 +101,20 @@ void main() {
     expect(controller.state.taskType, const TaskType(name: 'obs'));
   });
 
+  test('preset task type with empty catalog backfills availableTaskTypes',
+      () async {
+    // Deep-link from the tasks list passes a taskType but no catalog. Step 1
+    // must still have a type to show instead of the "no task types" state.
+    final controller = build(
+      taskId: 't1',
+      initialTaskType: 'obs',
+      availableTaskTypes: const [],
+    );
+
+    expect(controller.state.taskType, const TaskType(name: 'obs'));
+    expect(controller.state.availableTaskTypes, [const TaskType(name: 'obs')]);
+  });
+
   test('submit fails if taskType is null', () async {
     final controller = build();
     await controller.initLocation();
