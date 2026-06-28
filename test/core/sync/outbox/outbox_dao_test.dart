@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:rayuela_mobile/core/sync/app_database.dart';
 import 'package:rayuela_mobile/core/sync/outbox/outbox_dao.dart';
 import 'package:rayuela_mobile/core/sync/outbox/outbox_entry.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() {

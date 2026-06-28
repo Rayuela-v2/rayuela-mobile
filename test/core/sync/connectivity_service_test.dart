@@ -129,7 +129,7 @@ void main() {
     final raw = _MockConnectivity();
     when(() => raw.onConnectivityChanged)
         .thenAnswer((_) => const Stream.empty());
-    when(() => raw.checkConnectivity())
+    when(raw.checkConnectivity)
         .thenAnswer((_) async => [ConnectivityResult.wifi]);
 
     final svc = ConnectivityService(

@@ -44,7 +44,7 @@ void main() {
       overrides: [
         pendingCheckinCountProvider.overrideWith((ref) => Stream.value(0)),
       ],
-    ));
+    ),);
     await tester.pumpAndSettle();
 
     expect(find.byType(InkWell), findsNothing);
@@ -57,7 +57,7 @@ void main() {
       overrides: [
         pendingCheckinCountProvider.overrideWith((ref) => Stream.value(1)),
       ],
-    ));
+    ),);
     await tester.pumpAndSettle();
 
     expect(find.text('1 check-in waiting to sync'), findsOneWidget);
@@ -70,7 +70,7 @@ void main() {
       overrides: [
         pendingCheckinCountProvider.overrideWith((ref) => Stream.value(4)),
       ],
-    ));
+    ),);
     await tester.pumpAndSettle();
 
     expect(find.text('4 check-ins waiting to sync'), findsOneWidget);
@@ -83,7 +83,7 @@ void main() {
       overrides: [
         syncStatusProvider.overrideWith((ref) => Stream.value(SyncStatus.idle)),
       ],
-    ));
+    ),);
     await tester.pumpAndSettle();
 
     expect(find.byType(IconButton), findsNothing);
@@ -97,7 +97,7 @@ void main() {
         syncStatusProvider
             .overrideWith((ref) => Stream.value(SyncStatus.offline)),
       ],
-    ));
+    ),);
     await tester.pumpAndSettle();
 
     expect(find.byIcon(Icons.cloud_off_outlined), findsOneWidget);

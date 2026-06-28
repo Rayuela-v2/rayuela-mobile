@@ -53,7 +53,7 @@ void main() {
         currentUserId: () => 'u1',
       );
 
-  CheckinResultDto _fakeDto() => CheckinResultDto(
+  CheckinResultDto fakeDto() => CheckinResultDto(
         id: 'srv-1',
         pointsAwarded: 10,
         newBadges: const [],
@@ -61,7 +61,7 @@ void main() {
         timestamp: DateTime.utc(2026, 5, 16, 12),
       );
 
-  void _stubEnqueueOk() {
+  void stubEnqueueOk() {
     when(() => outbox.enqueue(
           id: any(named: 'id'),
           userId: any(named: 'userId'),
@@ -72,7 +72,7 @@ void main() {
           longitude: any(named: 'longitude'),
           datetime: any(named: 'datetime'),
           sourceImagePaths: any(named: 'sourceImagePaths'),
-        )).thenAnswer((inv) async {
+        ),).thenAnswer((inv) async {
       final id = (inv.namedArguments[#id] as String?) ?? 'gen-id';
       return OutboxEntry(
         id: id,
@@ -113,7 +113,7 @@ void main() {
           longitude: any(named: 'longitude'),
           datetime: any(named: 'datetime'),
           sourceImagePaths: any(named: 'sourceImagePaths'),
-        )).thenAnswer((inv) async {
+        ),).thenAnswer((inv) async {
       final id = inv.namedArguments[#id] as String;
       captured.add(id);
       return OutboxEntry(
@@ -142,11 +142,11 @@ void main() {
     final keyOnDirect = verify(() => remote.submit(
           any(),
           idempotencyKey: captureAny(named: 'idempotencyKey'),
-        )).captured.single as String;
+        ),).captured.single as String;
 
     expect(captured, hasLength(1), reason: 'enqueue must have been called once');
     expect(captured.single, keyOnDirect,
-        reason: 'enqueue id must equal the Idempotency-Key sent on the failed direct submit');
+        reason: 'enqueue id must equal the Idempotency-Key sent on the failed direct submit',);
 
     expect(result, isA<Success<CheckinSubmissionOutcome>>());
     final outcome = (result as Success<CheckinSubmissionOutcome>).value;
@@ -157,7 +157,7 @@ void main() {
     when(() => dao.pendingCount('u1')).thenAnswer((_) async => 0);
     when(() => connectivity.isOnlineForReal()).thenAnswer((_) async => true);
     when(() => remote.submit(any(), idempotencyKey: any(named: 'idempotencyKey')))
-        .thenAnswer((_) async => Success(_fakeDto()));
+        .thenAnswer((_) async => Success(fakeDto()));
 
     final result = await build().submitCheckin(_req());
 
@@ -174,17 +174,17 @@ void main() {
           longitude: any(named: 'longitude'),
           datetime: any(named: 'datetime'),
           sourceImagePaths: any(named: 'sourceImagePaths'),
-        ));
+        ),);
   });
 
   test('online + empty queue + 4xx validation: returns Rejected, does not enqueue', () async {
     when(() => dao.pendingCount('u1')).thenAnswer((_) async => 0);
     when(() => connectivity.isOnlineForReal()).thenAnswer((_) async => true);
     when(() => remote.submit(any(), idempotencyKey: any(named: 'idempotencyKey')))
-        .thenAnswer((_) async => Failure(ValidationException(
+        .thenAnswer((_) async => const Failure(ValidationException(
               message: 'bad',
-              fieldErrors: const {},
-            )));
+              fieldErrors: {},
+            ),),);
 
     final result = await build().submitCheckin(_req());
     final outcome = (result as Success<CheckinSubmissionOutcome>).value;
@@ -199,13 +199,13 @@ void main() {
           longitude: any(named: 'longitude'),
           datetime: any(named: 'datetime'),
           sourceImagePaths: any(named: 'sourceImagePaths'),
-        ));
+        ),);
   });
 
   test('offline: enqueues without touching remote', () async {
     when(() => dao.pendingCount('u1')).thenAnswer((_) async => 0);
     when(() => connectivity.isOnlineForReal()).thenAnswer((_) async => false);
-    _stubEnqueueOk();
+    stubEnqueueOk();
 
     final result = await build().submitCheckin(_req());
     expect((result as Success).value, isA<CheckinSubmissionQueued>());
@@ -215,7 +215,7 @@ void main() {
   test('online + non-empty queue: enqueues to preserve FIFO, skips remote', () async {
     when(() => dao.pendingCount('u1')).thenAnswer((_) async => 3);
     when(() => connectivity.isOnlineForReal()).thenAnswer((_) async => true);
-    _stubEnqueueOk();
+    stubEnqueueOk();
 
     final result = await build().submitCheckin(_req());
     expect((result as Success).value, isA<CheckinSubmissionQueued>());

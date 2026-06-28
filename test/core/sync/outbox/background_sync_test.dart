@@ -57,7 +57,7 @@ void main() {
       );
 
       expect(ok, isTrue,
-          reason: 'no-op cycle is not a failure — workmanager should not retry');
+          reason: 'no-op cycle is not a failure — workmanager should not retry',);
     });
   });
 }

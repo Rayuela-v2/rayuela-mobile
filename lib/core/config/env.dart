@@ -90,7 +90,7 @@ class Env {
   static Duration get cacheStaleDuration {
     const int customSeconds = int.fromEnvironment('CACHE_STALE_SECONDS', defaultValue: -1);
     if (customSeconds >= 0) {
-      return Duration(seconds: customSeconds);
+      return const Duration(seconds: customSeconds);
     }
     const String apiBase = String.fromEnvironment('API_BASE_URL');
     final isLocalUrl = apiBase.contains('localhost') ||

@@ -395,12 +395,12 @@ void main() {
       await svc.drain(userId: 'u1');
       final elapsed = DateTime.now().difference(start);
       expect(elapsed.inMilliseconds, lessThan(100),
-          reason: 'second drain must skip, not block on the in-flight one');
+          reason: 'second drain must skip, not block on the in-flight one',);
 
       gate.complete();
       await firstDrain;
       expect(sender.sentCount, 1,
-          reason: 'only one drain cycle should have run');
+          reason: 'only one drain cycle should have run',);
     });
   });
 
@@ -441,10 +441,10 @@ void main() {
 
       final row = await dao.findById(entry.id);
       expect(row!.lastErrorMessage, isNull,
-          reason: 'retry must not surface an internal debug string to the UI');
+          reason: 'retry must not surface an internal debug string to the UI',);
       expect(row.lastErrorCode, isNull);
       expect(row.nextAttemptAt!.isBefore(DateTime.utc(2026, 5, 16, 13)), isTrue,
-          reason: 'row must be eligible immediately');
+          reason: 'row must be eligible immediately',);
     });
   });
 }

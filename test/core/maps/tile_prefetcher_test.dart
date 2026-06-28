@@ -35,7 +35,7 @@ void main() {
     final pf = TilePrefetcher(
       cache: cache,
       // Tight zoom band keeps the test fast.
-      config: const TilePrefetchConfig(minZoom: 14, maxZoom: 14),
+      config: const TilePrefetchConfig(maxZoom: 14),
     );
 
     final progress = <TilePrefetchProgress>[];
@@ -61,7 +61,6 @@ void main() {
       cache: cache,
       // 1 tile cap forces the abort branch even for the smallest box.
       config: const TilePrefetchConfig(
-        minZoom: 14,
         maxZoom: 17,
         maxTiles: 1,
       ),
@@ -78,7 +77,7 @@ void main() {
 
     expect(outcome, isA<TilePrefetchTooLarge>());
     expect(cache.urls, isEmpty,
-        reason: 'no HTTP work should happen when the cap blocks the run');
+        reason: 'no HTTP work should happen when the cap blocks the run',);
   });
 
   test('reports succeeded(0) for an empty rings list', () async {

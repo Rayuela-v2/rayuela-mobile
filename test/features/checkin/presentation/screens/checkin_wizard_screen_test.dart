@@ -79,7 +79,7 @@ void main() {
   });
 
   testWidgets('CheckinWizardScreen full step flow integration', (tester) async {
-    final args = CheckinWizardArgs(
+    const args = CheckinWizardArgs(
       projectId: 'p1',
       availableTaskTypes: const [
         TaskType(name: 'Clean'),

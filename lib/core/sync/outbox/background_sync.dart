@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:workmanager/workmanager.dart';
 
+import '../../../features/checkin/data/sources/checkin_outbox_sender.dart';
+import '../../../features/checkin/data/sources/checkins_remote_source.dart';
 import '../../network/api_client.dart';
 import '../../storage/image_store.dart';
 import '../../storage/secure_token_store.dart';
 import '../app_database.dart';
 import '../connectivity_service.dart';
-import '../../../features/checkin/data/sources/checkin_outbox_sender.dart';
-import '../../../features/checkin/data/sources/checkins_remote_source.dart';
 import 'outbox_dao.dart';
 import 'outbox_service.dart';
 

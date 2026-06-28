@@ -63,7 +63,7 @@ class _LinkifiedTextState extends State<LinkifiedText> {
         spans.add(TextSpan(
           text: widget.text.substring(lastMatchEnd, match.start),
           style: widget.style,
-        ));
+        ),);
       }
 
       final url = match.group(2) ?? match.group(3);
@@ -91,7 +91,7 @@ class _LinkifiedTextState extends State<LinkifiedText> {
       spans.add(TextSpan(
         text: widget.text.substring(lastMatchEnd),
         style: widget.style,
-      ));
+      ),);
     }
 
     return Text.rich(

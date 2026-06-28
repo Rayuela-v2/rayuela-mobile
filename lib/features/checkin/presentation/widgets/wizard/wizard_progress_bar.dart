@@ -13,7 +13,7 @@ class WizardProgressBar extends ConsumerWidget {
     final step = ref.watch(checkinWizardProvider(args).select((s) => s.step));
     const totalSteps = 4;
     
-    final progressColor = const Color(0xFFC97B2E); // amber from design
+    const progressColor = Color(0xFFC97B2E); // amber from design
     final backgroundColor = Colors.white.withValues(alpha: 0.1);
 
     return Container(

@@ -2,12 +2,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rayuela_mobile/core/error/result.dart';
-import 'package:rayuela_mobile/features/dashboard/domain/entities/project_detail.dart';
 import 'package:rayuela_mobile/features/checkin/domain/entities/checkin_request.dart';
 import 'package:rayuela_mobile/features/checkin/domain/entities/checkin_submission_outcome.dart';
 import 'package:rayuela_mobile/features/checkin/domain/repositories/checkins_repository.dart';
 import 'package:rayuela_mobile/features/checkin/presentation/providers/checkin_wizard_controller.dart';
 import 'package:rayuela_mobile/features/checkin/presentation/services/location_service.dart';
+import 'package:rayuela_mobile/features/dashboard/domain/entities/project_detail.dart';
 
 class _MockCheckinsRepository extends Mock implements CheckinsRepository {}
 class _MockLocationService extends Mock implements LocationService {}

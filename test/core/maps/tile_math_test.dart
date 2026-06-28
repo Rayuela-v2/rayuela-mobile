@@ -46,13 +46,13 @@ void main() {
 
   group('tilesForBox / countTiles', () {
     test('a tiny box at low zoom covers exactly one tile', () {
-      final box = LatLngBox(-34.61, -58.41, -34.6, -58.4);
+      const box = LatLngBox(-34.61, -58.41, -34.6, -58.4);
       final tiles = tilesForBox(box, 10);
       expect(tiles, hasLength(1));
     });
 
     test('zoom range counts add up across zooms', () {
-      final box = LatLngBox(-34.65, -58.45, -34.55, -58.35);
+      const box = LatLngBox(-34.65, -58.45, -34.55, -58.35);
       final z14 = tilesForBox(box, 14).length;
       final z15 = tilesForBox(box, 15).length;
       final z16 = tilesForBox(box, 16).length;
@@ -63,7 +63,7 @@ void main() {
 
   group('TileCoord.urlFrom', () {
     test('substitutes z, x, y in a slippy-map template', () {
-      final c = TileCoord(123, 456, 12);
+      const c = TileCoord(123, 456, 12);
       expect(
         c.urlFrom('https://tile.openstreetmap.org/{z}/{x}/{y}.png'),
         'https://tile.openstreetmap.org/12/123/456.png',

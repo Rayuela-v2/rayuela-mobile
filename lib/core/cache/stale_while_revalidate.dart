@@ -58,7 +58,7 @@ Stream<Cached<T>> staleWhileRevalidate<T>({
       // Persisting the cache is best-effort. The UI still gets the
       // fresh value below.
     }
-    yield Cached(value: fresh, fetchedAt: at, isStale: false);
+    yield Cached(value: fresh, fetchedAt: at);
   } on AppException catch (e) {
     if (cached != null && _isSoftFailure(e)) {
       yield cached.markStale();

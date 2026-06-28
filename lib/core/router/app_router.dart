@@ -12,8 +12,8 @@ import '../../features/checkin/presentation/providers/checkin_wizard_controller.
 import '../../features/checkin/presentation/screens/checkin_result_screen.dart';
 import '../../features/checkin/presentation/screens/checkin_wizard_screen.dart';
 import '../../features/checkin/presentation/screens/pending_data_screen.dart';
-import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/dashboard/domain/entities/project_detail.dart';
+import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/dashboard/presentation/screens/project_detail_screen.dart';
 import '../../features/tasks/presentation/screens/tasks_screen.dart';
 import '../../l10n/app_localizations.dart';

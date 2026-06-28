@@ -41,7 +41,7 @@ void main() {
   testWidgets('renders the Pending pill for status=pending', (tester) async {
     await tester.pumpWidget(_wrap(
       PendingCheckinTile(entry: _entry(), dense: true),
-    ));
+    ),);
     await tester.pump();
 
     expect(find.text('Pending'), findsOneWidget);
@@ -54,7 +54,7 @@ void main() {
         entry: _entry(status: OutboxStatus.failed, attemptCount: 3),
         dense: true,
       ),
-    ));
+    ),);
     await tester.pump();
 
     expect(find.textContaining('Attempt'), findsOneWidget);
@@ -73,7 +73,7 @@ void main() {
         onDiscard: () => discarded = true,
         dense: true,
       ),
-    ));
+    ),);
     await tester.pump();
 
     expect(find.text('Retry now'), findsOneWidget);
@@ -96,7 +96,7 @@ void main() {
         ),
         dense: true,
       ),
-    ));
+    ),);
     await tester.pump();
 
     expect(find.text('Server unavailable'), findsOneWidget);

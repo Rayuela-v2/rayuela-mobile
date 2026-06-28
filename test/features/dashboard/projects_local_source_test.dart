@@ -64,7 +64,7 @@ void main() {
   group('detail', () {
     test('round-trips a project detail with areas + badges + user stats',
         () async {
-      final detail = ProjectDetail(
+      const detail = ProjectDetail(
         id: 'p1',
         name: 'Plaza',
         description: 'd',

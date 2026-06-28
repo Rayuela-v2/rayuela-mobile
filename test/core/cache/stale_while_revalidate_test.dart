@@ -40,7 +40,7 @@ void main() {
       final first = await stream.first;
       expect(first.value, 7);
       expect(first.isStale, isTrue,
-          reason: 'cache is 1h old vs staleAfter=30m');
+          reason: 'cache is 1h old vs staleAfter=30m',);
     });
 
     test('falls back to cache marked stale on a soft network failure',

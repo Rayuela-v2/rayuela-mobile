@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import '../../domain/entities/checkin_submission_outcome.dart';
+
 import '../../../../l10n/app_localizations.dart';
+import '../../domain/entities/checkin_submission_outcome.dart';
 import '../providers/checkin_wizard_controller.dart';
 import '../widgets/wizard/wizard_companion_guide.dart';
 
