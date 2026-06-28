@@ -12,6 +12,7 @@ import '../../../../features/leaderboard/presentation/providers/leaderboard_prov
 import '../../../../features/leaderboard/presentation/widgets/leaderboard_view.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/error_view.dart';
+import '../../../../shared/widgets/linkified_text.dart';
 import '../../domain/entities/project_detail.dart';
 import '../providers/project_detail_providers.dart';
 import '../widgets/badge_dependency_graph.dart';
@@ -332,8 +333,8 @@ class _OverviewTabState extends State<_OverviewTab> {
                 const SizedBox(height: 16),
               ],
               if (detail.description.isNotEmpty)
-                Text(
-                  detail.description,
+                LinkifiedText(
+                  text: detail.description,
                   style: theme.textTheme.bodyMedium,
                 ),
               const SizedBox(height: 24),
