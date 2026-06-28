@@ -74,48 +74,7 @@ class ProjectDetailScreen extends ConsumerWidget {
             ),
           );
         }
-        return DefaultTabController(
-          length: 3,
-          child: Scaffold(
-            appBar: AppBar(
-              title: title,
-              bottom: TabBar(
-                tabs: [
-                  Tab(
-                    icon: const Icon(Icons.info_outline),
-                    text: t.project_tab_overview,
-                  ),
-                  Tab(
-                    icon: const Icon(Icons.photo_camera_back_outlined),
-                    text: t.project_tab_checkins,
-                  ),
-                  Tab(
-                    icon: const Icon(Icons.emoji_events_outlined),
-                    text: t.project_tab_progress,
-                  ),
-                ],
-              ),
-            ),
-            // "Progress" merges the leaderboard and the badges grid/graph
-            // — they're both gamification readouts answering "how am I
-            // doing?", so keeping them on one tab avoids tab sprawl while
-            // freeing Overview for the upcoming check-ins map.
-            body: TabBarView(
-              children: [
-                RefreshIndicator(
-                  onRefresh: () async {
-                    try {
-                      await ref.read(refreshProjectDetailProvider)(projectId);
-                    } catch (_) {/* surfaces via AsyncError elsewhere */}
-                  },
-                  child: _OverviewTab(detail: detail),
-                ),
-                UserCheckinsView(projectId: detail.id),
-                _ProgressTab(detail: detail),
-              ],
-            ),
-          ),
-        );
+        return _SubscribedProjectView(detail: detail, title: title);
       },
       error: (error, _) => Scaffold(
         appBar: AppBar(title: title),
@@ -141,17 +100,200 @@ class ProjectDetailScreen extends ConsumerWidget {
   }
 }
 
-class _OverviewTab extends ConsumerWidget {
-  const _OverviewTab({required this.detail});
+/// Subscribed project view: the 3-tab layout plus a floating "add check-in"
+/// button. The FAB is shown on every tab and only hidden when the full-width
+/// "Agregar un check-in" button is actually on screen (bottom of Overview),
+/// so the primary action is always one tap away without ever duplicating a
+/// visible control.
+class _SubscribedProjectView extends ConsumerStatefulWidget {
+  const _SubscribedProjectView({required this.detail, required this.title});
+
   final ProjectDetail detail;
+  final Widget title;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_SubscribedProjectView> createState() =>
+      _SubscribedProjectViewState();
+}
+
+class _SubscribedProjectViewState
+    extends ConsumerState<_SubscribedProjectView>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabController;
+  final GlobalKey _checkinButtonKey = GlobalKey();
+
+  int _tabIndex = 0;
+  bool _inlineButtonVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(() {
+      if (_tabController.index != _tabIndex) {
+        setState(() => _tabIndex = _tabController.index);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  void _onInlineButtonVisibilityChanged(bool visible) {
+    if (visible != _inlineButtonVisible && mounted) {
+      setState(() => _inlineButtonVisible = visible);
+    }
+  }
+
+  // Hidden only when the inline button is on screen (Overview tab, scrolled to
+  // the bottom). On the other tabs the inline button isn't mounted, so the FAB
+  // always shows.
+  bool get _showFab => !(_tabIndex == 0 && _inlineButtonVisible);
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    final detail = widget.detail;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: widget.title,
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: [
+            Tab(
+              icon: const Icon(Icons.info_outline),
+              text: t.project_tab_overview,
+            ),
+            Tab(
+              icon: const Icon(Icons.photo_camera_back_outlined),
+              text: t.project_tab_checkins,
+            ),
+            Tab(
+              icon: const Icon(Icons.emoji_events_outlined),
+              text: t.project_tab_progress,
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: _showFab
+          ? FloatingActionButton(
+              tooltip: t.project_add_checkin,
+              onPressed: () => _openCheckin(context, detail),
+              child: const Icon(Icons.add_a_photo_outlined),
+            )
+          : null,
+      // "Progress" merges the leaderboard and the badges grid/graph — they're
+      // both gamification readouts answering "how am I doing?", so keeping them
+      // on one tab avoids tab sprawl while freeing Overview for the map.
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          RefreshIndicator(
+            onRefresh: () async {
+              try {
+                await ref.read(refreshProjectDetailProvider)(detail.id);
+              } catch (_) {/* surfaces via AsyncError elsewhere */}
+            },
+            child: _OverviewTab(
+              detail: detail,
+              checkinButtonKey: _checkinButtonKey,
+              onCheckinButtonVisibilityChanged:
+                  _onInlineButtonVisibilityChanged,
+            ),
+          ),
+          UserCheckinsView(projectId: detail.id),
+          _ProgressTab(detail: detail),
+        ],
+      ),
+    );
+  }
+}
+
+/// Navigates to the check-in wizard, passing the project's taskType catalog
+/// as `extra` so the wizard can show the picker.
+void _openCheckin(BuildContext context, ProjectDetail detail) {
+  context.pushNamed(
+    AppRoute.checkin,
+    pathParameters: {'projectId': detail.id},
+    queryParameters: {'projectName': detail.name},
+    extra: detail.taskTypes,
+  );
+}
+
+class _OverviewTab extends StatefulWidget {
+  const _OverviewTab({
+    required this.detail,
+    this.checkinButtonKey,
+    this.onCheckinButtonVisibilityChanged,
+  });
+
+  final ProjectDetail detail;
+
+  /// Attached to the inline "Agregar un check-in" button so the parent can
+  /// tell whether it's on screen. Null in the unsubscribed layout (no button).
+  final GlobalKey? checkinButtonKey;
+  final ValueChanged<bool>? onCheckinButtonVisibilityChanged;
+
+  @override
+  State<_OverviewTab> createState() => _OverviewTabState();
+}
+
+class _OverviewTabState extends State<_OverviewTab> {
+  @override
+  void initState() {
+    super.initState();
+    _scheduleVisibilityCheck();
+  }
+
+  @override
+  void didUpdateWidget(_OverviewTab oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _scheduleVisibilityCheck();
+  }
+
+  void _scheduleVisibilityCheck() {
+    if (widget.onCheckinButtonVisibilityChanged == null) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) => _reportVisibility());
+  }
+
+  /// Reports whether the inline check-in button currently intersects the
+  /// viewport, using its render box position relative to the screen.
+  void _reportVisibility() {
+    final callback = widget.onCheckinButtonVisibilityChanged;
+    final ctx = widget.checkinButtonKey?.currentContext;
+    if (callback == null) return;
+    if (ctx == null) {
+      callback(false);
+      return;
+    }
+    final box = ctx.findRenderObject() as RenderBox?;
+    if (box == null || !box.attached) {
+      callback(false);
+      return;
+    }
+    final screenHeight = MediaQuery.sizeOf(context).height;
+    final top = box.localToGlobal(Offset.zero).dy;
+    final bottom = top + box.size.height;
+    callback(bottom > 0 && top < screenHeight);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final detail = widget.detail;
     final theme = Theme.of(context);
     final t = AppLocalizations.of(context)!;
     final subscribed = detail.isSubscribed;
 
-    return ListView(
+    return NotificationListener<ScrollNotification>(
+      onNotification: (_) {
+        _reportVisibility();
+        return false;
+      },
+      child: ListView(
       padding: const EdgeInsets.only(bottom: 32),
       physics: const AlwaysScrollableScrollPhysics(),
       children: [
@@ -209,18 +351,14 @@ class _OverviewTab extends ConsumerWidget {
                 ),
                 const SizedBox(height: 12),
                 _PrimaryActionButton(
+                  key: widget.checkinButtonKey,
                   icon: Icons.add_a_photo_outlined,
                   label: t.project_add_checkin,
                   filled: true,
                   // Pass the project's taskType catalog as `extra` so the
                   // check-in screen can show the chip picker. No taskType
                   // query param — the user picks one on the next screen.
-                  onPressed: () => context.pushNamed(
-                    AppRoute.checkin,
-                    pathParameters: {'projectId': detail.id},
-                    queryParameters: {'projectName': detail.name},
-                    extra: detail.taskTypes,
-                  ),
+                  onPressed: () => _openCheckin(context, detail),
                 ),
                 const SizedBox(height: 24),
                 _UnsubscribeTile(projectId: detail.id),
@@ -231,6 +369,7 @@ class _OverviewTab extends ConsumerWidget {
           ),
         ),
       ],
+      ),
     );
   }
 }
@@ -439,6 +578,7 @@ class _StatTile extends StatelessWidget {
 
 class _PrimaryActionButton extends StatelessWidget {
   const _PrimaryActionButton({
+    super.key,
     required this.icon,
     required this.label,
     required this.onPressed,
