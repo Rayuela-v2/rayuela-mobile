@@ -58,7 +58,10 @@ class DashboardScreen extends ConsumerWidget {
         },
         child: projects.when(
           data: (cached) {
-            final list = cached.value;
+            // Paused/inactive projects (available == false) stay hidden from
+            // users, even if they were subscribed before the pause.
+            final list =
+                cached.value.where((p) => p.available).toList(growable: false);
             final chip = LastUpdatedChip(
               fetchedAt: cached.fetchedAt,
               isStale: cached.isStale,
