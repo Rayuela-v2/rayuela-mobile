@@ -336,10 +336,15 @@ class _BackButtons extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: FilledButton(
-        onPressed: () => context.goNamed(
-          AppRoute.projectDetail,
-          pathParameters: {'projectId': projectId},
-        ),
+        // pop back to the launching screen so its back stack (and the
+        // back arrow) survives; goNamed would reset the stack to a rootless
+        // project detail. Fallback to go only when there's nothing to pop.
+        onPressed: () => context.canPop()
+            ? context.pop()
+            : context.goNamed(
+                AppRoute.projectDetail,
+                pathParameters: {'projectId': projectId},
+              ),
         style: FilledButton.styleFrom(
           backgroundColor: const Color(0xFF4DBA87),
           foregroundColor: Colors.white,

@@ -1134,27 +1134,23 @@ class _UnsubscribeTile extends ConsumerWidget {
       }
     });
 
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.errorContainer.withValues(alpha: 0.4),
-        borderRadius: BorderRadius.circular(12),
+    return ListTile(
+      tileColor: theme.colorScheme.errorContainer.withValues(alpha: 0.4),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      leading: Icon(
+        Icons.logout,
+        color: theme.colorScheme.onErrorContainer,
       ),
-      child: ListTile(
-        leading: Icon(
-          Icons.logout,
-          color: theme.colorScheme.onErrorContainer,
-        ),
-        title: Text(t.project_unsubscribe),
-        subtitle: Text(t.project_unsubscribe_subtitle),
-        trailing: inFlight
-            ? const SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
-            : null,
-        onTap: inFlight ? null : () => _confirm(context, ref),
-      ),
+      title: Text(t.project_unsubscribe),
+      subtitle: Text(t.project_unsubscribe_subtitle),
+      trailing: inFlight
+          ? const SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : null,
+      onTap: inFlight ? null : () => _confirm(context, ref),
     );
   }
 
