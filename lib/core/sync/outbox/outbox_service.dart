@@ -103,10 +103,14 @@ class OutboxService {
     final entryId = id ?? _uuid.v4();
     final now = _clock().toUtc();
 
-    final stored = await _imageStore.persist(
-      outboxId: entryId,
-      sourcePaths: sourceImagePaths,
-    );
+    // Photos are optional (step 2 can be skipped); persist() rejects an empty
+    // list, so only call it when there's something to store.
+    final stored = sourceImagePaths.isEmpty
+        ? const <StoredImage>[]
+        : await _imageStore.persist(
+            outboxId: entryId,
+            sourcePaths: sourceImagePaths,
+          );
     final images = [
       for (var i = 0; i < stored.length; i++)
         OutboxImage(

@@ -133,6 +133,31 @@ void main() {
       expect(fromDb!.images.first.filePath, entry.images.first.filePath);
     });
 
+    test('enqueues a check-in with no photos', () async {
+      final svc = OutboxService(
+        dao: dao,
+        imageStore: imageStore,
+        connectivity: connectivity,
+        sender: _ScriptedSender([]),
+        uuid: const Uuid(),
+      );
+      addTearDown(svc.dispose);
+
+      final entry = await svc.enqueue(
+        userId: 'u1',
+        projectId: 'p1',
+        taskType: 'observation',
+        latitude: '0',
+        longitude: '0',
+        datetime: DateTime.utc(2026, 5, 1, 12),
+        sourceImagePaths: const [],
+      );
+
+      expect(entry.status, OutboxStatus.pending);
+      expect(entry.images, isEmpty);
+      expect(await dao.findById(entry.id), isNotNull);
+    });
+
     test('rolls back the on-disk folder if the SQLite insert fails',
         () async {
       // Pre-insert a row with the same id so the second insert blows up.

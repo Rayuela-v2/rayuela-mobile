@@ -39,13 +39,17 @@ class TaskTypeCard extends StatelessWidget {
                 color: const Color(0xFF37474F),
               ),
               const SizedBox(height: 12),
-              Text(
-                taskType,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.labelMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 11,
-                  color: const Color(0xFF37474F),
+              Flexible(
+                child: Text(
+                  taskType,
+                  textAlign: TextAlign.center,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 11,
+                    color: const Color(0xFF37474F),
+                  ),
                 ),
               ),
             ],
