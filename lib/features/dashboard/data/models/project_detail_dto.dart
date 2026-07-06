@@ -166,6 +166,8 @@ class ProjectBadgeDto {
     this.image,
     this.earned = false,
     this.previousBadges = const [],
+    this.status = 'active',
+    this.satisfied = false,
   });
 
   final String name;
@@ -173,6 +175,8 @@ class ProjectBadgeDto {
   final String? image;
   final bool earned;
   final List<String> previousBadges;
+  final String status;
+  final bool satisfied;
 
   static ProjectBadgeDto? tryParse(Object? raw) {
     if (raw is String) {
@@ -199,6 +203,9 @@ class ProjectBadgeDto {
             .toList(growable: false)
         : const <String>[];
 
+    final status = _firstString(m, const ['status', '_status']) ?? 'active';
+    final satisfied = _asBool(m['satisfied'] ?? m['_satisfied']) ?? false;
+
     return ProjectBadgeDto(
       name: name,
       description: _firstString(m, const ['description', '_description']),
@@ -210,6 +217,8 @@ class ProjectBadgeDto {
       ),
       earned: _asBool(m['active'] ?? m['earned']) ?? false,
       previousBadges: previous,
+      status: status,
+      satisfied: satisfied,
     );
   }
 
@@ -219,6 +228,8 @@ class ProjectBadgeDto {
         imageUrl: image,
         earned: earned,
         previousBadges: previousBadges,
+        status: status,
+        satisfied: satisfied,
       );
 }
 
@@ -322,6 +333,8 @@ List<ProjectBadgeDto> _mergeBadges({
       previousBadges: c.previousBadges.isNotEmpty
           ? c.previousBadges
           : overlay.previousBadges,
+      status: c.status,
+      satisfied: c.satisfied,
     );
   }).toList(growable: false);
 }

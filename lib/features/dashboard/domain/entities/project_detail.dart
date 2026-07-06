@@ -113,6 +113,8 @@ class ProjectBadge {
     this.imageUrl,
     this.earned = false,
     this.previousBadges = const [],
+    this.status = 'active',
+    this.satisfied = false,
   });
 
   final String name;
@@ -127,12 +129,25 @@ class ProjectBadge {
   /// Backend field: `BadgeRule.previousBadges: string[]`.
   final List<String> previousBadges;
 
-  ProjectBadge copyWith({bool? earned}) => ProjectBadge(
+  /// Dynamic badge status: 'active' | 'faded' | 'expired'.
+  final String status;
+
+  /// True when the current user satisfies this badge's rules in check-in history.
+  final bool satisfied;
+
+  ProjectBadge copyWith({
+    bool? earned,
+    String? status,
+    bool? satisfied,
+  }) =>
+      ProjectBadge(
         name: name,
         description: description,
         imageUrl: imageUrl,
         earned: earned ?? this.earned,
         previousBadges: previousBadges,
+        status: status ?? this.status,
+        satisfied: satisfied ?? this.satisfied,
       );
 }
 
