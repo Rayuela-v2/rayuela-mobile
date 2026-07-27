@@ -298,10 +298,6 @@ class _OverviewTabState extends State<_OverviewTab> {
       padding: const EdgeInsets.only(bottom: 32),
       physics: const AlwaysScrollableScrollPhysics(),
       children: [
-        AspectRatio(
-          aspectRatio: 16 / 9,
-          child: _Cover(url: detail.imageUrl),
-        ),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
           child: Column(
@@ -321,6 +317,11 @@ class _OverviewTabState extends State<_OverviewTab> {
                 ProjectAreasMap(
                   projectId: detail.id,
                   areas: detail.areas,
+                  // Map is now the hero of the overview (cover image removed),
+                  // so give it a big slice of the viewport instead of the
+                  // old fixed 280.
+                  height: (MediaQuery.sizeOf(context).height * 0.55)
+                      .clamp(320.0, 560.0),
                   onAreaTap: (areaName) => context.pushNamed(
                     AppRoute.tasks,
                     pathParameters: {'projectId': detail.id},
@@ -437,34 +438,6 @@ class _SectionHeader extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _Cover extends StatelessWidget {
-  const _Cover({required this.url});
-  final String? url;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    if (url == null || url!.isEmpty) {
-      return Container(
-        color: theme.colorScheme.surfaceContainerHighest,
-        child: const Icon(Icons.image_outlined, size: 64, color: Colors.white54),
-      );
-    }
-    return CachedNetworkImage(
-      imageUrl: url!,
-      fit: BoxFit.cover,
-      placeholder: (_, __) => Container(
-        color: theme.colorScheme.surfaceContainerHighest,
-      ),
-      errorWidget: (_, __, ___) => Container(
-        color: theme.colorScheme.surfaceContainerHighest,
-        alignment: Alignment.center,
-        child: const Icon(Icons.broken_image_outlined, color: Colors.white54),
-      ),
     );
   }
 }
@@ -663,9 +636,10 @@ class _BadgesSectionState extends State<_BadgesSection> {
                 showSelectedIcon: false,
                 onSelectionChanged: (s) =>
                     setState(() => _showGraph = s.first),
+                // Compact look is fine, but keep the default (padded) tap
+                // target so the toggle stays finger-friendly.
                 style: const ButtonStyle(
                   visualDensity: VisualDensity.compact,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   padding: WidgetStatePropertyAll(
                     EdgeInsets.symmetric(horizontal: 8),
                   ),

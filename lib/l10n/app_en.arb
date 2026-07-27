@@ -87,6 +87,7 @@
   "map_center_on_me": "Center on me",
   "map_location_permission_needed": "Location permission needed",
   "map_fit_to_areas": "Fit to project areas",
+  "map_toggle_area_stats": "Show/hide tasks and points per area",
   "map_legend_has_open": "Has open tasks",
   "map_legend_no_open": "No open tasks",
   "map_legend_solved_task": "Check-in solved a task",

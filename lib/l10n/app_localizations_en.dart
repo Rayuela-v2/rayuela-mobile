@@ -230,6 +230,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get map_fit_to_areas => 'Fit to project areas';
 
   @override
+  String get map_toggle_area_stats => 'Show/hide tasks and points per area';
+
+  @override
   String get map_legend_has_open => 'Has open tasks';
 
   @override
