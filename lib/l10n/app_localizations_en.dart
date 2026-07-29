@@ -209,10 +209,42 @@ class AppLocalizationsEn extends AppLocalizations {
   String get badge_earned => 'Earned';
 
   @override
-  String get badge_locked => 'Locked';
+  String get badge_locked => 'Yet to earn';
 
   @override
   String get badge_requires => 'Requires';
+
+  @override
+  String get badge_how_to_earn => 'How to earn it';
+
+  @override
+  String badge_req_checkins(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count check-ins',
+      one: '1 check-in',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get badge_req_contribute => 'Each must solve a task';
+
+  @override
+  String badge_req_task_type(String type) {
+    return 'Task type: $type';
+  }
+
+  @override
+  String badge_req_area(String area) {
+    return 'Area: $area';
+  }
+
+  @override
+  String badge_req_interval(String interval) {
+    return 'When: $interval';
+  }
 
   @override
   String get map_screen_title => 'Map';

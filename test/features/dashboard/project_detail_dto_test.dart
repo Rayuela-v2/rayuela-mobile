@@ -215,5 +215,35 @@ void main() {
       }).toEntity();
       expect(entity.areas, isEmpty);
     });
+
+    test('carries the badge earning rule through, treating "Cualquiera" as any',
+        () {
+      final entity = ProjectDetailDto.fromJson({
+        'id': 'p1',
+        'name': 'X',
+        'gamification': {
+          'badgesRules': [
+            {
+              'name': 'Riverkeeper',
+              'checkinsAmount': 3,
+              'mustContribute': true,
+              'taskType': 'photo',
+              'areaId': 'Riverside',
+              'timeIntervalId': 'Cualquiera', // "any" → not a constraint
+            },
+          ],
+        },
+      }).toEntity();
+
+      final badge = entity.badges.single;
+      expect(badge.checkinsAmount, 3);
+      expect(badge.mustContribute, isTrue);
+      expect(badge.hasTaskType, isTrue);
+      expect(badge.taskType, 'photo');
+      expect(badge.hasArea, isTrue);
+      expect(badge.areaId, 'Riverside');
+      // 'Cualquiera' means no restriction on that dimension.
+      expect(badge.hasTimeInterval, isFalse);
+    });
   });
 }

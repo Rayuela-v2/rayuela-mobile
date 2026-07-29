@@ -79,8 +79,26 @@
   },
 
   "badge_earned": "Earned",
-  "badge_locked": "Locked",
+  "badge_locked": "Yet to earn",
   "badge_requires": "Requires",
+  "badge_how_to_earn": "How to earn it",
+  "badge_req_checkins": "{count, plural, one{1 check-in} other{{count} check-ins}}",
+  "@badge_req_checkins": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "badge_req_contribute": "Each must solve a task",
+  "badge_req_task_type": "Task type: {type}",
+  "@badge_req_task_type": {
+    "placeholders": { "type": { "type": "String" } }
+  },
+  "badge_req_area": "Area: {area}",
+  "@badge_req_area": {
+    "placeholders": { "area": { "type": "String" } }
+  },
+  "badge_req_interval": "When: {interval}",
+  "@badge_req_interval": {
+    "placeholders": { "interval": { "type": "String" } }
+  },
 
   "map_screen_title": "Map",
   "map_full_screen": "Full screen",

@@ -166,6 +166,11 @@ class ProjectBadgeDto {
     this.image,
     this.earned = false,
     this.previousBadges = const [],
+    this.checkinsAmount = 0,
+    this.mustContribute = false,
+    this.taskType,
+    this.areaId,
+    this.timeIntervalId,
   });
 
   final String name;
@@ -173,6 +178,14 @@ class ProjectBadgeDto {
   final String? image;
   final bool earned;
   final List<String> previousBadges;
+
+  // Earning rule (backend BadgeTemplate). Present on catalog badges; absent
+  // on bare user-overlay entries.
+  final int checkinsAmount;
+  final bool mustContribute;
+  final String? taskType;
+  final String? areaId;
+  final String? timeIntervalId;
 
   static ProjectBadgeDto? tryParse(Object? raw) {
     if (raw is String) {
@@ -210,6 +223,14 @@ class ProjectBadgeDto {
       ),
       earned: _asBool(m['active'] ?? m['earned']) ?? false,
       previousBadges: previous,
+      checkinsAmount:
+          _asInt(m['checkinsAmount'] ?? m['_checkinsAmount']) ?? 0,
+      mustContribute:
+          _asBool(m['mustContribute'] ?? m['_mustContribute']) ?? false,
+      taskType: _firstString(m, const ['taskType', '_taskType']),
+      areaId: _firstString(m, const ['areaId', '_areaId']),
+      timeIntervalId:
+          _firstString(m, const ['timeIntervalId', '_timeIntervalId']),
     );
   }
 
@@ -219,6 +240,11 @@ class ProjectBadgeDto {
         imageUrl: image,
         earned: earned,
         previousBadges: previousBadges,
+        checkinsAmount: checkinsAmount,
+        mustContribute: mustContribute,
+        taskType: taskType,
+        areaId: areaId,
+        timeIntervalId: timeIntervalId,
       );
 }
 
@@ -322,6 +348,12 @@ List<ProjectBadgeDto> _mergeBadges({
       previousBadges: c.previousBadges.isNotEmpty
           ? c.previousBadges
           : overlay.previousBadges,
+      // Earning rule is catalog metadata — the user overlay never carries it.
+      checkinsAmount: c.checkinsAmount,
+      mustContribute: c.mustContribute,
+      taskType: c.taskType,
+      areaId: c.areaId,
+      timeIntervalId: c.timeIntervalId,
     );
   }).toList(growable: false);
 }

@@ -79,8 +79,26 @@
   },
 
   "badge_earned": "Conquistada",
-  "badge_locked": "Bloqueada",
+  "badge_locked": "A conquistar",
   "badge_requires": "Requer",
+  "badge_how_to_earn": "Como obtê-la",
+  "badge_req_checkins": "{count, plural, one{1 check-in} other{{count} check-ins}}",
+  "@badge_req_checkins": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "badge_req_contribute": "Cada um deve resolver uma tarefa",
+  "badge_req_task_type": "Tipo de tarefa: {type}",
+  "@badge_req_task_type": {
+    "placeholders": { "type": { "type": "String" } }
+  },
+  "badge_req_area": "Área: {area}",
+  "@badge_req_area": {
+    "placeholders": { "area": { "type": "String" } }
+  },
+  "badge_req_interval": "Quando: {interval}",
+  "@badge_req_interval": {
+    "placeholders": { "interval": { "type": "String" } }
+  },
 
   "map_screen_title": "Mapa",
   "map_full_screen": "Tela cheia",

@@ -475,7 +475,7 @@ abstract class AppLocalizations {
   /// No description provided for @badge_locked.
   ///
   /// In en, this message translates to:
-  /// **'Locked'**
+  /// **'Yet to earn'**
   String get badge_locked;
 
   /// No description provided for @badge_requires.
@@ -483,6 +483,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Requires'**
   String get badge_requires;
+
+  /// No description provided for @badge_how_to_earn.
+  ///
+  /// In en, this message translates to:
+  /// **'How to earn it'**
+  String get badge_how_to_earn;
+
+  /// No description provided for @badge_req_checkins.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 check-in} other{{count} check-ins}}'**
+  String badge_req_checkins(int count);
+
+  /// No description provided for @badge_req_contribute.
+  ///
+  /// In en, this message translates to:
+  /// **'Each must solve a task'**
+  String get badge_req_contribute;
+
+  /// No description provided for @badge_req_task_type.
+  ///
+  /// In en, this message translates to:
+  /// **'Task type: {type}'**
+  String badge_req_task_type(String type);
+
+  /// No description provided for @badge_req_area.
+  ///
+  /// In en, this message translates to:
+  /// **'Area: {area}'**
+  String badge_req_area(String area);
+
+  /// No description provided for @badge_req_interval.
+  ///
+  /// In en, this message translates to:
+  /// **'When: {interval}'**
+  String badge_req_interval(String interval);
 
   /// No description provided for @map_screen_title.
   ///
