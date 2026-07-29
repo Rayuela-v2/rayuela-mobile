@@ -10,8 +10,11 @@ import 'api_paths.dart';
 /// request. Gated by [Env.useRefreshToken] because the backend ships the
 /// refresh endpoint in §4.1 of the migration plan.
 ///
-/// If refresh fails, the store is cleared and the caller sees the 401 —
-/// the auth controller listens for this and navigates to /login.
+/// The session is dropped **only** when the backend actively rejects the
+/// refresh token (401/403 from `/auth/refresh`) or when there is no refresh
+/// token at all. Every other failure — offline, timeout, 5xx — leaves the
+/// tokens on disk and surfaces the original error, because a flaky network
+/// is not a reason to sign the user out.
 class RefreshInterceptor extends Interceptor {
   RefreshInterceptor({
     required Dio dio,
@@ -50,6 +53,7 @@ class RefreshInterceptor extends Interceptor {
       _inFlightRefresh = null;
 
       if (newAccess == null) {
+        // No refresh token on disk — there is nothing left to recover.
         await _failAndLogout();
         handler.next(err);
         return;
@@ -62,11 +66,16 @@ class RefreshInterceptor extends Interceptor {
       handler.resolve(retryResponse);
     } on DioException catch (e) {
       _inFlightRefresh = null;
-      await _failAndLogout();
+      // Only a real rejection of the refresh token ends the session. A
+      // connection error / timeout / 5xx means "try again later", and
+      // wiping the tokens there is what used to log users out at random.
+      final status = e.response?.statusCode;
+      if (status == 401 || status == 403) {
+        await _failAndLogout();
+      }
       handler.next(e);
     } catch (_) {
       _inFlightRefresh = null;
-      await _failAndLogout();
       handler.next(err);
     }
   }

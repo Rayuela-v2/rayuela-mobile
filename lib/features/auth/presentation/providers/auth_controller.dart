@@ -43,6 +43,11 @@ class AuthController extends StateNotifier<AuthState> {
   final GoogleAuthService _google;
 
   /// Called from the splash screen on boot.
+  ///
+  /// A stored session only ends here when the backend actually rejects it.
+  /// If `/user` fails because the device is offline (or the server is having
+  /// a bad day) we start from the cached profile — the tokens are still on
+  /// disk and the next request will refresh them.
   Future<void> bootstrap() async {
     final hasSession = await _repo.hasValidSession();
     if (!hasSession) {
@@ -50,10 +55,16 @@ class AuthController extends StateNotifier<AuthState> {
       return;
     }
     final res = await _repo.fetchCurrentUser();
-    state = res.fold(
-      onSuccess: AuthStateAuthenticated.new,
-      onFailure: (e) => AuthStateUnauthenticated(reason: e.message),
-    );
+    switch (res) {
+      case Success<AuthUser>(:final value):
+        state = AuthStateAuthenticated(value);
+      case Failure<AuthUser>(:final error):
+        final cached =
+            error is UnauthorizedException ? null : await _repo.cachedUser();
+        state = cached != null
+            ? AuthStateAuthenticated(cached)
+            : AuthStateUnauthenticated(reason: error.message);
+    }
   }
 
   /// Login with username + password. Returns the typed exception on failure

@@ -22,6 +22,10 @@ abstract class AuthRepository {
 
   Future<Result<AuthUser>> fetchCurrentUser();
 
+  /// Last profile we successfully fetched, or null. Lets the splash screen
+  /// keep an offline user signed in instead of showing the login screen.
+  Future<AuthUser?> cachedUser();
+
   Future<Result<void>> forgotPassword(String email);
 
   Future<void> logout();

@@ -131,6 +131,20 @@ class UserDto {
     );
   }
 
+  /// Round-trips through [UserDto.fromJson] — used to cache the profile so
+  /// a cold start without network keeps the user signed in.
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'username': username,
+        'completeName': completeName,
+        'email': email,
+        'role': role,
+        'profileImage': profileImage,
+        'verified': verified,
+        'gameProfiles':
+            gameProfiles.map((g) => g.toJson()).toList(growable: false),
+      };
+
   AuthUser toEntity() => AuthUser(
         id: id,
         username: username,
@@ -170,6 +184,13 @@ class GameProfileDto {
       active: _asBool(json['active']) ?? false,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'projectId': projectId,
+        'points': points,
+        'badges': badges,
+        'active': active,
+      };
 
   UserGameProfile toEntity() => UserGameProfile(
         projectId: projectId,
