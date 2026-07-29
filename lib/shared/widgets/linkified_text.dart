@@ -10,11 +10,19 @@ class LinkifiedText extends StatefulWidget {
   final TextStyle? style;
   final TextStyle? linkStyle;
 
+  /// Optional truncation, mirroring [Text]. When [maxLines] is set the text
+  /// clips to that many lines using [overflow] (default: ellipsis when a
+  /// limit is given). Leave null for unbounded text (the default).
+  final int? maxLines;
+  final TextOverflow? overflow;
+
   const LinkifiedText({
     super.key,
     required this.text,
     this.style,
     this.linkStyle,
+    this.maxLines,
+    this.overflow,
   });
 
   @override
@@ -96,6 +104,9 @@ class _LinkifiedTextState extends State<LinkifiedText> {
 
     return Text.rich(
       TextSpan(children: spans),
+      maxLines: widget.maxLines,
+      overflow: widget.overflow ??
+          (widget.maxLines != null ? TextOverflow.ellipsis : TextOverflow.clip),
     );
   }
 

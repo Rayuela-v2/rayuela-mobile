@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/linkified_text.dart';
 import '../../domain/entities/task_item.dart';
 import 'task_detail_sheet.dart';
 
@@ -44,8 +45,8 @@ class TaskCard extends StatelessWidget {
                     ),
                     if (task.description.isNotEmpty) ...[
                       const SizedBox(height: 4),
-                      Text(
-                        task.description,
+                      LinkifiedText(
+                        text: task.description,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodyMedium?.copyWith(
