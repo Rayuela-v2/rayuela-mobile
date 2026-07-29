@@ -6,9 +6,12 @@ import '../../../../core/router/routes.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/empty_state.dart';
 import '../../../../shared/widgets/error_view.dart';
+import '../../../dashboard/domain/entities/project_detail.dart' show TaskType;
+import '../../../dashboard/presentation/providers/project_detail_providers.dart';
 import '../../domain/entities/task_item.dart';
 import '../providers/tasks_providers.dart';
 import '../widgets/task_card.dart';
+import '../widgets/task_detail_sheet.dart';
 
 /// Lists every task in a project. The user taps an open task to start a
 /// check-in. Solved tasks are read-only.
@@ -52,6 +55,15 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
         ? t.tasks_appbar_fallback
         : widget.projectName;
 
+    // Task-type catalog (name → entry) so the detail sheet can show the
+    // type's description. Absent until the project detail is warm — the
+    // sheet degrades gracefully to just the type name.
+    final detail = ref.watch(projectDetailValueProvider(widget.projectId));
+    final typeByName = <String, TaskType>{
+      for (final tt in detail.asData?.value.taskTypes ?? const <TaskType>[])
+        tt.name: tt,
+    };
+
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
@@ -76,7 +88,13 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
             onClearFilter: _areaFilter == null
                 ? null
                 : () => setState(() => _areaFilter = null),
-            onTaskTap: (task) => _openCheckin(context, task),
+            onTaskTap: (task) => showTaskDetails(
+              context,
+              task: task,
+              taskType: typeByName[task.type],
+              onCheckin:
+                  task.solved ? null : () => _startCheckin(context, task),
+            ),
           ),
           error: (error, _) => LayoutBuilder(
             builder: (context, constraints) => SingleChildScrollView(
@@ -109,16 +127,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
         .toList(growable: false);
   }
 
-  void _openCheckin(BuildContext context, TaskItem task) {
-    final t = AppLocalizations.of(context)!;
-    if (task.solved) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(t.tasks_already_solved(task.name)),
-        ),
-      );
-      return;
-    }
+  void _startCheckin(BuildContext context, TaskItem task) {
     context.pushNamed(
       AppRoute.checkin,
       pathParameters: {'projectId': widget.projectId},

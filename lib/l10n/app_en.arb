@@ -161,6 +161,12 @@
   "@task_card_solved_by": {
     "placeholders": { "name": { "type": "String" } }
   },
+  "task_schedule_everyday": "Every day",
+  "task_schedule_anytime": "Any time",
+  "task_detail_status_open": "Open",
+  "task_detail_about_type": "About this task type",
+  "task_detail_schedule": "When",
+  "task_detail_area": "Area",
 
   "checkin_screen_title_default": "New check-in",
   "checkin_section_kind": "What kind of check-in?",

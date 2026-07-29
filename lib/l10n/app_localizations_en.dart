@@ -363,6 +363,24 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get task_schedule_everyday => 'Every day';
+
+  @override
+  String get task_schedule_anytime => 'Any time';
+
+  @override
+  String get task_detail_status_open => 'Open';
+
+  @override
+  String get task_detail_about_type => 'About this task type';
+
+  @override
+  String get task_detail_schedule => 'When';
+
+  @override
+  String get task_detail_area => 'Area';
+
+  @override
   String get checkin_screen_title_default => 'New check-in';
 
   @override

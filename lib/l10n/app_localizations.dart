@@ -700,6 +700,42 @@ abstract class AppLocalizations {
   /// **'by {name}'**
   String task_card_solved_by(String name);
 
+  /// No description provided for @task_schedule_everyday.
+  ///
+  /// In en, this message translates to:
+  /// **'Every day'**
+  String get task_schedule_everyday;
+
+  /// No description provided for @task_schedule_anytime.
+  ///
+  /// In en, this message translates to:
+  /// **'Any time'**
+  String get task_schedule_anytime;
+
+  /// No description provided for @task_detail_status_open.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get task_detail_status_open;
+
+  /// No description provided for @task_detail_about_type.
+  ///
+  /// In en, this message translates to:
+  /// **'About this task type'**
+  String get task_detail_about_type;
+
+  /// No description provided for @task_detail_schedule.
+  ///
+  /// In en, this message translates to:
+  /// **'When'**
+  String get task_detail_schedule;
+
+  /// No description provided for @task_detail_area.
+  ///
+  /// In en, this message translates to:
+  /// **'Area'**
+  String get task_detail_area;
+
   /// No description provided for @checkin_screen_title_default.
   ///
   /// In en, this message translates to:
