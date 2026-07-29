@@ -166,11 +166,11 @@ class _SubscribedProjectViewState
           controller: _tabController,
           tabs: [
             Tab(
-              icon: const Icon(Icons.info_outline),
+              icon: const Icon(Icons.home_outlined),
               text: t.project_tab_overview,
             ),
             Tab(
-              icon: const Icon(Icons.photo_camera_back_outlined),
+              icon: const Icon(Icons.menu_book_outlined),
               text: t.project_tab_checkins,
             ),
             Tab(
@@ -184,7 +184,7 @@ class _SubscribedProjectViewState
           ? FloatingActionButton(
               tooltip: t.project_add_checkin,
               onPressed: () => _openCheckin(context, detail),
-              child: const Icon(Icons.add_a_photo_outlined),
+              child: const Icon(Icons.post_add),
             )
           : null,
       // "Progress" merges the leaderboard and the badges grid/graph — they're
@@ -354,7 +354,7 @@ class _OverviewTabState extends State<_OverviewTab> {
                 const SizedBox(height: 12),
                 _PrimaryActionButton(
                   key: widget.checkinButtonKey,
-                  icon: Icons.add_a_photo_outlined,
+                  icon: Icons.post_add,
                   label: t.project_add_checkin,
                   filled: true,
                   // Pass the project's taskType catalog as `extra` so the

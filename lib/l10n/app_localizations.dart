@@ -337,13 +337,13 @@ abstract class AppLocalizations {
   /// No description provided for @project_tab_overview.
   ///
   /// In en, this message translates to:
-  /// **'Overview'**
+  /// **'Home'**
   String get project_tab_overview;
 
   /// No description provided for @project_tab_checkins.
   ///
   /// In en, this message translates to:
-  /// **'Check-ins'**
+  /// **'Logbook'**
   String get project_tab_checkins;
 
   /// No description provided for @project_tab_progress.

@@ -138,10 +138,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get project_detail_fallback_title => 'Proyecto';
 
   @override
-  String get project_tab_overview => 'Resumen';
+  String get project_tab_overview => 'Inicio';
 
   @override
-  String get project_tab_checkins => 'Check-ins';
+  String get project_tab_checkins => 'Bitácora';
 
   @override
   String get project_tab_progress => 'Progreso';

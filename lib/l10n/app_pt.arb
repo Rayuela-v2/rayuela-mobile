@@ -48,8 +48,8 @@
   "dashboard_empty_body": "Descubra projetos de ciência cidadã perto de você e inscreva-se para participar.",
 
   "project_detail_fallback_title": "Projeto",
-  "project_tab_overview": "Visão geral",
-  "project_tab_checkins": "Check-ins",
+  "project_tab_overview": "Início",
+  "project_tab_checkins": "Diário de bordo",
   "project_tab_progress": "Progresso",
   "project_view_tasks": "Ver tarefas",
   "project_add_checkin": "Adicionar check-in",

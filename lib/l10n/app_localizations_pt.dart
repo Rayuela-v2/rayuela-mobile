@@ -137,10 +137,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get project_detail_fallback_title => 'Projeto';
 
   @override
-  String get project_tab_overview => 'Visão geral';
+  String get project_tab_overview => 'Início';
 
   @override
-  String get project_tab_checkins => 'Check-ins';
+  String get project_tab_checkins => 'Diário de bordo';
 
   @override
   String get project_tab_progress => 'Progresso';

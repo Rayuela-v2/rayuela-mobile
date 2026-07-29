@@ -48,8 +48,8 @@
   "dashboard_empty_body": "Descubre proyectos de ciencia ciudadana cerca de ti y suscríbete para participar.",
 
   "project_detail_fallback_title": "Proyecto",
-  "project_tab_overview": "Resumen",
-  "project_tab_checkins": "Check-ins",
+  "project_tab_overview": "Inicio",
+  "project_tab_checkins": "Bitácora",
   "project_tab_progress": "Progreso",
   "project_view_tasks": "Ver tareas",
   "project_add_checkin": "Agregar un check-in",

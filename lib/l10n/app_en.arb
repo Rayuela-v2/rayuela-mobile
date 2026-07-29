@@ -48,8 +48,8 @@
   "dashboard_empty_body": "Discover citizen-science projects near you and subscribe to start participating.",
 
   "project_detail_fallback_title": "Project",
-  "project_tab_overview": "Overview",
-  "project_tab_checkins": "Check-ins",
+  "project_tab_overview": "Home",
+  "project_tab_checkins": "Logbook",
   "project_tab_progress": "Progress",
   "project_view_tasks": "View tasks",
   "project_add_checkin": "Add a check-in",

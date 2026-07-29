@@ -134,10 +134,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get project_detail_fallback_title => 'Project';
 
   @override
-  String get project_tab_overview => 'Overview';
+  String get project_tab_overview => 'Home';
 
   @override
-  String get project_tab_checkins => 'Check-ins';
+  String get project_tab_checkins => 'Logbook';
 
   @override
   String get project_tab_progress => 'Progress';
