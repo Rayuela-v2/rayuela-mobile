@@ -87,7 +87,7 @@
   "map_center_on_me": "Centralizar em mim",
   "map_location_permission_needed": "Permissão de localização necessária",
   "map_fit_to_areas": "Ajustar às áreas do projeto",
-  "map_toggle_area_stats": "Mostrar/ocultar tarefas e pontos por área",
+  "map_toggle_legend": "Mostrar/ocultar legenda",
   "map_legend_has_open": "Tem tarefas abertas",
   "map_legend_no_open": "Sem tarefas abertas",
   "map_legend_solved_task": "Check-in resolveu uma tarefa",

@@ -58,10 +58,9 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
   LatLng? _userLocation;
   String? _selectedAreaId;
   bool _locationDenied = false;
-  // Overlay of pending tasks + points on each area label. On by default so
-  // the "what's left to do here" read is immediate; the toggle lets users
-  // collapse it back to plain names when the map feels busy.
-  bool _showAreaStats = true;
+  // Legend is hidden by default so it doesn't cover the map; the info
+  // button below toggles it on demand.
+  bool _showLegend = false;
 
   @override
   void initState() {
@@ -357,15 +356,12 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
                   ),
                   const SizedBox(height: 6),
                   _MapButton(
-                    icon: _showAreaStats
-                        ? Icons.visibility_outlined
-                        : Icons.visibility_off_outlined,
-                    tooltip: t.map_toggle_area_stats,
-                    onPressed: widget.areas.isEmpty
-                        ? null
-                        : () => setState(
-                              () => _showAreaStats = !_showAreaStats,
-                            ),
+                    icon: _showLegend
+                        ? Icons.info
+                        : Icons.info_outline,
+                    tooltip: t.map_toggle_legend,
+                    onPressed: () =>
+                        setState(() => _showLegend = !_showLegend),
                   ),
                   const SizedBox(height: 6),
                   _MapButton(
@@ -377,16 +373,17 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
                 ],
               ),
             ),
-            Positioned(
-              left: 8,
-              bottom: 8,
-              right: 8,
-              child: _Legend(
-                pendingByArea: pendingByArea,
-                totalByArea: totalByArea,
-                hasUserLocation: _userLocation != null,
+            if (_showLegend)
+              Positioned(
+                left: 8,
+                bottom: 8,
+                right: 8,
+                child: _Legend(
+                  pendingByArea: pendingByArea,
+                  totalByArea: totalByArea,
+                  hasUserLocation: _userLocation != null,
+                ),
               ),
-            ),
             const Positioned(
               right: 6,
               bottom: 6,
@@ -478,7 +475,7 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
       final centroid = area.centroid;
       if (centroid == null) continue;
       final pending = pendingByArea[area.id] ?? 0;
-      final showStats = _showAreaStats && pending > 0;
+      final showStats = pending > 0;
       markers.add(
         Marker(
           width: 140,

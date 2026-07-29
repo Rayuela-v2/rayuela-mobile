@@ -234,8 +234,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get map_fit_to_areas => 'Ajustar às áreas do projeto';
 
   @override
-  String get map_toggle_area_stats =>
-      'Mostrar/ocultar tarefas e pontos por área';
+  String get map_toggle_legend => 'Mostrar/ocultar legenda';
 
   @override
   String get map_legend_has_open => 'Tem tarefas abertas';

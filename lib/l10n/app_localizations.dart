@@ -514,11 +514,11 @@ abstract class AppLocalizations {
   /// **'Fit to project areas'**
   String get map_fit_to_areas;
 
-  /// No description provided for @map_toggle_area_stats.
+  /// No description provided for @map_toggle_legend.
   ///
   /// In en, this message translates to:
-  /// **'Show/hide tasks and points per area'**
-  String get map_toggle_area_stats;
+  /// **'Show/hide legend'**
+  String get map_toggle_legend;
 
   /// No description provided for @map_legend_has_open.
   ///
