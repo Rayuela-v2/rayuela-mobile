@@ -139,6 +139,29 @@ void main() {
     expect(signedOut, isTrue);
   });
 
+  test('keeps the session when the refresh returns 200 with an unreadable body',
+      () async {
+    final tokens = _FakeTokenStore();
+    var signedOut = false;
+    final dio = _dioWith(
+      tokens,
+      () async => ResponseBody.fromString(
+        '{"unexpected":"shape"}',
+        200,
+        headers: {
+          Headers.contentTypeHeader: [Headers.jsonContentType],
+        },
+      ),
+      onAuthFailure: () => signedOut = true,
+    );
+
+    await expectLater(dio.get<dynamic>('/user'), throwsA(isA<DioException>()));
+
+    // A contract mismatch must never cost the user their session.
+    expect(tokens.cleared, isFalse);
+    expect(signedOut, isFalse);
+  });
+
   test('replays the original request with the refreshed access token',
       () async {
     final tokens = _FakeTokenStore();
@@ -147,9 +170,12 @@ void main() {
     dio.httpClientAdapter = _StubAdapter(() async {
       refreshCalls++;
       return ResponseBody.fromString(
+        // Exactly what AuthService.refreshAccessToken returns — snake_case.
         jsonEncode({
-          'accessToken': 'new-access',
-          'refreshToken': 'user-id.secret',
+          'access_token': 'new-access',
+          'refresh_token': 'user-id.secret',
+          'expires_in': 3600,
+          'username': 'testuser',
         }),
         200,
         headers: {
