@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/linkified_text.dart';
 import '../../domain/entities/project_summary.dart';
 
 class ProjectCard extends StatelessWidget {
@@ -50,8 +51,8 @@ class ProjectCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 6),
-                  Text(
-                    project.description,
+                  LinkifiedText(
+                    text: project.description,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.bodyMedium?.copyWith(
