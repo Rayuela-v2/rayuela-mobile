@@ -147,10 +147,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get project_tab_progress => 'Progreso';
 
   @override
-  String get project_view_tasks => 'Ver tareas';
+  String get project_view_tasks => 'Ver misiones';
 
   @override
-  String get project_add_checkin => 'Agregar un check-in';
+  String get project_add_checkin => 'Emprender misión';
 
   @override
   String get project_subscribe => 'Suscribirse al proyecto';
@@ -166,7 +166,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get project_unsubscribe_subtitle =>
-      'Tus check-ins se mantienen; dejas de ganar nuevos puntos e insignias.';
+      'Tus misiones se mantienen; dejás de ganar nuevos puntos e insignias.';
 
   @override
   String get project_unsubscribe_confirm_title => '¿Cancelar suscripción?';
@@ -226,18 +226,18 @@ class AppLocalizationsEs extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count check-ins',
-      one: '1 check-in',
+      other: '$count misiones',
+      one: '1 misión',
     );
     return '$_temp0';
   }
 
   @override
-  String get badge_req_contribute => 'Cada uno debe resolver una tarea';
+  String get badge_req_contribute => 'Cada una debe completar una misión';
 
   @override
   String badge_req_task_type(String type) {
-    return 'Tipo de tarea: $type';
+    return 'Tipo de misión: $type';
   }
 
   @override
@@ -270,22 +270,22 @@ class AppLocalizationsEs extends AppLocalizations {
   String get map_toggle_legend => 'Mostrar/ocultar leyenda';
 
   @override
-  String get map_legend_pending_tasks => 'Tareas pendientes en la zona';
+  String get map_legend_pending_tasks => 'Misiones pendientes en la zona';
 
   @override
   String get map_legend_points_to_earn => 'Puntos a ganar en la zona';
 
   @override
-  String get map_legend_has_open => 'Tiene tareas abiertas';
+  String get map_legend_has_open => 'Tiene misiones abiertas';
 
   @override
-  String get map_legend_no_open => 'Sin tareas abiertas';
+  String get map_legend_no_open => 'Sin misiones abiertas';
 
   @override
-  String get map_legend_solved_task => 'Check-in que resolvió una tarea';
+  String get map_legend_solved_task => 'Misión cumplida';
 
   @override
-  String get map_legend_no_task => 'Check-in (sin tarea)';
+  String get map_legend_no_task => 'Exploración libre';
 
   @override
   String get map_legend_you_here => 'Estás aquí';
@@ -297,11 +297,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get map_attribution => '© OpenStreetMap';
 
   @override
-  String get map_area_no_tasks => 'Esta área no tiene tareas';
+  String get map_area_no_tasks => 'Esta zona no tiene misiones';
 
   @override
   String map_area_all_completed(int count) {
-    return 'Las $count tareas están completadas';
+    return '¡Completaste las $count misiones!';
   }
 
   @override
@@ -309,8 +309,8 @@ class AppLocalizationsEs extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count tareas pendientes',
-      one: '1 tarea pendiente',
+      other: '$count misiones pendientes',
+      one: '1 misión pendiente',
     );
     return '$_temp0';
   }
@@ -321,10 +321,10 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get map_open_tasks => 'Abrir tareas';
+  String get map_open_tasks => 'Ver misiones';
 
   @override
-  String get tasks_appbar_fallback => 'Tareas';
+  String get tasks_appbar_fallback => 'Misiones';
 
   @override
   String tasks_section_open(int count) {
@@ -333,15 +333,15 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String tasks_section_solved(int count) {
-    return 'Resueltas · $count';
+    return 'Completadas · $count';
   }
 
   @override
-  String get tasks_empty_title => 'Aún no hay tareas';
+  String get tasks_empty_title => 'Aún no hay misiones';
 
   @override
   String get tasks_empty_body =>
-      'Este proyecto no tiene tareas abiertas en este momento. Desliza para refrescar.';
+      'Este proyecto no tiene misiones abiertas por ahora. Deslizá para refrescar.';
 
   @override
   String tasks_filter_label(String areaName) {
@@ -350,19 +350,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String tasks_empty_for_area_title(String areaName) {
-    return 'No hay tareas en \"$areaName\"';
+    return 'No hay misiones en \"$areaName\"';
   }
 
   @override
   String get tasks_empty_for_area_body =>
-      'Esta área no tiene tareas asociadas en este momento.';
+      'Esta zona no tiene misiones asociadas por ahora.';
 
   @override
   String get tasks_clear_filter => 'Mostrar todas las áreas';
 
   @override
   String tasks_already_solved(String name) {
-    return '\"$name\" ya fue resuelta.';
+    return '\"$name\" ya está completada.';
   }
 
   @override
@@ -383,7 +383,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get task_detail_status_open => 'Abierta';
 
   @override
-  String get task_detail_about_type => 'Sobre este tipo de tarea';
+  String get task_detail_about_type => 'Sobre este tipo de misión';
 
   @override
   String get task_detail_schedule => 'Cuándo';
@@ -392,10 +392,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get task_detail_area => 'Zona';
 
   @override
-  String get checkin_screen_title_default => 'Nuevo check-in';
+  String get checkin_screen_title_default => 'Nueva misión';
 
   @override
-  String get checkin_section_kind => '¿Qué tipo de check-in?';
+  String get checkin_section_kind => '¿Qué tipo de misión?';
 
   @override
   String checkin_section_photos(int count, int max) {
@@ -415,7 +415,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get checkin_btn_gallery => 'Galería';
 
   @override
-  String get checkin_btn_submit => 'Enviar check-in';
+  String get checkin_btn_submit => 'Completar misión';
 
   @override
   String get checkin_picker_freetext_hint =>
@@ -441,7 +441,7 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get checkin_validation_pick_kind => 'Elegí qué tipo de check-in es.';
+  String get checkin_validation_pick_kind => 'Elegí qué tipo de misión es.';
 
   @override
   String get checkin_validation_add_photo =>
@@ -498,11 +498,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get location_disabled =>
-      'Los servicios de ubicación están desactivados. Activalos para hacer check-in.';
+      'Los servicios de ubicación están desactivados. Activalos para registrar tu misión.';
 
   @override
   String get location_denied =>
-      'El permiso de ubicación es necesario para asociar tu check-in al área del proyecto.';
+      'Necesitamos permiso de ubicación para anclar tu misión a la zona del proyecto.';
 
   @override
   String get location_denied_forever =>
@@ -522,17 +522,17 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get checkin_result_recorded => 'Check-in registrado';
+  String get checkin_result_recorded => 'Misión registrada';
 
   @override
-  String get checkin_result_earned => 'Ganado por este check-in';
+  String get checkin_result_earned => 'Ganado en esta misión';
 
   @override
   String get checkin_result_new_badges => 'Nuevas insignias';
 
   @override
   String checkin_result_task_completed(String name) {
-    return '¡Completaste la tarea \"$name\"! 🎉';
+    return '¡Misión cumplida: \"$name\"! 🎉';
   }
 
   @override
@@ -558,7 +558,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get checkin_result_accepted_done => '¡Ya colaboraste!';
 
   @override
-  String get checkin_result_accepted_subtitle => 'Check-in finalizado';
+  String get checkin_result_accepted_subtitle => 'Misión completada';
 
   @override
   String get checkin_result_new_collab_label => '¡Nueva colaboración!';
@@ -569,7 +569,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get checkin_result_queued_subtitle =>
-      'Enviaremos tu check-in automáticamente apenas vuelvas a tener conexión. Puedes seguir usando la app mientras tanto.';
+      'Enviaremos tu misión automáticamente apenas vuelvas a tener conexión. Podés seguir explorando mientras tanto.';
 
   @override
   String checkin_result_queued_at(String time) {
@@ -699,8 +699,7 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get outbox_discard_confirm_title =>
-      '¿Descartar el check-in pendiente?';
+  String get outbox_discard_confirm_title => '¿Descartar la misión pendiente?';
 
   @override
   String get outbox_discard_confirm_body =>
@@ -713,11 +712,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get outbox_cancel => 'Cancelar';
 
   @override
-  String get dashboard_outbox_banner_one => '1 check-in por enviar';
+  String get dashboard_outbox_banner_one => '1 misión por enviar';
 
   @override
   String dashboard_outbox_banner_many(int count) {
-    return '$count check-ins por enviar';
+    return '$count misiones por enviar';
   }
 
   @override
@@ -740,7 +739,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get pending_data_empty_body =>
-      'Los check-ins que crees sin conexión aparecerán acá mientras esperamos red.';
+      'Las misiones que registres sin conexión aparecerán acá mientras esperamos red.';
 
   @override
   String pending_data_project_label(String projectId) {
@@ -748,21 +747,21 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get checkins_empty_title => 'Aún no hay check-ins';
+  String get checkins_empty_title => 'Aún no hay misiones';
 
   @override
   String get checkins_empty_body =>
-      'Tus check-ins para este proyecto aparecerán aquí. Abrí una tarea y agregá el primero para empezar a ganar puntos.';
+      'Tus misiones para este proyecto aparecerán aquí. Emprendé una misión y registrá la primera para empezar a ganar puntos.';
 
   @override
-  String get checkins_card_default_kind => 'Check-in';
+  String get checkins_card_default_kind => 'Misión';
 
   @override
-  String get checkins_task_solved => 'Tarea resuelta';
+  String get checkins_task_solved => 'Misión cumplida';
 
   @override
   String checkins_task_solved_named(String name) {
-    return 'Resolvió · $name';
+    return 'Completó · $name';
   }
 
   @override
@@ -778,7 +777,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get leaderboard_empty_body =>
-      'Sé el primero en registrar un check-in y empezar a escalar la tabla.';
+      'Sé el primero en registrar una misión y empezá a escalar la tabla.';
 
   @override
   String get leaderboard_you => 'TÚ';
@@ -805,7 +804,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get admin_not_supported_body =>
-      'Por favor gestiona los proyectos, la gamificación y las tareas desde la consola web de Rayuela.';
+      'Por favor gestioná los proyectos, la gamificación y las misiones desde la consola web de Rayuela.';
 
   @override
   String router_route_not_found(String uri) {
@@ -821,7 +820,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get router_param_project_id => 'el id del proyecto';
 
   @override
-  String get router_param_checkin_result => 'el resultado del check-in';
+  String get router_param_checkin_result => 'el resultado de la misión';
 
   @override
   String get language_picker_tooltip => 'Idioma';
@@ -892,42 +891,41 @@ class AppLocalizationsEs extends AppLocalizations {
       'El servidor está tardando en responder. Probá en un momento.';
 
   @override
-  String get wizard_step1_guide =>
-      '¡Hola! ¿Qué tipo de tarea querés registrar hoy?';
+  String get wizard_step1_guide => '¡Hola! ¿Qué misión vas a emprender hoy?';
 
   @override
-  String get wizard_step1_title => 'TIPO DE TAREA';
+  String get wizard_step1_title => 'TIPO DE MISIÓN';
 
   @override
   String get wizard_step1_description => 'DESCRIPCIÓN';
 
   @override
   String get wizard_step1_empty =>
-      'No hay tipos de tareas disponibles para este proyecto.';
+      'No hay tipos de misión disponibles para este proyecto.';
 
   @override
   String get wizard_step1_empty_back => 'Volver';
 
   @override
-  String get wizard_step1_search_hint => 'Buscar tipo de tarea…';
+  String get wizard_step1_search_hint => 'Buscar tipo de misión…';
 
   @override
   String get wizard_step1_no_matches =>
-      'Ningún tipo de tarea coincide con tu búsqueda.';
+      'Ningún tipo de misión coincide con tu búsqueda.';
 
   @override
   String get wizard_next => 'Siguiente →';
 
   @override
-  String get wizard_submit => '¡COLABORAR!';
+  String get wizard_submit => '¡COMPLETAR MISIÓN!';
 
   @override
   String get wizard_step4_guide_custom =>
-      'Estableciste una fecha y hora personalizada para esta colaboración.';
+      'Estableciste una fecha y hora personalizada para esta misión.';
 
   @override
   String get wizard_step4_guide_current =>
-      'Estamos usando la fecha y hora actual para este check-in. ¿Querés modificarla?';
+      'Estamos usando la fecha y hora actual para esta misión. ¿Querés modificarla?';
 
   @override
   String get wizard_step4_title => 'FECHA Y HORA';
@@ -942,7 +940,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get wizard_step4_restore => 'Restablecer a la hora actual';
 
   @override
-  String get wizard_error_select_type => 'Elegí qué tipo de check-in es.';
+  String get wizard_error_select_type => 'Elegí qué tipo de misión es.';
 
   @override
   String get wizard_error_waiting_location => 'Esperando tu ubicación.';

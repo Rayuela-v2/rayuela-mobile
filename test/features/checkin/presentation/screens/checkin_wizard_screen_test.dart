@@ -111,7 +111,7 @@ void main() {
     // ----------------------------------------------------
     // STEP 1: Select Task Type
     // ----------------------------------------------------
-    expect(find.text('TASK TYPE'), findsOneWidget);
+    expect(find.text('MISSION TYPE'), findsOneWidget);
     expect(find.text('Clean'), findsOneWidget);
     expect(find.text('Repair'), findsOneWidget);
 
@@ -149,7 +149,7 @@ void main() {
     expect(find.text('Current date/time'), findsOneWidget);
 
     // Tap "Submit"
-    await tester.tap(find.text('COLLABORATE!'));
+    await tester.tap(find.text('COMPLETE MISSION!'));
     await tester.pumpAndSettle();
 
     // Verify submission is processed and navigates to the result screen

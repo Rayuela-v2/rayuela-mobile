@@ -51,13 +51,13 @@
   "project_tab_overview": "Home",
   "project_tab_checkins": "Logbook",
   "project_tab_progress": "Progress",
-  "project_view_tasks": "View tasks",
-  "project_add_checkin": "Add a check-in",
+  "project_view_tasks": "View missions",
+  "project_add_checkin": "Start a mission",
   "project_subscribe": "Subscribe to project",
   "project_subscribing": "Subscribing…",
   "project_subscribed_success": "You're subscribed!",
   "project_unsubscribe": "Unsubscribe from this project",
-  "project_unsubscribe_subtitle": "Your check-ins stay; you stop earning new points and badges.",
+  "project_unsubscribe_subtitle": "Your missions stay; you stop earning new points and badges.",
   "project_unsubscribe_confirm_title": "Unsubscribe?",
   "project_unsubscribe_confirm_body": "You can re-subscribe anytime. Earned badges and points stay on your profile.",
   "project_unsubscribe_success": "Unsubscribed.",
@@ -82,12 +82,12 @@
   "badge_locked": "Yet to earn",
   "badge_requires": "Requires",
   "badge_how_to_earn": "How to earn it",
-  "badge_req_checkins": "{count, plural, one{1 check-in} other{{count} check-ins}}",
+  "badge_req_checkins": "{count, plural, one{1 mission} other{{count} missions}}",
   "@badge_req_checkins": {
     "placeholders": { "count": { "type": "int" } }
   },
-  "badge_req_contribute": "Each must solve a task",
-  "badge_req_task_type": "Task type: {type}",
+  "badge_req_contribute": "Each must complete a mission",
+  "badge_req_task_type": "Mission type: {type}",
   "@badge_req_task_type": {
     "placeholders": { "type": { "type": "String" } }
   },
@@ -106,21 +106,21 @@
   "map_location_permission_needed": "Location permission needed",
   "map_fit_to_areas": "Fit to project areas",
   "map_toggle_legend": "Show/hide legend",
-  "map_legend_pending_tasks": "Pending tasks in the zone",
+  "map_legend_pending_tasks": "Pending missions in the zone",
   "map_legend_points_to_earn": "Points to earn in the zone",
-  "map_legend_has_open": "Has open tasks",
-  "map_legend_no_open": "No open tasks",
-  "map_legend_solved_task": "Check-in solved a task",
-  "map_legend_no_task": "Check-in (no task)",
+  "map_legend_has_open": "Has open missions",
+  "map_legend_no_open": "No open missions",
+  "map_legend_solved_task": "Mission accomplished",
+  "map_legend_no_task": "Free scouting",
   "map_legend_you_here": "You are here",
   "map_legend_your_location": "Your location",
   "map_attribution": "© OpenStreetMap",
-  "map_area_no_tasks": "No tasks in this area",
-  "map_area_all_completed": "All {count} tasks completed",
+  "map_area_no_tasks": "No missions in this zone",
+  "map_area_all_completed": "All {count} missions cleared!",
   "@map_area_all_completed": {
     "placeholders": { "count": { "type": "int" } }
   },
-  "map_area_pending_only": "{count, plural, one{1 task pending} other{{count} tasks pending}}",
+  "map_area_pending_only": "{count, plural, one{1 mission pending} other{{count} missions pending}}",
   "@map_area_pending_only": {
     "placeholders": { "count": { "type": "int" } }
   },
@@ -131,30 +131,30 @@
       "done": { "type": "int" }
     }
   },
-  "map_open_tasks": "Open tasks",
+  "map_open_tasks": "Open missions",
 
-  "tasks_appbar_fallback": "Tasks",
+  "tasks_appbar_fallback": "Missions",
   "tasks_section_open": "Open · {count}",
   "@tasks_section_open": {
     "placeholders": { "count": { "type": "int" } }
   },
-  "tasks_section_solved": "Solved · {count}",
+  "tasks_section_solved": "Completed · {count}",
   "@tasks_section_solved": {
     "placeholders": { "count": { "type": "int" } }
   },
-  "tasks_empty_title": "No tasks yet",
-  "tasks_empty_body": "This project does not have any tasks open right now. Pull down to refresh.",
+  "tasks_empty_title": "No missions yet",
+  "tasks_empty_body": "This project has no missions open right now. Pull down to refresh.",
   "tasks_filter_label": "Area · {areaName}",
   "@tasks_filter_label": {
     "placeholders": { "areaName": { "type": "String" } }
   },
-  "tasks_empty_for_area_title": "No tasks in \"{areaName}\"",
+  "tasks_empty_for_area_title": "No missions in \"{areaName}\"",
   "@tasks_empty_for_area_title": {
     "placeholders": { "areaName": { "type": "String" } }
   },
-  "tasks_empty_for_area_body": "This area has no tasks attached right now.",
+  "tasks_empty_for_area_body": "This zone has no missions attached right now.",
   "tasks_clear_filter": "Show all areas",
-  "tasks_already_solved": "\"{name}\" has already been solved.",
+  "tasks_already_solved": "\"{name}\" is already complete.",
   "@tasks_already_solved": {
     "placeholders": { "name": { "type": "String" } }
   },
@@ -166,12 +166,12 @@
   "task_schedule_everyday": "Every day",
   "task_schedule_anytime": "Any time",
   "task_detail_status_open": "Open",
-  "task_detail_about_type": "About this task type",
+  "task_detail_about_type": "About this mission type",
   "task_detail_schedule": "When",
   "task_detail_area": "Area",
 
-  "checkin_screen_title_default": "New check-in",
-  "checkin_section_kind": "What kind of check-in?",
+  "checkin_screen_title_default": "New mission",
+  "checkin_section_kind": "What kind of mission?",
   "checkin_section_photos": "Photos · {count}/{max}",
   "@checkin_section_photos": {
     "placeholders": {
@@ -183,7 +183,7 @@
   "checkin_section_notes": "Notes (optional)",
   "checkin_btn_camera": "Camera",
   "checkin_btn_gallery": "Gallery",
-  "checkin_btn_submit": "Submit check-in",
+  "checkin_btn_submit": "Complete mission",
   "checkin_picker_freetext_hint": "e.g. observation, photo report, water sample",
   "checkin_notes_hint": "Anything the project team should know about this observation?",
   "checkin_photos_hint": "Add up to {max} photos to support your observation.",
@@ -198,7 +198,7 @@
   "@checkin_gallery_error": {
     "placeholders": { "detail": { "type": "String" } }
   },
-  "checkin_validation_pick_kind": "Pick what kind of check-in this is.",
+  "checkin_validation_pick_kind": "Pick what kind of mission this is.",
   "checkin_validation_add_photo": "Add at least one photo first.",
   "checkin_validation_waiting_location": "Waiting for your location. Retry or pick a spot on the map.",
 
@@ -219,8 +219,8 @@
   "location_picker_recenter": "Re-center",
   "location_picker_use_this": "Use this location",
   "location_unknown_error": "Could not determine your location. Try again.",
-  "location_disabled": "Location services are turned off. Enable them to check in.",
-  "location_denied": "Location permission is required to attach your check-in to the project area.",
+  "location_disabled": "Location services are off. Turn them on to log your mission.",
+  "location_denied": "We need location permission to pin your mission to the project zone.",
   "location_denied_forever": "Location is permanently denied. Open Settings to grant access and try again.",
 
   "checkin_result_title": "Thanks for contributing",
@@ -232,10 +232,10 @@
   "@checkin_result_points_label": {
     "placeholders": { "points": { "type": "int" } }
   },
-  "checkin_result_recorded": "Check-in recorded",
-  "checkin_result_earned": "Earned for this check-in",
+  "checkin_result_recorded": "Mission logged",
+  "checkin_result_earned": "Earned on this mission",
   "checkin_result_new_badges": "New badges",
-  "checkin_result_task_completed": "You completed the task \"{name}\"! 🎉",
+  "checkin_result_task_completed": "Mission complete: \"{name}\"! 🎉",
   "@checkin_result_task_completed": {
     "placeholders": { "name": { "type": "String" } }
   },
@@ -247,11 +247,11 @@
   "checkin_result_complete_badge": "Complete",
   "checkin_result_accepted_heading": "Collaboration\nrecorded!",
   "checkin_result_accepted_done": "You collaborated!",
-  "checkin_result_accepted_subtitle": "Check-in complete",
+  "checkin_result_accepted_subtitle": "Mission complete",
   "checkin_result_new_collab_label": "New collaboration!",
 
   "checkin_result_queued_title": "Saved — will sync when you have signal",
-  "checkin_result_queued_subtitle": "We'll send your check-in automatically as soon as you're back online. You can keep working in the meantime.",
+  "checkin_result_queued_subtitle": "We'll send your mission automatically as soon as you're back online. Keep exploring in the meantime.",
   "checkin_result_queued_at": "Captured at {time}",
   "@checkin_result_queued_at": {
     "placeholders": { "time": { "type": "String" } }
@@ -327,13 +327,13 @@
   "@outbox_attempt_count": {
     "placeholders": { "count": { "type": "int" } }
   },
-  "outbox_discard_confirm_title": "Discard pending check-in?",
+  "outbox_discard_confirm_title": "Discard pending mission?",
   "outbox_discard_confirm_body": "The photos and details will be removed from this device. This cannot be undone.",
   "outbox_discard_confirm_cta": "Discard",
   "outbox_cancel": "Cancel",
 
-  "dashboard_outbox_banner_one": "1 check-in waiting to sync",
-  "dashboard_outbox_banner_many": "{count} check-ins waiting to sync",
+  "dashboard_outbox_banner_one": "1 mission waiting to sync",
+  "dashboard_outbox_banner_many": "{count} missions waiting to sync",
   "@dashboard_outbox_banner_many": {
     "placeholders": { "count": { "type": "int" } }
   },
@@ -344,17 +344,17 @@
 
   "pending_data_title": "Pending data",
   "pending_data_empty_title": "Nothing waiting",
-  "pending_data_empty_body": "Check-ins you create offline will appear here while we wait for a connection.",
+  "pending_data_empty_body": "Missions you log offline will appear here while we wait for a connection.",
   "pending_data_project_label": "Project: {projectId}",
   "@pending_data_project_label": {
     "placeholders": { "projectId": { "type": "String" } }
   },
 
-  "checkins_empty_title": "No check-ins yet",
-  "checkins_empty_body": "Your check-ins for this project will appear here. Open a task and add your first one to start earning points.",
-  "checkins_card_default_kind": "Check-in",
-  "checkins_task_solved": "Task solved",
-  "checkins_task_solved_named": "Solved · {name}",
+  "checkins_empty_title": "No missions yet",
+  "checkins_empty_body": "Your missions for this project will appear here. Take on a mission and log your first to start earning points.",
+  "checkins_card_default_kind": "Mission",
+  "checkins_task_solved": "Mission complete",
+  "checkins_task_solved_named": "Complete · {name}",
   "@checkins_task_solved_named": {
     "placeholders": { "name": { "type": "String" } }
   },
@@ -369,7 +369,7 @@
   },
 
   "leaderboard_empty_title": "No rankings yet",
-  "leaderboard_empty_body": "Be the first to log a check-in and start climbing the leaderboard.",
+  "leaderboard_empty_body": "Be the first to log a mission and start climbing the leaderboard.",
   "leaderboard_you": "YOU",
   "leaderboard_pt_singular": "pt",
   "leaderboard_pt_plural": "pts",
@@ -379,7 +379,7 @@
   },
 
   "admin_not_supported_title": "The mobile app is for volunteers",
-  "admin_not_supported_body": "Please manage projects, gamification and tasks from the Rayuela web console.",
+  "admin_not_supported_body": "Please manage projects, gamification and missions from the Rayuela web console.",
 
   "router_route_not_found": "Route not found: {uri}",
   "@router_route_not_found": {
@@ -390,7 +390,7 @@
     "placeholders": { "what": { "type": "String" } }
   },
   "router_param_project_id": "project id",
-  "router_param_checkin_result": "check-in result",
+  "router_param_checkin_result": "mission result",
 
   "language_picker_tooltip": "Language",
   "language_picker_title": "Language",
@@ -418,22 +418,22 @@
   "error_server_no_code": "Server error. Please try again.",
   "error_unauthorized": "Your session expired. Please log in again.",
   "error_timeout": "The server is slow to respond. Try again in a moment.",
-  "wizard_step1_guide": "Hello! What type of task would you like to register today?",
-  "wizard_step1_title": "TASK TYPE",
+  "wizard_step1_guide": "Hey! What kind of mission are you taking on today?",
+  "wizard_step1_title": "MISSION TYPE",
   "wizard_step1_description": "DESCRIPTION",
-  "wizard_step1_empty": "There are no task types available for this project.",
+  "wizard_step1_empty": "There are no mission types available for this project.",
   "wizard_step1_empty_back": "Go Back",
-  "wizard_step1_search_hint": "Search task type…",
-  "wizard_step1_no_matches": "No task types match your search.",
+  "wizard_step1_search_hint": "Search mission type…",
+  "wizard_step1_no_matches": "No mission types match your search.",
   "wizard_next": "Next →",
-  "wizard_submit": "COLLABORATE!",
-  "wizard_step4_guide_custom": "You have set a custom date and time for this collaboration.",
-  "wizard_step4_guide_current": "We are using the current date and time for this check-in. Would you like to modify it?",
+  "wizard_submit": "COMPLETE MISSION!",
+  "wizard_step4_guide_custom": "You've set a custom date and time for this mission.",
+  "wizard_step4_guide_current": "We're using the current date and time for this mission. Would you like to modify it?",
   "wizard_step4_title": "DATE & TIME",
   "wizard_step4_subtitle_custom": "Modified date/time",
   "wizard_step4_subtitle_current": "Current date/time",
   "wizard_step4_restore": "Reset to current time",
-  "wizard_error_select_type": "Please select a check-in type.",
+  "wizard_error_select_type": "Please pick a mission type.",
   "wizard_error_waiting_location": "Waiting for your location.",
   "wizard_error_future_date": "The date and time cannot be in the future.",
   "wizard_step2_guide": "Do you have evidence to add? You can upload up to 3 photos.",

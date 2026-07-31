@@ -51,13 +51,13 @@
   "project_tab_overview": "Inicio",
   "project_tab_checkins": "Bitácora",
   "project_tab_progress": "Progreso",
-  "project_view_tasks": "Ver tareas",
-  "project_add_checkin": "Agregar un check-in",
+  "project_view_tasks": "Ver misiones",
+  "project_add_checkin": "Emprender misión",
   "project_subscribe": "Suscribirse al proyecto",
   "project_subscribing": "Suscribiendo…",
   "project_subscribed_success": "¡Te suscribiste!",
   "project_unsubscribe": "Cancelar suscripción a este proyecto",
-  "project_unsubscribe_subtitle": "Tus check-ins se mantienen; dejas de ganar nuevos puntos e insignias.",
+  "project_unsubscribe_subtitle": "Tus misiones se mantienen; dejás de ganar nuevos puntos e insignias.",
   "project_unsubscribe_confirm_title": "¿Cancelar suscripción?",
   "project_unsubscribe_confirm_body": "Puedes volver a suscribirte cuando quieras. Las insignias y puntos ganados quedan en tu perfil.",
   "project_unsubscribe_success": "Suscripción cancelada.",
@@ -82,12 +82,12 @@
   "badge_locked": "Por conseguir",
   "badge_requires": "Requiere",
   "badge_how_to_earn": "Cómo obtenerla",
-  "badge_req_checkins": "{count, plural, one{1 check-in} other{{count} check-ins}}",
+  "badge_req_checkins": "{count, plural, one{1 misión} other{{count} misiones}}",
   "@badge_req_checkins": {
     "placeholders": { "count": { "type": "int" } }
   },
-  "badge_req_contribute": "Cada uno debe resolver una tarea",
-  "badge_req_task_type": "Tipo de tarea: {type}",
+  "badge_req_contribute": "Cada una debe completar una misión",
+  "badge_req_task_type": "Tipo de misión: {type}",
   "@badge_req_task_type": {
     "placeholders": { "type": { "type": "String" } }
   },
@@ -106,21 +106,21 @@
   "map_location_permission_needed": "Se necesita permiso de ubicación",
   "map_fit_to_areas": "Ajustar a las áreas del proyecto",
   "map_toggle_legend": "Mostrar/ocultar leyenda",
-  "map_legend_pending_tasks": "Tareas pendientes en la zona",
+  "map_legend_pending_tasks": "Misiones pendientes en la zona",
   "map_legend_points_to_earn": "Puntos a ganar en la zona",
-  "map_legend_has_open": "Tiene tareas abiertas",
-  "map_legend_no_open": "Sin tareas abiertas",
-  "map_legend_solved_task": "Check-in que resolvió una tarea",
-  "map_legend_no_task": "Check-in (sin tarea)",
+  "map_legend_has_open": "Tiene misiones abiertas",
+  "map_legend_no_open": "Sin misiones abiertas",
+  "map_legend_solved_task": "Misión cumplida",
+  "map_legend_no_task": "Exploración libre",
   "map_legend_you_here": "Estás aquí",
   "map_legend_your_location": "Tu ubicación",
   "map_attribution": "© OpenStreetMap",
-  "map_area_no_tasks": "Esta área no tiene tareas",
-  "map_area_all_completed": "Las {count} tareas están completadas",
+  "map_area_no_tasks": "Esta zona no tiene misiones",
+  "map_area_all_completed": "¡Completaste las {count} misiones!",
   "@map_area_all_completed": {
     "placeholders": { "count": { "type": "int" } }
   },
-  "map_area_pending_only": "{count, plural, one{1 tarea pendiente} other{{count} tareas pendientes}}",
+  "map_area_pending_only": "{count, plural, one{1 misión pendiente} other{{count} misiones pendientes}}",
   "@map_area_pending_only": {
     "placeholders": { "count": { "type": "int" } }
   },
@@ -131,30 +131,30 @@
       "done": { "type": "int" }
     }
   },
-  "map_open_tasks": "Abrir tareas",
+  "map_open_tasks": "Ver misiones",
 
-  "tasks_appbar_fallback": "Tareas",
+  "tasks_appbar_fallback": "Misiones",
   "tasks_section_open": "Abiertas · {count}",
   "@tasks_section_open": {
     "placeholders": { "count": { "type": "int" } }
   },
-  "tasks_section_solved": "Resueltas · {count}",
+  "tasks_section_solved": "Completadas · {count}",
   "@tasks_section_solved": {
     "placeholders": { "count": { "type": "int" } }
   },
-  "tasks_empty_title": "Aún no hay tareas",
-  "tasks_empty_body": "Este proyecto no tiene tareas abiertas en este momento. Desliza para refrescar.",
+  "tasks_empty_title": "Aún no hay misiones",
+  "tasks_empty_body": "Este proyecto no tiene misiones abiertas por ahora. Deslizá para refrescar.",
   "tasks_filter_label": "Área · {areaName}",
   "@tasks_filter_label": {
     "placeholders": { "areaName": { "type": "String" } }
   },
-  "tasks_empty_for_area_title": "No hay tareas en \"{areaName}\"",
+  "tasks_empty_for_area_title": "No hay misiones en \"{areaName}\"",
   "@tasks_empty_for_area_title": {
     "placeholders": { "areaName": { "type": "String" } }
   },
-  "tasks_empty_for_area_body": "Esta área no tiene tareas asociadas en este momento.",
+  "tasks_empty_for_area_body": "Esta zona no tiene misiones asociadas por ahora.",
   "tasks_clear_filter": "Mostrar todas las áreas",
-  "tasks_already_solved": "\"{name}\" ya fue resuelta.",
+  "tasks_already_solved": "\"{name}\" ya está completada.",
   "@tasks_already_solved": {
     "placeholders": { "name": { "type": "String" } }
   },
@@ -166,12 +166,12 @@
   "task_schedule_everyday": "Todos los días",
   "task_schedule_anytime": "Cualquier horario",
   "task_detail_status_open": "Abierta",
-  "task_detail_about_type": "Sobre este tipo de tarea",
+  "task_detail_about_type": "Sobre este tipo de misión",
   "task_detail_schedule": "Cuándo",
   "task_detail_area": "Zona",
 
-  "checkin_screen_title_default": "Nuevo check-in",
-  "checkin_section_kind": "¿Qué tipo de check-in?",
+  "checkin_screen_title_default": "Nueva misión",
+  "checkin_section_kind": "¿Qué tipo de misión?",
   "checkin_section_photos": "Fotos · {count}/{max}",
   "@checkin_section_photos": {
     "placeholders": {
@@ -183,7 +183,7 @@
   "checkin_section_notes": "Notas (opcional)",
   "checkin_btn_camera": "Cámara",
   "checkin_btn_gallery": "Galería",
-  "checkin_btn_submit": "Enviar check-in",
+  "checkin_btn_submit": "Completar misión",
   "checkin_picker_freetext_hint": "p. ej. observación, reporte fotográfico, muestra de agua",
   "checkin_notes_hint": "¿Algo que el equipo del proyecto deba saber sobre esta observación?",
   "checkin_photos_hint": "Agrega hasta {max} fotos para respaldar tu observación.",
@@ -198,7 +198,7 @@
   "@checkin_gallery_error": {
     "placeholders": { "detail": { "type": "String" } }
   },
-  "checkin_validation_pick_kind": "Elegí qué tipo de check-in es.",
+  "checkin_validation_pick_kind": "Elegí qué tipo de misión es.",
   "checkin_validation_add_photo": "Agregá al menos una foto primero.",
   "checkin_validation_waiting_location": "Esperando tu ubicación. Reintentá o elegí un punto en el mapa.",
 
@@ -219,8 +219,8 @@
   "location_picker_recenter": "Re-centrar",
   "location_picker_use_this": "Usar esta ubicación",
   "location_unknown_error": "No pudimos determinar tu ubicación. Probá de nuevo.",
-  "location_disabled": "Los servicios de ubicación están desactivados. Activalos para hacer check-in.",
-  "location_denied": "El permiso de ubicación es necesario para asociar tu check-in al área del proyecto.",
+  "location_disabled": "Los servicios de ubicación están desactivados. Activalos para registrar tu misión.",
+  "location_denied": "Necesitamos permiso de ubicación para anclar tu misión a la zona del proyecto.",
   "location_denied_forever": "La ubicación está bloqueada permanentemente. Abrí la configuración para concederla y volvé a intentarlo.",
 
   "checkin_result_title": "¡Gracias por contribuir!",
@@ -232,10 +232,10 @@
   "@checkin_result_points_label": {
     "placeholders": { "points": { "type": "int" } }
   },
-  "checkin_result_recorded": "Check-in registrado",
-  "checkin_result_earned": "Ganado por este check-in",
+  "checkin_result_recorded": "Misión registrada",
+  "checkin_result_earned": "Ganado en esta misión",
   "checkin_result_new_badges": "Nuevas insignias",
-  "checkin_result_task_completed": "¡Completaste la tarea \"{name}\"! 🎉",
+  "checkin_result_task_completed": "¡Misión cumplida: \"{name}\"! 🎉",
   "@checkin_result_task_completed": {
     "placeholders": { "name": { "type": "String" } }
   },
@@ -247,11 +247,11 @@
   "checkin_result_complete_badge": "Completo",
   "checkin_result_accepted_heading": "¡Colaboración\nregistrada!",
   "checkin_result_accepted_done": "¡Ya colaboraste!",
-  "checkin_result_accepted_subtitle": "Check-in finalizado",
+  "checkin_result_accepted_subtitle": "Misión completada",
   "checkin_result_new_collab_label": "¡Nueva colaboración!",
 
   "checkin_result_queued_title": "Guardado — se enviará cuando tengas señal",
-  "checkin_result_queued_subtitle": "Enviaremos tu check-in automáticamente apenas vuelvas a tener conexión. Puedes seguir usando la app mientras tanto.",
+  "checkin_result_queued_subtitle": "Enviaremos tu misión automáticamente apenas vuelvas a tener conexión. Podés seguir explorando mientras tanto.",
   "checkin_result_queued_at": "Capturado a las {time}",
   "@checkin_result_queued_at": {
     "placeholders": { "time": { "type": "String" } }
@@ -327,13 +327,13 @@
   "@outbox_attempt_count": {
     "placeholders": { "count": { "type": "int" } }
   },
-  "outbox_discard_confirm_title": "¿Descartar el check-in pendiente?",
+  "outbox_discard_confirm_title": "¿Descartar la misión pendiente?",
   "outbox_discard_confirm_body": "Las fotos y los datos se borrarán de este dispositivo. Esta acción no se puede deshacer.",
   "outbox_discard_confirm_cta": "Descartar",
   "outbox_cancel": "Cancelar",
 
-  "dashboard_outbox_banner_one": "1 check-in por enviar",
-  "dashboard_outbox_banner_many": "{count} check-ins por enviar",
+  "dashboard_outbox_banner_one": "1 misión por enviar",
+  "dashboard_outbox_banner_many": "{count} misiones por enviar",
   "@dashboard_outbox_banner_many": {
     "placeholders": { "count": { "type": "int" } }
   },
@@ -344,17 +344,17 @@
 
   "pending_data_title": "Datos pendientes",
   "pending_data_empty_title": "Nada por sincronizar",
-  "pending_data_empty_body": "Los check-ins que crees sin conexión aparecerán acá mientras esperamos red.",
+  "pending_data_empty_body": "Las misiones que registres sin conexión aparecerán acá mientras esperamos red.",
   "pending_data_project_label": "Proyecto: {projectId}",
   "@pending_data_project_label": {
     "placeholders": { "projectId": { "type": "String" } }
   },
 
-  "checkins_empty_title": "Aún no hay check-ins",
-  "checkins_empty_body": "Tus check-ins para este proyecto aparecerán aquí. Abrí una tarea y agregá el primero para empezar a ganar puntos.",
-  "checkins_card_default_kind": "Check-in",
-  "checkins_task_solved": "Tarea resuelta",
-  "checkins_task_solved_named": "Resolvió · {name}",
+  "checkins_empty_title": "Aún no hay misiones",
+  "checkins_empty_body": "Tus misiones para este proyecto aparecerán aquí. Emprendé una misión y registrá la primera para empezar a ganar puntos.",
+  "checkins_card_default_kind": "Misión",
+  "checkins_task_solved": "Misión cumplida",
+  "checkins_task_solved_named": "Completó · {name}",
   "@checkins_task_solved_named": {
     "placeholders": { "name": { "type": "String" } }
   },
@@ -369,7 +369,7 @@
   },
 
   "leaderboard_empty_title": "Aún no hay rankings",
-  "leaderboard_empty_body": "Sé el primero en registrar un check-in y empezar a escalar la tabla.",
+  "leaderboard_empty_body": "Sé el primero en registrar una misión y empezá a escalar la tabla.",
   "leaderboard_you": "TÚ",
   "leaderboard_pt_singular": "pt",
   "leaderboard_pt_plural": "pts",
@@ -379,7 +379,7 @@
   },
 
   "admin_not_supported_title": "La app móvil es para voluntarios",
-  "admin_not_supported_body": "Por favor gestiona los proyectos, la gamificación y las tareas desde la consola web de Rayuela.",
+  "admin_not_supported_body": "Por favor gestioná los proyectos, la gamificación y las misiones desde la consola web de Rayuela.",
 
   "router_route_not_found": "Ruta no encontrada: {uri}",
   "@router_route_not_found": {
@@ -390,7 +390,7 @@
     "placeholders": { "what": { "type": "String" } }
   },
   "router_param_project_id": "el id del proyecto",
-  "router_param_checkin_result": "el resultado del check-in",
+  "router_param_checkin_result": "el resultado de la misión",
 
   "language_picker_tooltip": "Idioma",
   "language_picker_title": "Idioma",
@@ -418,22 +418,22 @@
   "error_server_no_code": "Error del servidor. Probá de nuevo.",
   "error_unauthorized": "Tu sesión expiró. Iniciá sesión de nuevo.",
   "error_timeout": "El servidor está tardando en responder. Probá en un momento.",
-  "wizard_step1_guide": "¡Hola! ¿Qué tipo de tarea querés registrar hoy?",
-  "wizard_step1_title": "TIPO DE TAREA",
+  "wizard_step1_guide": "¡Hola! ¿Qué misión vas a emprender hoy?",
+  "wizard_step1_title": "TIPO DE MISIÓN",
   "wizard_step1_description": "DESCRIPCIÓN",
-  "wizard_step1_empty": "No hay tipos de tareas disponibles para este proyecto.",
+  "wizard_step1_empty": "No hay tipos de misión disponibles para este proyecto.",
   "wizard_step1_empty_back": "Volver",
-  "wizard_step1_search_hint": "Buscar tipo de tarea…",
-  "wizard_step1_no_matches": "Ningún tipo de tarea coincide con tu búsqueda.",
+  "wizard_step1_search_hint": "Buscar tipo de misión…",
+  "wizard_step1_no_matches": "Ningún tipo de misión coincide con tu búsqueda.",
   "wizard_next": "Siguiente →",
-  "wizard_submit": "¡COLABORAR!",
-  "wizard_step4_guide_custom": "Estableciste una fecha y hora personalizada para esta colaboración.",
-  "wizard_step4_guide_current": "Estamos usando la fecha y hora actual para este check-in. ¿Querés modificarla?",
+  "wizard_submit": "¡COMPLETAR MISIÓN!",
+  "wizard_step4_guide_custom": "Estableciste una fecha y hora personalizada para esta misión.",
+  "wizard_step4_guide_current": "Estamos usando la fecha y hora actual para esta misión. ¿Querés modificarla?",
   "wizard_step4_title": "FECHA Y HORA",
   "wizard_step4_subtitle_custom": "Fecha/hora modificada",
   "wizard_step4_subtitle_current": "Fecha/hora actual",
   "wizard_step4_restore": "Restablecer a la hora actual",
-  "wizard_error_select_type": "Elegí qué tipo de check-in es.",
+  "wizard_error_select_type": "Elegí qué tipo de misión es.",
   "wizard_error_waiting_location": "Esperando tu ubicación.",
   "wizard_error_future_date": "La fecha y hora no pueden ser futuras.",
   "wizard_step2_guide": "¿Tenés evidencia para agregar? Podés subir hasta 3 fotos.",

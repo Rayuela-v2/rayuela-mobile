@@ -60,7 +60,7 @@ void main() {
     ),);
     await tester.pumpAndSettle();
 
-    expect(find.text('1 check-in waiting to sync'), findsOneWidget);
+    expect(find.text('1 mission waiting to sync'), findsOneWidget);
   });
 
   testWidgets('OutboxBanner shows the plural copy with the count',
@@ -73,7 +73,7 @@ void main() {
     ),);
     await tester.pumpAndSettle();
 
-    expect(find.text('4 check-ins waiting to sync'), findsOneWidget);
+    expect(find.text('4 missions waiting to sync'), findsOneWidget);
   });
 
   testWidgets('SyncStatusBadge renders nothing for SyncStatus.idle',

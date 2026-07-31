@@ -355,13 +355,13 @@ abstract class AppLocalizations {
   /// No description provided for @project_view_tasks.
   ///
   /// In en, this message translates to:
-  /// **'View tasks'**
+  /// **'View missions'**
   String get project_view_tasks;
 
   /// No description provided for @project_add_checkin.
   ///
   /// In en, this message translates to:
-  /// **'Add a check-in'**
+  /// **'Start a mission'**
   String get project_add_checkin;
 
   /// No description provided for @project_subscribe.
@@ -391,7 +391,7 @@ abstract class AppLocalizations {
   /// No description provided for @project_unsubscribe_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Your check-ins stay; you stop earning new points and badges.'**
+  /// **'Your missions stay; you stop earning new points and badges.'**
   String get project_unsubscribe_subtitle;
 
   /// No description provided for @project_unsubscribe_confirm_title.
@@ -493,19 +493,19 @@ abstract class AppLocalizations {
   /// No description provided for @badge_req_checkins.
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, one{1 check-in} other{{count} check-ins}}'**
+  /// **'{count, plural, one{1 mission} other{{count} missions}}'**
   String badge_req_checkins(int count);
 
   /// No description provided for @badge_req_contribute.
   ///
   /// In en, this message translates to:
-  /// **'Each must solve a task'**
+  /// **'Each must complete a mission'**
   String get badge_req_contribute;
 
   /// No description provided for @badge_req_task_type.
   ///
   /// In en, this message translates to:
-  /// **'Task type: {type}'**
+  /// **'Mission type: {type}'**
   String badge_req_task_type(String type);
 
   /// No description provided for @badge_req_area.
@@ -559,7 +559,7 @@ abstract class AppLocalizations {
   /// No description provided for @map_legend_pending_tasks.
   ///
   /// In en, this message translates to:
-  /// **'Pending tasks in the zone'**
+  /// **'Pending missions in the zone'**
   String get map_legend_pending_tasks;
 
   /// No description provided for @map_legend_points_to_earn.
@@ -571,25 +571,25 @@ abstract class AppLocalizations {
   /// No description provided for @map_legend_has_open.
   ///
   /// In en, this message translates to:
-  /// **'Has open tasks'**
+  /// **'Has open missions'**
   String get map_legend_has_open;
 
   /// No description provided for @map_legend_no_open.
   ///
   /// In en, this message translates to:
-  /// **'No open tasks'**
+  /// **'No open missions'**
   String get map_legend_no_open;
 
   /// No description provided for @map_legend_solved_task.
   ///
   /// In en, this message translates to:
-  /// **'Check-in solved a task'**
+  /// **'Mission accomplished'**
   String get map_legend_solved_task;
 
   /// No description provided for @map_legend_no_task.
   ///
   /// In en, this message translates to:
-  /// **'Check-in (no task)'**
+  /// **'Free scouting'**
   String get map_legend_no_task;
 
   /// No description provided for @map_legend_you_here.
@@ -613,19 +613,19 @@ abstract class AppLocalizations {
   /// No description provided for @map_area_no_tasks.
   ///
   /// In en, this message translates to:
-  /// **'No tasks in this area'**
+  /// **'No missions in this zone'**
   String get map_area_no_tasks;
 
   /// No description provided for @map_area_all_completed.
   ///
   /// In en, this message translates to:
-  /// **'All {count} tasks completed'**
+  /// **'All {count} missions cleared!'**
   String map_area_all_completed(int count);
 
   /// No description provided for @map_area_pending_only.
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, one{1 task pending} other{{count} tasks pending}}'**
+  /// **'{count, plural, one{1 mission pending} other{{count} missions pending}}'**
   String map_area_pending_only(int count);
 
   /// No description provided for @map_area_pending_done.
@@ -637,13 +637,13 @@ abstract class AppLocalizations {
   /// No description provided for @map_open_tasks.
   ///
   /// In en, this message translates to:
-  /// **'Open tasks'**
+  /// **'Open missions'**
   String get map_open_tasks;
 
   /// No description provided for @tasks_appbar_fallback.
   ///
   /// In en, this message translates to:
-  /// **'Tasks'**
+  /// **'Missions'**
   String get tasks_appbar_fallback;
 
   /// No description provided for @tasks_section_open.
@@ -655,19 +655,19 @@ abstract class AppLocalizations {
   /// No description provided for @tasks_section_solved.
   ///
   /// In en, this message translates to:
-  /// **'Solved · {count}'**
+  /// **'Completed · {count}'**
   String tasks_section_solved(int count);
 
   /// No description provided for @tasks_empty_title.
   ///
   /// In en, this message translates to:
-  /// **'No tasks yet'**
+  /// **'No missions yet'**
   String get tasks_empty_title;
 
   /// No description provided for @tasks_empty_body.
   ///
   /// In en, this message translates to:
-  /// **'This project does not have any tasks open right now. Pull down to refresh.'**
+  /// **'This project has no missions open right now. Pull down to refresh.'**
   String get tasks_empty_body;
 
   /// No description provided for @tasks_filter_label.
@@ -679,13 +679,13 @@ abstract class AppLocalizations {
   /// No description provided for @tasks_empty_for_area_title.
   ///
   /// In en, this message translates to:
-  /// **'No tasks in \"{areaName}\"'**
+  /// **'No missions in \"{areaName}\"'**
   String tasks_empty_for_area_title(String areaName);
 
   /// No description provided for @tasks_empty_for_area_body.
   ///
   /// In en, this message translates to:
-  /// **'This area has no tasks attached right now.'**
+  /// **'This zone has no missions attached right now.'**
   String get tasks_empty_for_area_body;
 
   /// No description provided for @tasks_clear_filter.
@@ -697,7 +697,7 @@ abstract class AppLocalizations {
   /// No description provided for @tasks_already_solved.
   ///
   /// In en, this message translates to:
-  /// **'\"{name}\" has already been solved.'**
+  /// **'\"{name}\" is already complete.'**
   String tasks_already_solved(String name);
 
   /// No description provided for @task_card_pts_unit.
@@ -733,7 +733,7 @@ abstract class AppLocalizations {
   /// No description provided for @task_detail_about_type.
   ///
   /// In en, this message translates to:
-  /// **'About this task type'**
+  /// **'About this mission type'**
   String get task_detail_about_type;
 
   /// No description provided for @task_detail_schedule.
@@ -751,13 +751,13 @@ abstract class AppLocalizations {
   /// No description provided for @checkin_screen_title_default.
   ///
   /// In en, this message translates to:
-  /// **'New check-in'**
+  /// **'New mission'**
   String get checkin_screen_title_default;
 
   /// No description provided for @checkin_section_kind.
   ///
   /// In en, this message translates to:
-  /// **'What kind of check-in?'**
+  /// **'What kind of mission?'**
   String get checkin_section_kind;
 
   /// No description provided for @checkin_section_photos.
@@ -793,7 +793,7 @@ abstract class AppLocalizations {
   /// No description provided for @checkin_btn_submit.
   ///
   /// In en, this message translates to:
-  /// **'Submit check-in'**
+  /// **'Complete mission'**
   String get checkin_btn_submit;
 
   /// No description provided for @checkin_picker_freetext_hint.
@@ -829,7 +829,7 @@ abstract class AppLocalizations {
   /// No description provided for @checkin_validation_pick_kind.
   ///
   /// In en, this message translates to:
-  /// **'Pick what kind of check-in this is.'**
+  /// **'Pick what kind of mission this is.'**
   String get checkin_validation_pick_kind;
 
   /// No description provided for @checkin_validation_add_photo.
@@ -931,13 +931,13 @@ abstract class AppLocalizations {
   /// No description provided for @location_disabled.
   ///
   /// In en, this message translates to:
-  /// **'Location services are turned off. Enable them to check in.'**
+  /// **'Location services are off. Turn them on to log your mission.'**
   String get location_disabled;
 
   /// No description provided for @location_denied.
   ///
   /// In en, this message translates to:
-  /// **'Location permission is required to attach your check-in to the project area.'**
+  /// **'We need location permission to pin your mission to the project zone.'**
   String get location_denied;
 
   /// No description provided for @location_denied_forever.
@@ -967,13 +967,13 @@ abstract class AppLocalizations {
   /// No description provided for @checkin_result_recorded.
   ///
   /// In en, this message translates to:
-  /// **'Check-in recorded'**
+  /// **'Mission logged'**
   String get checkin_result_recorded;
 
   /// No description provided for @checkin_result_earned.
   ///
   /// In en, this message translates to:
-  /// **'Earned for this check-in'**
+  /// **'Earned on this mission'**
   String get checkin_result_earned;
 
   /// No description provided for @checkin_result_new_badges.
@@ -985,7 +985,7 @@ abstract class AppLocalizations {
   /// No description provided for @checkin_result_task_completed.
   ///
   /// In en, this message translates to:
-  /// **'You completed the task \"{name}\"! 🎉'**
+  /// **'Mission complete: \"{name}\"! 🎉'**
   String checkin_result_task_completed(String name);
 
   /// No description provided for @checkin_result_generic_thanks.
@@ -1033,7 +1033,7 @@ abstract class AppLocalizations {
   /// No description provided for @checkin_result_accepted_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Check-in complete'**
+  /// **'Mission complete'**
   String get checkin_result_accepted_subtitle;
 
   /// No description provided for @checkin_result_new_collab_label.
@@ -1051,7 +1051,7 @@ abstract class AppLocalizations {
   /// No description provided for @checkin_result_queued_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'We\'ll send your check-in automatically as soon as you\'re back online. You can keep working in the meantime.'**
+  /// **'We\'ll send your mission automatically as soon as you\'re back online. Keep exploring in the meantime.'**
   String get checkin_result_queued_subtitle;
 
   /// No description provided for @checkin_result_queued_at.
@@ -1255,7 +1255,7 @@ abstract class AppLocalizations {
   /// No description provided for @outbox_discard_confirm_title.
   ///
   /// In en, this message translates to:
-  /// **'Discard pending check-in?'**
+  /// **'Discard pending mission?'**
   String get outbox_discard_confirm_title;
 
   /// No description provided for @outbox_discard_confirm_body.
@@ -1279,13 +1279,13 @@ abstract class AppLocalizations {
   /// No description provided for @dashboard_outbox_banner_one.
   ///
   /// In en, this message translates to:
-  /// **'1 check-in waiting to sync'**
+  /// **'1 mission waiting to sync'**
   String get dashboard_outbox_banner_one;
 
   /// No description provided for @dashboard_outbox_banner_many.
   ///
   /// In en, this message translates to:
-  /// **'{count} check-ins waiting to sync'**
+  /// **'{count} missions waiting to sync'**
   String dashboard_outbox_banner_many(int count);
 
   /// No description provided for @dashboard_outbox_banner_action.
@@ -1327,7 +1327,7 @@ abstract class AppLocalizations {
   /// No description provided for @pending_data_empty_body.
   ///
   /// In en, this message translates to:
-  /// **'Check-ins you create offline will appear here while we wait for a connection.'**
+  /// **'Missions you log offline will appear here while we wait for a connection.'**
   String get pending_data_empty_body;
 
   /// No description provided for @pending_data_project_label.
@@ -1339,31 +1339,31 @@ abstract class AppLocalizations {
   /// No description provided for @checkins_empty_title.
   ///
   /// In en, this message translates to:
-  /// **'No check-ins yet'**
+  /// **'No missions yet'**
   String get checkins_empty_title;
 
   /// No description provided for @checkins_empty_body.
   ///
   /// In en, this message translates to:
-  /// **'Your check-ins for this project will appear here. Open a task and add your first one to start earning points.'**
+  /// **'Your missions for this project will appear here. Take on a mission and log your first to start earning points.'**
   String get checkins_empty_body;
 
   /// No description provided for @checkins_card_default_kind.
   ///
   /// In en, this message translates to:
-  /// **'Check-in'**
+  /// **'Mission'**
   String get checkins_card_default_kind;
 
   /// No description provided for @checkins_task_solved.
   ///
   /// In en, this message translates to:
-  /// **'Task solved'**
+  /// **'Mission complete'**
   String get checkins_task_solved;
 
   /// No description provided for @checkins_task_solved_named.
   ///
   /// In en, this message translates to:
-  /// **'Solved · {name}'**
+  /// **'Complete · {name}'**
   String checkins_task_solved_named(String name);
 
   /// No description provided for @image_viewer_single.
@@ -1387,7 +1387,7 @@ abstract class AppLocalizations {
   /// No description provided for @leaderboard_empty_body.
   ///
   /// In en, this message translates to:
-  /// **'Be the first to log a check-in and start climbing the leaderboard.'**
+  /// **'Be the first to log a mission and start climbing the leaderboard.'**
   String get leaderboard_empty_body;
 
   /// No description provided for @leaderboard_you.
@@ -1423,7 +1423,7 @@ abstract class AppLocalizations {
   /// No description provided for @admin_not_supported_body.
   ///
   /// In en, this message translates to:
-  /// **'Please manage projects, gamification and tasks from the Rayuela web console.'**
+  /// **'Please manage projects, gamification and missions from the Rayuela web console.'**
   String get admin_not_supported_body;
 
   /// No description provided for @router_route_not_found.
@@ -1447,7 +1447,7 @@ abstract class AppLocalizations {
   /// No description provided for @router_param_checkin_result.
   ///
   /// In en, this message translates to:
-  /// **'check-in result'**
+  /// **'mission result'**
   String get router_param_checkin_result;
 
   /// No description provided for @language_picker_tooltip.
@@ -1579,13 +1579,13 @@ abstract class AppLocalizations {
   /// No description provided for @wizard_step1_guide.
   ///
   /// In en, this message translates to:
-  /// **'Hello! What type of task would you like to register today?'**
+  /// **'Hey! What kind of mission are you taking on today?'**
   String get wizard_step1_guide;
 
   /// No description provided for @wizard_step1_title.
   ///
   /// In en, this message translates to:
-  /// **'TASK TYPE'**
+  /// **'MISSION TYPE'**
   String get wizard_step1_title;
 
   /// No description provided for @wizard_step1_description.
@@ -1597,7 +1597,7 @@ abstract class AppLocalizations {
   /// No description provided for @wizard_step1_empty.
   ///
   /// In en, this message translates to:
-  /// **'There are no task types available for this project.'**
+  /// **'There are no mission types available for this project.'**
   String get wizard_step1_empty;
 
   /// No description provided for @wizard_step1_empty_back.
@@ -1609,13 +1609,13 @@ abstract class AppLocalizations {
   /// No description provided for @wizard_step1_search_hint.
   ///
   /// In en, this message translates to:
-  /// **'Search task type…'**
+  /// **'Search mission type…'**
   String get wizard_step1_search_hint;
 
   /// No description provided for @wizard_step1_no_matches.
   ///
   /// In en, this message translates to:
-  /// **'No task types match your search.'**
+  /// **'No mission types match your search.'**
   String get wizard_step1_no_matches;
 
   /// No description provided for @wizard_next.
@@ -1627,19 +1627,19 @@ abstract class AppLocalizations {
   /// No description provided for @wizard_submit.
   ///
   /// In en, this message translates to:
-  /// **'COLLABORATE!'**
+  /// **'COMPLETE MISSION!'**
   String get wizard_submit;
 
   /// No description provided for @wizard_step4_guide_custom.
   ///
   /// In en, this message translates to:
-  /// **'You have set a custom date and time for this collaboration.'**
+  /// **'You\'ve set a custom date and time for this mission.'**
   String get wizard_step4_guide_custom;
 
   /// No description provided for @wizard_step4_guide_current.
   ///
   /// In en, this message translates to:
-  /// **'We are using the current date and time for this check-in. Would you like to modify it?'**
+  /// **'We\'re using the current date and time for this mission. Would you like to modify it?'**
   String get wizard_step4_guide_current;
 
   /// No description provided for @wizard_step4_title.
@@ -1669,7 +1669,7 @@ abstract class AppLocalizations {
   /// No description provided for @wizard_error_select_type.
   ///
   /// In en, this message translates to:
-  /// **'Please select a check-in type.'**
+  /// **'Please pick a mission type.'**
   String get wizard_error_select_type;
 
   /// No description provided for @wizard_error_waiting_location.
