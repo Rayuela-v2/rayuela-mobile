@@ -785,6 +785,14 @@ class _Legend extends StatelessWidget {
         runSpacing: 6,
         children: [
           _LegendChip(
+            swatch: const _PillIconSwatch(icon: Icons.assignment_outlined),
+            label: t.map_legend_pending_tasks,
+          ),
+          _LegendChip(
+            swatch: const _PillIconSwatch(icon: Icons.stars_rounded),
+            label: t.map_legend_points_to_earn,
+          ),
+          _LegendChip(
             swatch: const _SquareSwatch(
               fill: Color(0x4D0000FF),
               border: Color(0xFF319FD3),
@@ -905,6 +913,25 @@ class _GlyphSwatch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(width: 16, height: 16, child: Center(child: child));
+  }
+}
+
+/// Mini version of the blue area pill (white icon on the has-open blue), so
+/// the legend swatch reads as the same thing the user sees on each zone.
+class _PillIconSwatch extends StatelessWidget {
+  const _PillIconSwatch({required this.icon});
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(3),
+      decoration: BoxDecoration(
+        color: const Color(0xF2319FD3), // matches the area pill
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Icon(icon, size: 12, color: Colors.white),
+    );
   }
 }
 

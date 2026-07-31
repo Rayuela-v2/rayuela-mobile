@@ -106,6 +106,8 @@
   "map_location_permission_needed": "Se necesita permiso de ubicación",
   "map_fit_to_areas": "Ajustar a las áreas del proyecto",
   "map_toggle_legend": "Mostrar/ocultar leyenda",
+  "map_legend_pending_tasks": "Tareas pendientes en la zona",
+  "map_legend_points_to_earn": "Puntos a ganar en la zona",
   "map_legend_has_open": "Tiene tareas abiertas",
   "map_legend_no_open": "Sin tareas abiertas",
   "map_legend_solved_task": "Check-in que resolvió una tarea",

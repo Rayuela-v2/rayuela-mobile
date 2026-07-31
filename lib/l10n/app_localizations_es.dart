@@ -270,6 +270,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get map_toggle_legend => 'Mostrar/ocultar leyenda';
 
   @override
+  String get map_legend_pending_tasks => 'Tareas pendientes en la zona';
+
+  @override
+  String get map_legend_points_to_earn => 'Puntos a ganar en la zona';
+
+  @override
   String get map_legend_has_open => 'Tiene tareas abiertas';
 
   @override

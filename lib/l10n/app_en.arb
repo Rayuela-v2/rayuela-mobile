@@ -106,6 +106,8 @@
   "map_location_permission_needed": "Location permission needed",
   "map_fit_to_areas": "Fit to project areas",
   "map_toggle_legend": "Show/hide legend",
+  "map_legend_pending_tasks": "Pending tasks in the zone",
+  "map_legend_points_to_earn": "Points to earn in the zone",
   "map_legend_has_open": "Has open tasks",
   "map_legend_no_open": "No open tasks",
   "map_legend_solved_task": "Check-in solved a task",

@@ -269,6 +269,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get map_toggle_legend => 'Mostrar/ocultar legenda';
 
   @override
+  String get map_legend_pending_tasks => 'Tarefas pendentes na zona';
+
+  @override
+  String get map_legend_points_to_earn => 'Pontos a ganhar na zona';
+
+  @override
   String get map_legend_has_open => 'Tem tarefas abertas';
 
   @override

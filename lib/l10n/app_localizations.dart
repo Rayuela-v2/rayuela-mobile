@@ -556,6 +556,18 @@ abstract class AppLocalizations {
   /// **'Show/hide legend'**
   String get map_toggle_legend;
 
+  /// No description provided for @map_legend_pending_tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending tasks in the zone'**
+  String get map_legend_pending_tasks;
+
+  /// No description provided for @map_legend_points_to_earn.
+  ///
+  /// In en, this message translates to:
+  /// **'Points to earn in the zone'**
+  String get map_legend_points_to_earn;
+
   /// No description provided for @map_legend_has_open.
   ///
   /// In en, this message translates to:
