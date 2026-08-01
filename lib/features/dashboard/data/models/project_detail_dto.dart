@@ -166,6 +166,8 @@ class ProjectBadgeDto {
     this.image,
     this.earned = false,
     this.previousBadges = const [],
+    this.status = 'active',
+    this.satisfied = false,
     this.checkinsAmount = 0,
     this.mustContribute = false,
     this.taskType,
@@ -178,6 +180,8 @@ class ProjectBadgeDto {
   final String? image;
   final bool earned;
   final List<String> previousBadges;
+  final String status;
+  final bool satisfied;
 
   // Earning rule (backend BadgeTemplate). Present on catalog badges; absent
   // on bare user-overlay entries.
@@ -212,6 +216,9 @@ class ProjectBadgeDto {
             .toList(growable: false)
         : const <String>[];
 
+    final status = _firstString(m, const ['status', '_status']) ?? 'active';
+    final satisfied = _asBool(m['satisfied'] ?? m['_satisfied']) ?? false;
+
     return ProjectBadgeDto(
       name: name,
       description: _firstString(m, const ['description', '_description']),
@@ -223,6 +230,8 @@ class ProjectBadgeDto {
       ),
       earned: _asBool(m['active'] ?? m['earned']) ?? false,
       previousBadges: previous,
+      status: status,
+      satisfied: satisfied,
       checkinsAmount:
           _asInt(m['checkinsAmount'] ?? m['_checkinsAmount']) ?? 0,
       mustContribute:
@@ -240,6 +249,8 @@ class ProjectBadgeDto {
         imageUrl: image,
         earned: earned,
         previousBadges: previousBadges,
+        status: status,
+        satisfied: satisfied,
         checkinsAmount: checkinsAmount,
         mustContribute: mustContribute,
         taskType: taskType,
@@ -348,7 +359,8 @@ List<ProjectBadgeDto> _mergeBadges({
       previousBadges: c.previousBadges.isNotEmpty
           ? c.previousBadges
           : overlay.previousBadges,
-      // Earning rule is catalog metadata — the user overlay never carries it.
+      status: c.status,
+      satisfied: c.satisfied,
       checkinsAmount: c.checkinsAmount,
       mustContribute: c.mustContribute,
       taskType: c.taskType,
