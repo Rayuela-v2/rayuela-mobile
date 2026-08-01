@@ -16,12 +16,20 @@ class SecureTokenStore {
   static const String _accessTokenKey = 'rayuela.access_token';
   static const String _refreshTokenKey = 'rayuela.refresh_token';
   static const String _userIdKey = 'rayuela.user_id';
+  static const String _userJsonKey = 'rayuela.user_json';
 
   final FlutterSecureStorage _storage;
 
   Future<String?> readAccessToken() => _storage.read(key: _accessTokenKey);
   Future<String?> readRefreshToken() => _storage.read(key: _refreshTokenKey);
   Future<String?> readUserId() => _storage.read(key: _userIdKey);
+
+  /// Last known `/user` payload, so a cold start with no network can show
+  /// the app instead of bouncing to the login screen.
+  Future<String?> readUserJson() => _storage.read(key: _userJsonKey);
+
+  Future<void> saveUserJson(String json) =>
+      _storage.write(key: _userJsonKey, value: json);
 
   Future<void> saveTokens({
     required String accessToken,
@@ -41,5 +49,6 @@ class SecureTokenStore {
     await _storage.delete(key: _accessTokenKey);
     await _storage.delete(key: _refreshTokenKey);
     await _storage.delete(key: _userIdKey);
+    await _storage.delete(key: _userJsonKey);
   }
 }

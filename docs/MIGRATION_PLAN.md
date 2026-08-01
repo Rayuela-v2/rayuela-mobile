@@ -276,7 +276,7 @@ We agreed to patch the backend alongside the app. These go into `rayuela-NodeBac
 7. Real-time leaderboard via Server-Sent Events at `GET /leaderboard/:projectId/stream` (optional — polling every 30 s works for MVP).
 8. Rate limiting (`@nestjs/throttler`) on `POST /checkin` and `POST /auth/*`.
 
-The mobile repo ships with client code that *already* assumes the §4.1 endpoints exist; a compile-time `USE_REFRESH_TOKEN` flag in `Env` gates the refresh interceptor so we can work against the current backend during local dev.
+The mobile repo ships with client code that *already* assumes the §4.1 endpoints exist. (The compile-time `USE_REFRESH_TOKEN` flag that used to gate the refresh interceptor is gone — the endpoints shipped, and leaving the flag off in `.env.production` meant sessions silently died after one access-token TTL.)
 
 ---
 

@@ -58,6 +58,9 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
   LatLng? _userLocation;
   String? _selectedAreaId;
   bool _locationDenied = false;
+  // Legend is hidden by default so it doesn't cover the map; the info
+  // button below toggles it on demand.
+  bool _showLegend = false;
 
   @override
   void initState() {
@@ -208,12 +211,16 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
     // don't belong to any polygon.
     final pendingByArea = <String, int>{};
     final totalByArea = <String, int>{};
+    // Points still up for grabs per area = sum of points on its open tasks.
+    final pendingPointsByArea = <String, int>{};
     for (final t in tasks) {
       final name = t.areaName;
       if (name == null || name.isEmpty) continue;
       totalByArea[name] = (totalByArea[name] ?? 0) + 1;
       if (!t.solved) {
         pendingByArea[name] = (pendingByArea[name] ?? 0) + 1;
+        pendingPointsByArea[name] =
+            (pendingPointsByArea[name] ?? 0) + t.points;
       }
     }
 
@@ -269,7 +276,11 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
                   ),
                 ),
                 MarkerLayer(
-                  markers: _buildAreaLabels(theme),
+                  markers: _buildAreaLabels(
+                    theme,
+                    pendingByArea: pendingByArea,
+                    pendingPointsByArea: pendingPointsByArea,
+                  ),
                 ),
                 MarkerLayer(
                   markers: _buildCheckinMarkers(checkins),
@@ -345,6 +356,15 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
                   ),
                   const SizedBox(height: 6),
                   _MapButton(
+                    icon: _showLegend
+                        ? Icons.info
+                        : Icons.info_outline,
+                    tooltip: t.map_toggle_legend,
+                    onPressed: () =>
+                        setState(() => _showLegend = !_showLegend),
+                  ),
+                  const SizedBox(height: 6),
+                  _MapButton(
                     icon: Icons.download_for_offline_outlined,
                     tooltip: t.map_download_offline_tooltip,
                     onPressed:
@@ -353,16 +373,17 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
                 ],
               ),
             ),
-            Positioned(
-              left: 8,
-              bottom: 8,
-              right: 8,
-              child: _Legend(
-                pendingByArea: pendingByArea,
-                totalByArea: totalByArea,
-                hasUserLocation: _userLocation != null,
+            if (_showLegend)
+              Positioned(
+                left: 8,
+                bottom: 8,
+                right: 8,
+                child: _Legend(
+                  pendingByArea: pendingByArea,
+                  totalByArea: totalByArea,
+                  hasUserLocation: _userLocation != null,
+                ),
               ),
-            ),
             const Positioned(
               right: 6,
               bottom: 6,
@@ -440,21 +461,33 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
     return polygons;
   }
 
-  List<Marker> _buildAreaLabels(ThemeData theme) {
+  List<Marker> _buildAreaLabels(
+    ThemeData theme, {
+    required Map<String, int> pendingByArea,
+    required Map<String, int> pendingPointsByArea,
+  }) {
     // Cheap label markers on each polygon's centroid — same as the web's
     // Text style on the area features. Helps the user discover the area
-    // names without having to tap.
+    // names without having to tap, and (when the stats overlay is on)
+    // surfaces the pending tasks + points to earn right on the map.
     final markers = <Marker>[];
     for (final area in widget.areas) {
       final centroid = area.centroid;
       if (centroid == null) continue;
+      final pending = pendingByArea[area.id] ?? 0;
+      final showStats = pending > 0;
       markers.add(
         Marker(
-          width: 120,
-          height: 24,
+          width: 140,
+          height: showStats ? 44 : 24,
           point: centroid,
           child: IgnorePointer(
-            child: _AreaLabel(name: area.id),
+            child: _AreaLabel(
+              name: area.id,
+              pending: pending,
+              pendingPoints: pendingPointsByArea[area.id] ?? 0,
+              showStats: showStats,
+            ),
           ),
         ),
       );
@@ -604,28 +637,92 @@ class _CheckinNoContribGlyph extends StatelessWidget {
 }
 
 class _AreaLabel extends StatelessWidget {
-  const _AreaLabel({required this.name});
+  const _AreaLabel({
+    required this.name,
+    this.pending = 0,
+    this.pendingPoints = 0,
+    this.showStats = false,
+  });
+
   final String name;
+  final int pending;
+  final int pendingPoints;
+
+  /// When true, a compact pill under the name shows the pending-task count
+  /// and points still on the table. Icons carry the meaning so no extra
+  /// per-language strings are needed.
+  final bool showStats;
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.85),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: Text(
-          name,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
-            color: Colors.black87,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.85),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
           ),
-        ),
+          if (showStats) ...[
+            const SizedBox(height: 2),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: const Color(0xF2319FD3), // matches has-open border
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.assignment_outlined,
+                    size: 11,
+                    color: Colors.white,
+                  ),
+                  const SizedBox(width: 2),
+                  Text(
+                    '$pending',
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                  if (pendingPoints > 0) ...[
+                    const SizedBox(width: 6),
+                    const Icon(
+                      Icons.stars_rounded,
+                      size: 11,
+                      color: Colors.white,
+                    ),
+                    const SizedBox(width: 2),
+                    Text(
+                      '$pendingPoints',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -652,9 +749,10 @@ class _MapButton extends StatelessWidget {
         tooltip: tooltip,
         icon: Icon(icon, color: Colors.black87, size: 20),
         onPressed: onPressed,
-        constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+        // 44x44 minimum touch target (mobile HIG) — mis-taps on map
+        // controls are extra costly because they pan/zoom instead.
+        constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
         padding: EdgeInsets.zero,
-        visualDensity: VisualDensity.compact,
       ),
     );
   }
@@ -686,6 +784,14 @@ class _Legend extends StatelessWidget {
         spacing: 12,
         runSpacing: 6,
         children: [
+          _LegendChip(
+            swatch: const _PillIconSwatch(icon: Icons.assignment_outlined),
+            label: t.map_legend_pending_tasks,
+          ),
+          _LegendChip(
+            swatch: const _PillIconSwatch(icon: Icons.stars_rounded),
+            label: t.map_legend_points_to_earn,
+          ),
           _LegendChip(
             swatch: const _SquareSwatch(
               fill: Color(0x4D0000FF),
@@ -810,6 +916,25 @@ class _GlyphSwatch extends StatelessWidget {
   }
 }
 
+/// Mini version of the blue area pill (white icon on the has-open blue), so
+/// the legend swatch reads as the same thing the user sees on each zone.
+class _PillIconSwatch extends StatelessWidget {
+  const _PillIconSwatch({required this.icon});
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(3),
+      decoration: BoxDecoration(
+        color: const Color(0xF2319FD3), // matches the area pill
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Icon(icon, size: 12, color: Colors.white),
+    );
+  }
+}
+
 class _Attribution extends StatelessWidget {
   const _Attribution();
 
@@ -892,9 +1017,10 @@ class _AreaInfoBanner extends StatelessWidget {
               ),
               InkWell(
                 onTap: onClose,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(22),
                 child: const Padding(
-                  padding: EdgeInsets.all(2),
+                  // Icon stays small; padding brings the tap area to 44x44.
+                  padding: EdgeInsets.all(14),
                   child: Icon(Icons.close, size: 16, color: Colors.black54),
                 ),
               ),
@@ -908,14 +1034,13 @@ class _AreaInfoBanner extends StatelessWidget {
           if (totalTasks > 0) ...[
             const SizedBox(height: 6),
             SizedBox(
-              height: 30,
+              height: 40,
               child: FilledButton.tonalIcon(
                 onPressed: onOpen,
                 icon: const Icon(Icons.arrow_forward, size: 16),
                 label: Text(t.map_open_tasks),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
-                  visualDensity: VisualDensity.compact,
                   textStyle: theme.textTheme.labelMedium,
                 ),
               ),

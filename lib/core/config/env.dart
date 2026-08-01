@@ -79,11 +79,6 @@ class Env {
   /// Toggles verbose HTTP logging in debug builds.
   static bool get logHttp => const bool.fromEnvironment('LOG_HTTP');
 
-  /// Whether to use the `POST /auth/refresh` endpoint when receiving a 401.
-  /// Needs to be enabled once backend §4.1 ships.
-  static bool get useRefreshToken =>
-      const bool.fromEnvironment('USE_REFRESH_TOKEN', defaultValue: true);
-
   /// The duration after which cached data is considered stale.
   /// Defaults to 30 seconds for local/development environments (when API_BASE_URL
   /// contains 'localhost', '10.0.2.2', or '127.0.0.1'), and 15 minutes for production/test.

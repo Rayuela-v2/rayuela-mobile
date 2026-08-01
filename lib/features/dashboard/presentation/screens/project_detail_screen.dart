@@ -166,11 +166,11 @@ class _SubscribedProjectViewState
           controller: _tabController,
           tabs: [
             Tab(
-              icon: const Icon(Icons.info_outline),
+              icon: const Icon(Icons.home_outlined),
               text: t.project_tab_overview,
             ),
             Tab(
-              icon: const Icon(Icons.photo_camera_back_outlined),
+              icon: const Icon(Icons.menu_book_outlined),
               text: t.project_tab_checkins,
             ),
             Tab(
@@ -184,7 +184,7 @@ class _SubscribedProjectViewState
           ? FloatingActionButton(
               tooltip: t.project_add_checkin,
               onPressed: () => _openCheckin(context, detail),
-              child: const Icon(Icons.add_a_photo_outlined),
+              child: const Icon(Icons.post_add),
             )
           : null,
       // "Progress" merges the leaderboard and the badges grid/graph — they're
@@ -298,10 +298,6 @@ class _OverviewTabState extends State<_OverviewTab> {
       padding: const EdgeInsets.only(bottom: 32),
       physics: const AlwaysScrollableScrollPhysics(),
       children: [
-        AspectRatio(
-          aspectRatio: 16 / 9,
-          child: _Cover(url: detail.imageUrl),
-        ),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
           child: Column(
@@ -321,6 +317,11 @@ class _OverviewTabState extends State<_OverviewTab> {
                 ProjectAreasMap(
                   projectId: detail.id,
                   areas: detail.areas,
+                  // Map is now the hero of the overview (cover image removed),
+                  // so give it a big slice of the viewport instead of the
+                  // old fixed 280.
+                  height: (MediaQuery.sizeOf(context).height * 0.55)
+                      .clamp(320.0, 560.0),
                   onAreaTap: (areaName) => context.pushNamed(
                     AppRoute.tasks,
                     pathParameters: {'projectId': detail.id},
@@ -353,7 +354,7 @@ class _OverviewTabState extends State<_OverviewTab> {
                 const SizedBox(height: 12),
                 _PrimaryActionButton(
                   key: widget.checkinButtonKey,
-                  icon: Icons.add_a_photo_outlined,
+                  icon: Icons.post_add,
                   label: t.project_add_checkin,
                   filled: true,
                   // Pass the project's taskType catalog as `extra` so the
@@ -437,34 +438,6 @@ class _SectionHeader extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _Cover extends StatelessWidget {
-  const _Cover({required this.url});
-  final String? url;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    if (url == null || url!.isEmpty) {
-      return Container(
-        color: theme.colorScheme.surfaceContainerHighest,
-        child: const Icon(Icons.image_outlined, size: 64, color: Colors.white54),
-      );
-    }
-    return CachedNetworkImage(
-      imageUrl: url!,
-      fit: BoxFit.cover,
-      placeholder: (_, __) => Container(
-        color: theme.colorScheme.surfaceContainerHighest,
-      ),
-      errorWidget: (_, __, ___) => Container(
-        color: theme.colorScheme.surfaceContainerHighest,
-        alignment: Alignment.center,
-        child: const Icon(Icons.broken_image_outlined, color: Colors.white54),
-      ),
     );
   }
 }
@@ -624,7 +597,10 @@ class _BadgesSection extends StatefulWidget {
 }
 
 class _BadgesSectionState extends State<_BadgesSection> {
-  bool _showGraph = false;
+  // Graph-first: the dependency tree tells the "how do I get there" story
+  // better than a flat grid. Falls back to the grid automatically when the
+  // catalog has no edges (the graph would be an empty canvas).
+  bool _showGraph = true;
 
   @override
   Widget build(BuildContext context) {
@@ -663,9 +639,10 @@ class _BadgesSectionState extends State<_BadgesSection> {
                 showSelectedIcon: false,
                 onSelectionChanged: (s) =>
                     setState(() => _showGraph = s.first),
+                // Compact look is fine, but keep the default (padded) tap
+                // target so the toggle stays finger-friendly.
                 style: const ButtonStyle(
                   visualDensity: VisualDensity.compact,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   padding: WidgetStatePropertyAll(
                     EdgeInsets.symmetric(horizontal: 8),
                   ),
@@ -710,7 +687,7 @@ class _BadgeGraphCard extends StatelessWidget {
             child: Center(
               child: BadgeDependencyGraph(
                 badges: badges,
-                onBadgeTap: (b) => _showBadgeSheet(context, b),
+                onBadgeTap: (b) => _showBadgeDetails(context, b),
               ),
             ),
           ),
@@ -718,60 +695,228 @@ class _BadgeGraphCard extends StatelessWidget {
       ),
     );
   }
+}
 
-  void _showBadgeSheet(BuildContext context, ProjectBadge badge) {
+/// Shared badge detail sheet used from both the grid and the graph. A big
+/// hero medium (with the earned glow), the name, a status pill, the
+/// description, and the prerequisite chips — everything the user needs to
+/// know "what is this and how do I get it" in one clear, generous card.
+void _showBadgeDetails(BuildContext context, ProjectBadge badge) {
+  showModalBottomSheet<void>(
+    context: context,
+    showDragHandle: true,
+    isScrollControlled: true,
+    builder: (sheetCtx) {
+      final theme = Theme.of(sheetCtx);
+      final t = AppLocalizations.of(sheetCtx)!;
+      final earned = badge.earned;
+      final color =
+          earned ? theme.colorScheme.tertiary : theme.colorScheme.outline;
+
+      return SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 4, 24, 40),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Hero medium: a 140px disc with the same earned gradient +
+              // glow the grid tiles use, so earned badges feel rewarding.
+              Container(
+                width: 148,
+                height: 148,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: earned
+                      ? LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            color.withValues(alpha: 0.22),
+                            color.withValues(alpha: 0.06),
+                          ],
+                        )
+                      : null,
+                  color: earned ? null : color.withValues(alpha: 0.06),
+                  border: Border.all(
+                    color: color.withValues(alpha: earned ? 0.5 : 0.2),
+                    width: earned ? 2 : 1,
+                  ),
+                  boxShadow: earned
+                      ? [
+                          BoxShadow(
+                            color: color.withValues(alpha: 0.28),
+                            blurRadius: 24,
+                            spreadRadius: 2,
+                          ),
+                        ]
+                      : null,
+                ),
+                alignment: Alignment.center,
+                child: _BadgeMedia(
+                  key: ValueKey(badge.imageUrl),
+                  imageUrl: badge.imageUrl,
+                  earned: earned,
+                  color: color,
+                  size: 108,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                badge.name,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 10),
+              // Status pill.
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                decoration: BoxDecoration(
+                  color: earned
+                      ? theme.colorScheme.tertiaryContainer
+                      : theme.colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      earned ? Icons.check_circle : Icons.flag_outlined,
+                      size: 16,
+                      color: earned
+                          ? theme.colorScheme.onTertiaryContainer
+                          : theme.colorScheme.onSurfaceVariant,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      earned ? t.badge_earned : t.badge_locked,
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        color: earned
+                            ? theme.colorScheme.onTertiaryContainer
+                            : theme.colorScheme.onSurfaceVariant,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (badge.description != null &&
+                  badge.description!.isNotEmpty) ...[
+                const SizedBox(height: 20),
+                Text(
+                  badge.description!,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    height: 1.4,
+                  ),
+                ),
+              ],
+              _BadgeRequirements(badge: badge),
+              if (badge.previousBadges.isNotEmpty) ...[
+                const SizedBox(height: 24),
+                Text(
+                  t.badge_requires.toUpperCase(),
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    letterSpacing: 1.2,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 6,
+                  runSpacing: 4,
+                  children: [
+                    for (final p in badge.previousBadges)
+                      Chip(
+                        label: Text(p),
+                        visualDensity: VisualDensity.compact,
+                        avatar: const Icon(Icons.arrow_upward, size: 14),
+                      ),
+                  ],
+                ),
+              ],
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+/// "How to earn it" card: turns the backend BadgeTemplate rule into a plain
+/// checklist — how many check-ins, whether they must solve a task, and any
+/// task-type / area / time-interval restriction. Renders nothing when the
+/// rule wasn't sent (e.g. a legacy user-overlay badge with no catalog match).
+class _BadgeRequirements extends StatelessWidget {
+  const _BadgeRequirements({required this.badge});
+  final ProjectBadge badge;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final t = AppLocalizations.of(context)!;
-    showModalBottomSheet<void>(
-      context: context,
-      showDragHandle: true,
-      builder: (_) => Padding(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+
+    final rows = <(IconData, String)>[
+      if (badge.checkinsAmount > 0)
+        (
+          Icons.photo_camera_outlined,
+          t.badge_req_checkins(badge.checkinsAmount),
+        ),
+      if (badge.mustContribute)
+        (Icons.task_alt, t.badge_req_contribute),
+      if (badge.hasTaskType)
+        (Icons.category_outlined, t.badge_req_task_type(badge.taskType!)),
+      if (badge.hasArea)
+        (Icons.place_outlined, t.badge_req_area(badge.areaId!)),
+      if (badge.hasTimeInterval)
+        (Icons.schedule, t.badge_req_interval(badge.timeIntervalId!)),
+    ];
+    if (rows.isEmpty) return const SizedBox.shrink();
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 24),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surfaceContainerHighest
+              .withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(16),
+        ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              badge.name,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              badge.earned ? t.badge_earned : t.badge_locked,
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: badge.earned
-                        ? const Color(0xFF2E7D32)
-                        : Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-            ),
-            if (badge.description != null) ...[
-              const SizedBox(height: 12),
-              Text(
-                badge.description!,
-                style: Theme.of(context).textTheme.bodyMedium,
+              t.badge_how_to_earn.toUpperCase(),
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+                letterSpacing: 1.2,
+                fontWeight: FontWeight.w600,
               ),
-            ],
-            if (badge.previousBadges.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              Text(
-                t.badge_requires,
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color:
-                          Theme.of(context).colorScheme.onSurfaceVariant,
-                      letterSpacing: 1.2,
+            ),
+            const SizedBox(height: 12),
+            for (final (icon, label) in rows)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(icon, size: 18, color: theme.colorScheme.primary),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        label,
+                        style: theme.textTheme.bodyMedium,
+                      ),
                     ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 4),
-              Wrap(
-                spacing: 6,
-                runSpacing: 4,
-                children: [
-                  for (final p in badge.previousBadges)
-                    Chip(label: Text(p), visualDensity: VisualDensity.compact),
-                ],
-              ),
-            ],
           ],
         ),
       ),
@@ -812,7 +957,7 @@ class _BadgeTile extends StatelessWidget {
         earned ? theme.colorScheme.tertiary : theme.colorScheme.outline;
 
     return InkWell(
-      onTap: () => _show(context),
+      onTap: () => _showBadgeDetails(context, badge),
       borderRadius: BorderRadius.circular(12),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 220),
@@ -904,76 +1049,6 @@ class _BadgeTile extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  void _show(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      showDragHandle: true,
-      builder: (sheetCtx) {
-        final theme = Theme.of(sheetCtx);
-        final t = AppLocalizations.of(sheetCtx)!;
-        final earned = badge.earned;
-        final color =
-            earned ? theme.colorScheme.tertiary : theme.colorScheme.outline;
-        return Padding(
-          padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                width: 96,
-                height: 96,
-                child: _BadgeMedia(
-                  key: ValueKey(badge.imageUrl),
-                  imageUrl: badge.imageUrl,
-                  earned: earned,
-                  color: color,
-                  size: 64,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                badge.name,
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 4),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 12, vertical: 4,),
-                decoration: BoxDecoration(
-                  color: earned
-                      ? theme.colorScheme.tertiaryContainer
-                      : theme.colorScheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(999),
-                ),
-                child: Text(
-                  earned ? t.badge_earned : t.badge_locked,
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: earned
-                        ? theme.colorScheme.onTertiaryContainer
-                        : theme.colorScheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              if (badge.description != null &&
-                  badge.description!.isNotEmpty) ...[
-                const SizedBox(height: 16),
-                Text(
-                  badge.description!,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyMedium,
-                ),
-              ],
-            ],
-          ),
-        );
-      },
     );
   }
 }

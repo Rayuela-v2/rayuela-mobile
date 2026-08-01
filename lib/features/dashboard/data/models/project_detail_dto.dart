@@ -168,6 +168,11 @@ class ProjectBadgeDto {
     this.previousBadges = const [],
     this.status = 'active',
     this.satisfied = false,
+    this.checkinsAmount = 0,
+    this.mustContribute = false,
+    this.taskType,
+    this.areaId,
+    this.timeIntervalId,
   });
 
   final String name;
@@ -177,6 +182,14 @@ class ProjectBadgeDto {
   final List<String> previousBadges;
   final String status;
   final bool satisfied;
+
+  // Earning rule (backend BadgeTemplate). Present on catalog badges; absent
+  // on bare user-overlay entries.
+  final int checkinsAmount;
+  final bool mustContribute;
+  final String? taskType;
+  final String? areaId;
+  final String? timeIntervalId;
 
   static ProjectBadgeDto? tryParse(Object? raw) {
     if (raw is String) {
@@ -219,6 +232,14 @@ class ProjectBadgeDto {
       previousBadges: previous,
       status: status,
       satisfied: satisfied,
+      checkinsAmount:
+          _asInt(m['checkinsAmount'] ?? m['_checkinsAmount']) ?? 0,
+      mustContribute:
+          _asBool(m['mustContribute'] ?? m['_mustContribute']) ?? false,
+      taskType: _firstString(m, const ['taskType', '_taskType']),
+      areaId: _firstString(m, const ['areaId', '_areaId']),
+      timeIntervalId:
+          _firstString(m, const ['timeIntervalId', '_timeIntervalId']),
     );
   }
 
@@ -230,6 +251,11 @@ class ProjectBadgeDto {
         previousBadges: previousBadges,
         status: status,
         satisfied: satisfied,
+        checkinsAmount: checkinsAmount,
+        mustContribute: mustContribute,
+        taskType: taskType,
+        areaId: areaId,
+        timeIntervalId: timeIntervalId,
       );
 }
 
@@ -335,6 +361,11 @@ List<ProjectBadgeDto> _mergeBadges({
           : overlay.previousBadges,
       status: c.status,
       satisfied: c.satisfied,
+      checkinsAmount: c.checkinsAmount,
+      mustContribute: c.mustContribute,
+      taskType: c.taskType,
+      areaId: c.areaId,
+      timeIntervalId: c.timeIntervalId,
     );
   }).toList(growable: false);
 }

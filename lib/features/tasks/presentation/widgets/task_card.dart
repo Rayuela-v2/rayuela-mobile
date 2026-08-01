@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/linkified_text.dart';
 import '../../domain/entities/task_item.dart';
+import 'task_detail_sheet.dart';
 
 class TaskCard extends StatelessWidget {
   const TaskCard({super.key, required this.task, this.onTap});
@@ -14,6 +16,7 @@ class TaskCard extends StatelessWidget {
     final theme = Theme.of(context);
     final t = AppLocalizations.of(context)!;
     final solved = task.solved;
+    final schedule = taskScheduleShort(context, task.timeInterval);
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -42,8 +45,8 @@ class TaskCard extends StatelessWidget {
                     ),
                     if (task.description.isNotEmpty) ...[
                       const SizedBox(height: 4),
-                      Text(
-                        task.description,
+                      LinkifiedText(
+                        text: task.description,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodyMedium?.copyWith(
@@ -52,17 +55,22 @@ class TaskCard extends StatelessWidget {
                       ),
                     ],
                     const SizedBox(height: 8),
-                    Row(
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 4,
                       children: [
                         if (task.type.isNotEmpty)
-                          _MetaChip(icon: Icons.category_outlined, label: task.type),
-                        if (solved && task.solvedBy != null) ...[
-                          const SizedBox(width: 8),
+                          _MetaChip(
+                            icon: Icons.category_outlined,
+                            label: task.type,
+                          ),
+                        if (schedule != null)
+                          _MetaChip(icon: Icons.schedule, label: schedule),
+                        if (solved && task.solvedBy != null)
                           _MetaChip(
                             icon: Icons.check_circle_outline,
                             label: t.task_card_solved_by(task.solvedBy!),
                           ),
-                        ],
                       ],
                     ),
                   ],

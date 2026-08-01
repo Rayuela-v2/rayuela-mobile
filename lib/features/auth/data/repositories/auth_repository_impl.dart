@@ -1,4 +1,5 @@
-import '../../../../core/error/app_exception.dart';
+import 'dart:convert';
+
 import '../../../../core/error/result.dart';
 import '../../../../core/storage/secure_token_store.dart';
 import '../../domain/entities/auth_user.dart';
@@ -58,6 +59,7 @@ class AuthRepositoryImpl implements AuthRepository {
           refreshToken: token.refreshToken,
           userId: dto.id,
         );
+        await _cacheUser(dto);
         return Success(dto.toEntity());
       },
       onFailure: (e) async {
@@ -89,15 +91,33 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Result<AuthUser>> fetchCurrentUser() async {
     final res = await _remote.fetchMe();
     return res.fold(
-      onSuccess: (dto) => Success<AuthUser>(dto.toEntity()),
-      onFailure: (e) {
-        if (e is UnauthorizedException) {
-          // Token is invalid — drop it.
-          _tokens.clear();
-        }
-        return Failure<AuthUser>(e);
+      onSuccess: (dto) async {
+        await _cacheUser(dto);
+        return Success<AuthUser>(dto.toEntity());
       },
+      // Never clear tokens here: a 401 has already been through
+      // RefreshInterceptor, which owns the decision to end the session.
+      onFailure: (e) async => Failure<AuthUser>(e),
     );
+  }
+
+  @override
+  Future<AuthUser?> cachedUser() async {
+    final raw = await _tokens.readUserJson();
+    if (raw == null || raw.isEmpty) return null;
+    try {
+      return UserDto.fromJson(jsonDecode(raw)).toEntity();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> _cacheUser(UserDto dto) async {
+    try {
+      await _tokens.saveUserJson(jsonEncode(dto.toJson()));
+    } catch (_) {
+      // Best-effort: the cache only powers the offline cold start.
+    }
   }
 
   @override

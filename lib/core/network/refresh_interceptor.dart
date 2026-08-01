@@ -2,16 +2,17 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 
-import '../config/env.dart';
 import '../storage/secure_token_store.dart';
 import 'api_paths.dart';
 
 /// On a 401, tries to refresh the access token once and replay the original
-/// request. Gated by [Env.useRefreshToken] because the backend ships the
-/// refresh endpoint in §4.1 of the migration plan.
+/// request.
 ///
-/// If refresh fails, the store is cleared and the caller sees the 401 —
-/// the auth controller listens for this and navigates to /login.
+/// The session is dropped **only** when the backend actively rejects the
+/// refresh token (401/403 from `/auth/refresh`) or when there is no refresh
+/// token at all. Every other failure — offline, timeout, 5xx — leaves the
+/// tokens on disk and surfaces the original error, because a flaky network
+/// is not a reason to sign the user out.
 class RefreshInterceptor extends Interceptor {
   RefreshInterceptor({
     required Dio dio,
@@ -40,7 +41,7 @@ class RefreshInterceptor extends Interceptor {
     final is401 = response?.statusCode == 401;
     final isRefreshCall = request.path.endsWith(ApiPaths.refresh);
 
-    if (!Env.useRefreshToken || !is401 || alreadyRetried || isRefreshCall) {
+    if (!is401 || alreadyRetried || isRefreshCall) {
       handler.next(err);
       return;
     }
@@ -50,6 +51,7 @@ class RefreshInterceptor extends Interceptor {
       _inFlightRefresh = null;
 
       if (newAccess == null) {
+        // No refresh token on disk — there is nothing left to recover.
         await _failAndLogout();
         handler.next(err);
         return;
@@ -62,15 +64,22 @@ class RefreshInterceptor extends Interceptor {
       handler.resolve(retryResponse);
     } on DioException catch (e) {
       _inFlightRefresh = null;
-      await _failAndLogout();
+      // Only a real rejection of the refresh token ends the session. A
+      // connection error / timeout / 5xx means "try again later", and
+      // wiping the tokens there is what used to log users out at random.
+      final status = e.response?.statusCode;
+      if (status == 401 || status == 403) {
+        await _failAndLogout();
+      }
       handler.next(e);
     } catch (_) {
       _inFlightRefresh = null;
-      await _failAndLogout();
       handler.next(err);
     }
   }
 
+  /// Returns the new access token, or null only when there is no refresh
+  /// token to spend — the one case where signing out is the right answer.
   Future<String?> _refresh() async {
     final refresh = await _tokens.readRefreshToken();
     if (refresh == null || refresh.isEmpty) return null;
@@ -81,11 +90,25 @@ class RefreshInterceptor extends Interceptor {
       options: Options(extra: {'anonymous': true}),
     );
 
+    // The backend answers in snake_case (`access_token`); accept camelCase
+    // too, the way LoginResponseDto does, so one casing change can't take
+    // every session down again.
     final data = response.data;
-    if (data == null) return null;
-    final newAccess = data['accessToken'] as String?;
-    final newRefresh = data['refreshToken'] as String?;
-    if (newAccess == null) return null;
+    final newAccess =
+        (data?['accessToken'] ?? data?['access_token']) as String?;
+    final newRefresh =
+        (data?['refreshToken'] ?? data?['refresh_token']) as String?;
+
+    if (newAccess == null || newAccess.isEmpty) {
+      // A 200 we can't read is a contract bug, not a dead session. Throwing
+      // routes it through onError's non-401 branch, which keeps the tokens.
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Refresh response had no access token',
+      );
+    }
+
     await _tokens.saveTokens(
       accessToken: newAccess,
       refreshToken: newRefresh,

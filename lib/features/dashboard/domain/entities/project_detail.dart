@@ -115,6 +115,11 @@ class ProjectBadge {
     this.previousBadges = const [],
     this.status = 'active',
     this.satisfied = false,
+    this.checkinsAmount = 0,
+    this.mustContribute = false,
+    this.taskType,
+    this.areaId,
+    this.timeIntervalId,
   });
 
   final String name;
@@ -135,6 +140,42 @@ class ProjectBadge {
   /// True when the current user satisfies this badge's rules in check-in history.
   final bool satisfied;
 
+  // --- Earning rule (backend BadgeTemplate) --------------------------------
+  // These describe *what the user has to do* to earn the badge. taskType,
+  // areaId and timeIntervalId are stored as human-readable names; the literal
+  // 'Cualquiera' (see [anyKind]) means "any", i.e. no restriction on that
+  // dimension. `checkinsAmount` is 0 only when the rule wasn't sent (e.g. a
+  // user-overlay badge with no catalog match).
+
+  /// How many qualifying check-ins are required.
+  final int checkinsAmount;
+
+  /// Whether each qualifying check-in must actually solve a task.
+  final bool mustContribute;
+
+  /// Required task type, or [anyKind]/null for "any".
+  final String? taskType;
+
+  /// Required project area (its display name), or [anyKind]/null for "any".
+  final String? areaId;
+
+  /// Required time interval (its name), or [anyKind]/null for "any".
+  final String? timeIntervalId;
+
+  /// Backend sentinel meaning "no restriction on this dimension"
+  /// (`ANY_KIND` in gamification.entity.ts). Always this Spanish literal
+  /// regardless of project locale.
+  static const String anyKind = 'Cualquiera';
+
+  /// A rule dimension is a real constraint only when it's set and not the
+  /// "any" sentinel.
+  static bool _isConstraint(String? v) =>
+      v != null && v.isNotEmpty && v != anyKind;
+
+  bool get hasTaskType => _isConstraint(taskType);
+  bool get hasArea => _isConstraint(areaId);
+  bool get hasTimeInterval => _isConstraint(timeIntervalId);
+
   ProjectBadge copyWith({
     bool? earned,
     String? status,
@@ -148,6 +189,11 @@ class ProjectBadge {
         previousBadges: previousBadges,
         status: status ?? this.status,
         satisfied: satisfied ?? this.satisfied,
+        checkinsAmount: checkinsAmount,
+        mustContribute: mustContribute,
+        taskType: taskType,
+        areaId: areaId,
+        timeIntervalId: timeIntervalId,
       );
 }
 
