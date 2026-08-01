@@ -5,12 +5,11 @@ import '../../../../core/router/routes.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/checkin_result.dart';
 import '../../domain/entities/checkin_submission_outcome.dart';
-import '../providers/checkin_wizard_controller.dart';
 import '../widgets/wizard/companion_avatar.dart';
 import '../widgets/wizard/companion_bubble.dart';
 
-class CheckinResultScreen extends StatefulWidget {
-  const CheckinResultScreen({
+class Step3ResultScreen extends StatefulWidget {
+  const Step3ResultScreen({
     super.key,
     required this.outcome,
     required this.projectId,
@@ -20,10 +19,10 @@ class CheckinResultScreen extends StatefulWidget {
   final String projectId;
 
   @override
-  State<CheckinResultScreen> createState() => _CheckinResultScreenState();
+  State<Step3ResultScreen> createState() => _Step3ResultScreenState();
 }
 
-class _CheckinResultScreenState extends State<CheckinResultScreen>
+class _Step3ResultScreenState extends State<Step3ResultScreen>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
@@ -44,8 +43,6 @@ class _CheckinResultScreenState extends State<CheckinResultScreen>
 
   @override
   Widget build(BuildContext context) {
-    // Scoped args forced to step 3 (final) for progress bar
-    final args = CheckinWizardArgs(projectId: widget.projectId);
     final t = AppLocalizations.of(context)!;
 
     return Scaffold(
@@ -60,32 +57,10 @@ class _CheckinResultScreenState extends State<CheckinResultScreen>
           style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         centerTitle: true,
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 16),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            decoration: BoxDecoration(
-              color: const Color(0xFFC97B2E).withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: const Color(0xFFC97B2E).withValues(alpha: 0.5)),
-            ),
-            child: Row(
-              children: [
-                const Icon(Icons.check, size: 12, color: Color(0xFFC97B2E)),
-                const SizedBox(width: 4),
-                Text(
-                  t.checkin_result_complete_badge,
-                  style: const TextStyle(color: Color(0xFFC97B2E), fontWeight: FontWeight.bold, fontSize: 10),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
       body: SafeArea(
         child: Column(
           children: [
-            _ForcedProgressBar(args: args),
             // Content scrolls when it doesn't fit; the back button below stays
             // pinned and always reachable.
             Expanded(
@@ -118,40 +93,6 @@ class _CheckinResultScreenState extends State<CheckinResultScreen>
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _ForcedProgressBar extends StatelessWidget {
-  const _ForcedProgressBar({required this.args});
-  final CheckinWizardArgs args;
-
-  @override
-  Widget build(BuildContext context) {
-    const totalSteps = 4;
-    const step = 3; // Forced last step
-    const progressColor = Color(0xFFC97B2E);
-    final backgroundColor = Colors.white.withValues(alpha: 0.1);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      child: Row(
-        children: List.generate(totalSteps, (index) {
-          final isCompleted = index <= step;
-          return Expanded(
-            child: Container(
-              height: 4,
-              margin: EdgeInsets.only(
-                right: index == totalSteps - 1 ? 0 : 6,
-              ),
-              decoration: BoxDecoration(
-                color: isCompleted ? progressColor : backgroundColor,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-          );
-        }),
       ),
     );
   }
@@ -229,16 +170,12 @@ class _AcceptedView extends StatelessWidget {
           ),
           const SizedBox(height: 24),
         ],
-        Text(
-          t.checkin_result_accepted_done,
-          textAlign: TextAlign.center,
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
-        ),
-        Text(
-          t.checkin_result_accepted_subtitle,
-          textAlign: TextAlign.center,
-          style: const TextStyle(color: Colors.white60, fontSize: 12),
-        ),
+        if (contributesTo != null)
+          Text(
+            t.checkin_result_accepted_subtitle,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.white60, fontSize: 12),
+          ),
       ],
     );
   }

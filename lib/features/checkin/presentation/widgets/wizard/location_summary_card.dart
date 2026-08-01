@@ -97,10 +97,10 @@ class LocationSummaryCard extends StatelessWidget {
         children: [
           const Icon(Icons.location_on, color: Color(0xFFC0392B), size: 28),
           const SizedBox(width: 12),
-          const Expanded(
+          Expanded(
             child: Text(
-              "GPS activo",
-              style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF37474F)),
+              t.location_using_current,
+              style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF37474F)),
             ),
           ),
           IconButton(

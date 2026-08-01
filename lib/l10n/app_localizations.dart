@@ -991,7 +991,7 @@ abstract class AppLocalizations {
   /// No description provided for @checkin_result_generic_thanks.
   ///
   /// In en, this message translates to:
-  /// **'Thank you so much for your contribution! 🎉'**
+  /// **'Thank you so much! 🎉'**
   String get checkin_result_generic_thanks;
 
   /// No description provided for @checkin_back_to_dashboard.
@@ -1725,6 +1725,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'COORDINATES'**
   String get wizard_step3_title;
+
+  /// No description provided for @wizard_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get wizard_confirm;
+
+  /// No description provided for @wizard_step2_guide_confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s confirm this information before finishing'**
+  String get wizard_step2_guide_confirmation;
+
+  /// No description provided for @location_using_current.
+  ///
+  /// In en, this message translates to:
+  /// **'Using current location'**
+  String get location_using_current;
+
+  /// No description provided for @wizard_date_today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get wizard_date_today;
 }
 
 class _AppLocalizationsDelegate
