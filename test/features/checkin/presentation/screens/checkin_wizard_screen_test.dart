@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rayuela_mobile/core/error/result.dart';
 import 'package:rayuela_mobile/core/router/routes.dart';
-import 'package:rayuela_mobile/features/dashboard/domain/entities/project_detail.dart';
 import 'package:rayuela_mobile/features/checkin/domain/entities/checkin_request.dart';
 import 'package:rayuela_mobile/features/checkin/domain/entities/checkin_submission_outcome.dart';
 import 'package:rayuela_mobile/features/checkin/domain/repositories/checkins_repository.dart';
@@ -14,6 +13,7 @@ import 'package:rayuela_mobile/features/checkin/presentation/providers/checkin_p
 import 'package:rayuela_mobile/features/checkin/presentation/providers/checkin_wizard_controller.dart';
 import 'package:rayuela_mobile/features/checkin/presentation/screens/checkin_wizard_screen.dart';
 import 'package:rayuela_mobile/features/checkin/presentation/services/location_service.dart';
+import 'package:rayuela_mobile/features/dashboard/domain/entities/project_detail.dart';
 import 'package:rayuela_mobile/l10n/app_localizations.dart';
 
 class _MockCheckinsRepository extends Mock implements CheckinsRepository {}
@@ -81,7 +81,7 @@ void main() {
   testWidgets('CheckinWizardScreen full step flow integration', (tester) async {
     const args = CheckinWizardArgs(
       projectId: 'p1',
-      availableTaskTypes: const [
+      availableTaskTypes: [
         TaskType(name: 'Clean'),
         TaskType(name: 'Repair'),
       ],
@@ -97,7 +97,7 @@ void main() {
 
     await tester.pumpWidget(
       _hostWith(
-        child: CheckinWizardScreen(args: args),
+        child: const CheckinWizardScreen(args: args),
         overrides: [
           checkinsRepositoryProvider.overrideWithValue(repository),
           locationServiceProvider.overrideWithValue(locationService),
@@ -124,32 +124,15 @@ void main() {
     await tester.pumpAndSettle();
 
     // ----------------------------------------------------
-    // STEP 2: Evidence (Photos)
-    // ----------------------------------------------------
-    expect(find.textContaining('EVIDENCE'), findsOneWidget);
-
-    // Tap "Next" (evidence/photos are optional)
-    await tester.tap(find.text('Next →'));
-    await tester.pumpAndSettle();
-
-    // ----------------------------------------------------
-    // STEP 3: Location
+    // STEP 2: Context Information (Coordinates, DateTime, Photos)
     // ----------------------------------------------------
     expect(find.text('COORDINATES'), findsOneWidget);
-    expect(find.text('GPS activo'), findsOneWidget);
-
-    // Tap "Next"
-    await tester.tap(find.text('Next →'));
-    await tester.pumpAndSettle();
-
-    // ----------------------------------------------------
-    // STEP 4: Date & Time
-    // ----------------------------------------------------
     expect(find.text('DATE & TIME'), findsOneWidget);
-    expect(find.text('Current date/time'), findsOneWidget);
+    expect(find.textContaining('EVIDENCE'), findsOneWidget);
+    expect(find.text('Using current location'), findsOneWidget);
 
-    // Tap "Submit"
-    await tester.tap(find.text('COMPLETE MISSION!'));
+    // Tap "Confirm" button
+    await tester.tap(find.text('Confirm'));
     await tester.pumpAndSettle();
 
     // Verify submission is processed and navigates to the result screen

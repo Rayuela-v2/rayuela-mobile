@@ -241,19 +241,24 @@ class _EdgePainter extends CustomPainter {
       final c1 = Offset(e.from.x, controlY);
       final c2 = Offset(e.to.x, controlY);
 
+      final isLinkSatisfied = e.from.badge.satisfied;
+      final isFaded = e.from.badge.status == 'faded';
+
       final paint = Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2
-        ..color = e.earned
+        ..color = isLinkSatisfied
             ? const Color(0xFF4CAF50).withValues(alpha: 0.85)
-            : color;
+            : (isFaded ? const Color(0xFFEF5350).withValues(alpha: 0.85) : color);
 
       final path = Path()
         ..moveTo(start.dx, start.dy)
         ..cubicTo(c1.dx, c1.dy, c2.dx, c2.dy, end.dx, end.dy);
 
-      if (e.earned) {
+      if (isLinkSatisfied) {
         canvas.drawPath(path, paint);
+      } else if (isFaded) {
+        _drawDashed(canvas, path, paint, dash: 2, gap: 2);
       } else {
         _drawDashed(canvas, path, paint, dash: 6, gap: 4);
       }
@@ -329,7 +334,19 @@ class _BadgeNode extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final earned = badge.earned;
-    final ring = earned ? const Color(0xFF4CAF50) : theme.colorScheme.outline;
+    final isFaded = badge.status == 'faded';
+    final satisfied = badge.satisfied;
+
+    final Color ring;
+    if (earned) {
+      ring = const Color(0xFF4CAF50);
+    } else if (isFaded && satisfied) {
+      ring = const Color(0xFFFF9800); // Orange for satisfied-but-faded
+    } else if (isFaded) {
+      ring = const Color(0xFFEF5350); // Red for unsatisfied faded
+    } else {
+      ring = theme.colorScheme.outline;
+    }
 
     return Tooltip(
       message: badge.description == null
@@ -352,7 +369,15 @@ class _BadgeNode extends StatelessWidget {
                       spreadRadius: 1,
                     ),
                   ]
-                : null,
+                : (isFaded && satisfied)
+                    ? [
+                        BoxShadow(
+                          color: const Color(0xFFFF9800).withValues(alpha: 0.35),
+                          blurRadius: 8,
+                          spreadRadius: 1,
+                        ),
+                      ]
+                    : null,
           ),
           child: Stack(
             fit: StackFit.expand,
@@ -365,7 +390,9 @@ class _BadgeNode extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: theme.colorScheme.surface.withValues(alpha: 0.25),
+                    color: theme.colorScheme.surface.withValues(
+                      alpha: isFaded ? 0.65 : 0.25,
+                    ),
                   ),
                 ),
               if (earned)

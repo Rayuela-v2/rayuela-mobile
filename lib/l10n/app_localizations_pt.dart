@@ -536,8 +536,7 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get checkin_result_generic_thanks =>
-      'Muito obrigado pela sua colaboração! 🎉';
+  String get checkin_result_generic_thanks => 'Muito obrigado! 🎉';
 
   @override
   String get checkin_back_to_dashboard => 'Voltar ao painel';
@@ -1080,4 +1079,17 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get wizard_step3_title => 'COORDENADAS';
+
+  @override
+  String get wizard_confirm => 'Confirmar';
+
+  @override
+  String get wizard_step2_guide_confirmation =>
+      'Vamos confirmar estas informações antes de terminar';
+
+  @override
+  String get location_using_current => 'Usando localização atual';
+
+  @override
+  String get wizard_date_today => 'Hoje';
 }

@@ -113,6 +113,8 @@ class ProjectBadge {
     this.imageUrl,
     this.earned = false,
     this.previousBadges = const [],
+    this.status = 'active',
+    this.satisfied = false,
     this.checkinsAmount = 0,
     this.mustContribute = false,
     this.taskType,
@@ -131,6 +133,12 @@ class ProjectBadge {
   /// achievable. Drives the dependency-graph view (Sugiyama-style DAG).
   /// Backend field: `BadgeRule.previousBadges: string[]`.
   final List<String> previousBadges;
+
+  /// Dynamic badge status: 'active' | 'faded' | 'expired'.
+  final String status;
+
+  /// True when the current user satisfies this badge's rules in check-in history.
+  final bool satisfied;
 
   // --- Earning rule (backend BadgeTemplate) --------------------------------
   // These describe *what the user has to do* to earn the badge. taskType,
@@ -168,12 +176,19 @@ class ProjectBadge {
   bool get hasArea => _isConstraint(areaId);
   bool get hasTimeInterval => _isConstraint(timeIntervalId);
 
-  ProjectBadge copyWith({bool? earned}) => ProjectBadge(
+  ProjectBadge copyWith({
+    bool? earned,
+    String? status,
+    bool? satisfied,
+  }) =>
+      ProjectBadge(
         name: name,
         description: description,
         imageUrl: imageUrl,
         earned: earned ?? this.earned,
         previousBadges: previousBadges,
+        status: status ?? this.status,
+        satisfied: satisfied ?? this.satisfied,
         checkinsAmount: checkinsAmount,
         mustContribute: mustContribute,
         taskType: taskType,
