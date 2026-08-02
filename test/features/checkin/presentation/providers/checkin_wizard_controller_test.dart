@@ -121,7 +121,7 @@ void main() {
     expect(controller.state.taskTypeLocked, true);
     expect(controller.state.step, 1);
     expect(controller.state.firstStep, 1);
-    expect(controller.state.visibleStepCount, 3);
+    expect(controller.state.visibleStepCount, 1);
     expect(controller.state.visibleStepIndex, 0);
 
     // Cannot step back into the hidden task-type step.
@@ -135,7 +135,7 @@ void main() {
     expect(controller.state.taskTypeLocked, false);
     expect(controller.state.step, 0);
     expect(controller.state.firstStep, 0);
-    expect(controller.state.visibleStepCount, 4);
+    expect(controller.state.visibleStepCount, 2);
   });
 
   test('submit fails if taskType is null', () async {

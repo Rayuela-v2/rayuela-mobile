@@ -9,9 +9,9 @@ import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/checkin/domain/entities/checkin_result.dart';
 import '../../features/checkin/domain/entities/checkin_submission_outcome.dart';
 import '../../features/checkin/presentation/providers/checkin_wizard_controller.dart';
-import '../../features/checkin/presentation/screens/checkin_result_screen.dart';
 import '../../features/checkin/presentation/screens/checkin_wizard_screen.dart';
 import '../../features/checkin/presentation/screens/pending_data_screen.dart';
+import '../../features/checkin/presentation/screens/step3_result_screen.dart';
 import '../../features/dashboard/domain/entities/project_detail.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/dashboard/presentation/screens/project_detail_screen.dart';
@@ -140,13 +140,13 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           // "Pending" state (Queued). Older callers that still hand a raw
           // CheckinResult are tolerated and treated as Accepted.
           if (extra is CheckinSubmissionOutcome) {
-            return CheckinResultScreen(
+            return Step3ResultScreen(
               outcome: extra,
               projectId: projectId,
             );
           }
           if (extra is CheckinResult) {
-            return CheckinResultScreen(
+            return Step3ResultScreen(
               outcome: CheckinSubmissionAccepted(extra),
               projectId: projectId,
             );

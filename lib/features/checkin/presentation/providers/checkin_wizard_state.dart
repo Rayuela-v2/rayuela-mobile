@@ -44,9 +44,9 @@ class CheckinWizardState {
   /// First navigable [step] — step 1 (task type) is skipped when locked.
   int get firstStep => taskTypeLocked ? 1 : 0;
 
-  /// Number of steps shown in the progress UI (the task-type step is hidden
+  /// Number of steps shown in the wizard progress UI (the task-type step is hidden
   /// when [taskTypeLocked]).
-  int get visibleStepCount => taskTypeLocked ? 3 : 4;
+  int get visibleStepCount => taskTypeLocked ? 1 : 2;
 
   /// Zero-based index of the current step among the visible ones.
   int get visibleStepIndex => step - firstStep;

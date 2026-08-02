@@ -239,7 +239,7 @@
   "@checkin_result_task_completed": {
     "placeholders": { "name": { "type": "String" } }
   },
-  "checkin_result_generic_thanks": "¡Muchas gracias por tu colaboración! 🎉",
+  "checkin_result_generic_thanks": "¡Muchas gracias! 🎉",
   "checkin_back_to_dashboard": "Volver al panel",
   "checkin_back_to_project": "Volver al proyecto",
 
@@ -442,5 +442,9 @@
   "wizard_step2_gal": "Galería",
   "wizard_step2_skip": "saltear si no tenés fotos",
   "wizard_step3_guide": "Estamos usando tu ubicación actual. ¿Querés modificarla?",
-  "wizard_step3_title": "COORDENADAS"
+  "wizard_step3_title": "COORDENADAS",
+  "wizard_confirm": "Confirmar",
+  "wizard_step2_guide_confirmation": "Confirmemos esta información antes de terminar",
+  "location_using_current": "Usando ubicación actual",
+  "wizard_date_today": "Hoy"
 }
