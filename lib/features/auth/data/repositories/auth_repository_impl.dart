@@ -102,6 +102,28 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<Result<AuthUser>> updateProfile({
+    String? completeName,
+    String? description,
+    String? profileImage,
+  }) async {
+    final res = await _remote.updateMe(
+      UpdateProfileRequestDto(
+        completeName: completeName,
+        description: description,
+        profileImage: profileImage,
+      ),
+    );
+    return res.fold(
+      onSuccess: (dto) async {
+        await _cacheUser(dto);
+        return Success<AuthUser>(dto.toEntity());
+      },
+      onFailure: (e) async => Failure<AuthUser>(e),
+    );
+  }
+
+  @override
   Future<AuthUser?> cachedUser() async {
     final raw = await _tokens.readUserJson();
     if (raw == null || raw.isEmpty) return null;

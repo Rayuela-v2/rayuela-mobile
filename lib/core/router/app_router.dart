@@ -15,6 +15,8 @@ import '../../features/checkin/presentation/screens/pending_data_screen.dart';
 import '../../features/dashboard/domain/entities/project_detail.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/dashboard/presentation/screens/project_detail_screen.dart';
+import '../../features/profile/presentation/screens/journey_screen.dart';
+import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/tasks/presentation/screens/tasks_screen.dart';
 import '../../l10n/app_localizations.dart';
 import '../../shared/widgets/admin_not_supported_screen.dart';
@@ -53,6 +55,16 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: AppPath.dashboard,
         name: AppRoute.dashboard,
         builder: (_, __) => const DashboardScreen(),
+      ),
+      GoRoute(
+        path: AppPath.profile,
+        name: AppRoute.profile,
+        builder: (_, __) => const ProfileScreen(),
+      ),
+      GoRoute(
+        path: AppPath.journey,
+        name: AppRoute.journey,
+        builder: (_, __) => const JourneyScreen(),
       ),
       GoRoute(
         path: AppPath.projectDetail,

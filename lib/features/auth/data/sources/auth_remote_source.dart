@@ -90,6 +90,14 @@ class AuthRemoteSource {
     );
   }
 
+  /// PATCH /user — returns the updated user in the same shape as [fetchMe].
+  Future<Result<UserDto>> updateMe(UpdateProfileRequestDto req) {
+    return _api.request(
+      (d) => d.patch<Map<String, dynamic>>(ApiPaths.me, data: req.toJson()),
+      parse: UserDto.fromJson,
+    );
+  }
+
   Future<Result<void>> forgotPassword(String email) {
     return _api.request<void>(
       (d) => d.post<Object?>(

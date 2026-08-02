@@ -8,6 +8,8 @@ class AuthUser {
     required this.email,
     required this.role,
     this.profileImageUrl,
+    this.description = '',
+    this.createdAt,
     this.verified = false,
     this.gameProfiles = const [],
   });
@@ -17,7 +19,17 @@ class AuthUser {
   final String completeName;
   final String email;
   final UserRole role;
+
+  /// Either an `avatar:<id>` pick from the app's catalog or a remote URL
+  /// (Google sign-in fills this one). See `ProfileAvatar.resolve`.
   final String? profileImageUrl;
+
+  /// Short user-authored bio shown on the profile screen.
+  final String description;
+
+  /// Sign-up date — powers the profile's "exploring since". Null when the
+  /// backend didn't send it.
+  final DateTime? createdAt;
   final bool verified;
 
   /// Per-project gamification record. Populated from `_gameProfiles` on
@@ -42,6 +54,8 @@ class AuthUser {
     String? email,
     UserRole? role,
     String? profileImageUrl,
+    String? description,
+    DateTime? createdAt,
     bool? verified,
     List<UserGameProfile>? gameProfiles,
   }) {
@@ -52,6 +66,8 @@ class AuthUser {
       email: email ?? this.email,
       role: role ?? this.role,
       profileImageUrl: profileImageUrl ?? this.profileImageUrl,
+      description: description ?? this.description,
+      createdAt: createdAt ?? this.createdAt,
       verified: verified ?? this.verified,
       gameProfiles: gameProfiles ?? this.gameProfiles,
     );

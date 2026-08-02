@@ -76,6 +76,29 @@ class RegisterRequestDto {
       };
 }
 
+/// PATCH /user body — the fields a volunteer can edit on their own profile.
+///
+/// Only non-null fields travel: the backend patches key-by-key, so sending
+/// just `description` leaves the avatar alone. `email`/`username` are absent
+/// on purpose — the email identifies the account.
+class UpdateProfileRequestDto {
+  const UpdateProfileRequestDto({
+    this.completeName,
+    this.description,
+    this.profileImage,
+  });
+
+  final String? completeName;
+  final String? description;
+  final String? profileImage;
+
+  Map<String, dynamic> toJson() => {
+        if (completeName != null) 'complete_name': completeName,
+        if (description != null) 'description': description,
+        if (profileImage != null) 'profile_image': profileImage,
+      };
+}
+
 /// GET /user
 ///
 /// The backend currently returns the raw `User` entity instance, which
@@ -92,6 +115,8 @@ class UserDto {
     required this.email,
     required this.role,
     this.profileImage,
+    this.description = '',
+    this.createdAt,
     this.verified = false,
     this.gameProfiles = const [],
   });
@@ -102,6 +127,8 @@ class UserDto {
   final String email;
   final String role;
   final String? profileImage;
+  final String description;
+  final String? createdAt;
   final bool verified;
   final List<GameProfileDto> gameProfiles;
 
@@ -124,6 +151,9 @@ class UserDto {
         'profileImage',
         'profile_image',
       ]),
+      description:
+          _firstString(json, const ['_description', 'description']) ?? '',
+      createdAt: _firstString(json, const ['_createdAt', 'createdAt']),
       verified: _asBool(json['_verified'] ?? json['verified']) ?? false,
       gameProfiles: _parseGameProfiles(
         json['_gameProfiles'] ?? json['gameProfiles'],
@@ -140,6 +170,8 @@ class UserDto {
         'email': email,
         'role': role,
         'profileImage': profileImage,
+        'description': description,
+        'createdAt': createdAt,
         'verified': verified,
         'gameProfiles':
             gameProfiles.map((g) => g.toJson()).toList(growable: false),
@@ -152,6 +184,8 @@ class UserDto {
         email: email,
         role: UserRole.fromApi(role),
         profileImageUrl: profileImage,
+        description: description,
+        createdAt: createdAt == null ? null : DateTime.tryParse(createdAt!),
         verified: verified,
         gameProfiles:
             gameProfiles.map((dto) => dto.toEntity()).toList(growable: false),

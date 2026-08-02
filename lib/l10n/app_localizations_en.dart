@@ -860,6 +860,117 @@ class AppLocalizationsEn extends AppLocalizations {
   String get common_logout => 'Log out';
 
   @override
+  String get profile_title => 'My profile';
+
+  @override
+  String get profile_avatar_change => 'Change avatar';
+
+  @override
+  String get profile_avatar_picker_title => 'Pick your expedition role';
+
+  @override
+  String get profile_avatar_picker_subtitle =>
+      'This is how other explorers will see you on Rayuela.';
+
+  @override
+  String get profile_name_label => 'Name';
+
+  @override
+  String get profile_name_required => 'Enter your name';
+
+  @override
+  String get profile_description_label => 'About you';
+
+  @override
+  String get profile_description_hint =>
+      'Tell us in a few words what brings you to Rayuela.';
+
+  @override
+  String get profile_username_label => 'Username';
+
+  @override
+  String get profile_email_label => 'Email';
+
+  @override
+  String get profile_email_locked =>
+      'Your email identifies your account, so it can\'t be changed.';
+
+  @override
+  String get profile_save => 'Save changes';
+
+  @override
+  String get profile_saved => 'Profile updated!';
+
+  @override
+  String get profile_stats_title => 'Your journey';
+
+  @override
+  String get profile_stats_subtitle => 'Missions, points and badges';
+
+  @override
+  String get profile_stats_missions => 'Missions';
+
+  @override
+  String get profile_stats_points => 'Points';
+
+  @override
+  String get profile_stats_badges => 'Badges';
+
+  @override
+  String get profile_stats_by_project => 'By project';
+
+  @override
+  String profile_stats_points_short(int count) {
+    return '$count pts';
+  }
+
+  @override
+  String profile_stats_streak(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count day streak',
+      one: '1 day streak',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String profile_since(String date) {
+    return 'Exploring since $date';
+  }
+
+  @override
+  String get avatar_explorer => 'Explorer';
+
+  @override
+  String get avatar_naturalist => 'Naturalist';
+
+  @override
+  String get avatar_bug_watcher => 'Bug watcher';
+
+  @override
+  String get avatar_chronicler => 'Chronicler';
+
+  @override
+  String get avatar_cartographer => 'Cartographer';
+
+  @override
+  String get avatar_water_sentinel => 'Water sentinel';
+
+  @override
+  String get avatar_night_watch => 'Night watch';
+
+  @override
+  String get avatar_trailblazer => 'Trailblazer';
+
+  @override
+  String get avatar_field_scientist => 'Field scientist';
+
+  @override
+  String get avatar_forest_ranger => 'Forest ranger';
+
+  @override
   String get error_no_internet => 'No internet connection.';
 
   @override

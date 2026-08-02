@@ -22,6 +22,14 @@ abstract class AuthRepository {
 
   Future<Result<AuthUser>> fetchCurrentUser();
 
+  /// Patch the signed-in user's own profile. Null arguments are left
+  /// untouched server-side.
+  Future<Result<AuthUser>> updateProfile({
+    String? completeName,
+    String? description,
+    String? profileImage,
+  });
+
   /// Last profile we successfully fetched, or null. Lets the splash screen
   /// keep an offline user signed in instead of showing the login screen.
   Future<AuthUser?> cachedUser();

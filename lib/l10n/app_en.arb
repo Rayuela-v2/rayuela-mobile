@@ -408,6 +408,50 @@
   "common_retry": "Try again",
   "common_logout": "Log out",
 
+  "profile_title": "My profile",
+  "profile_avatar_change": "Change avatar",
+  "profile_avatar_picker_title": "Pick your expedition role",
+  "profile_avatar_picker_subtitle": "This is how other explorers will see you on Rayuela.",
+  "profile_name_label": "Name",
+  "profile_name_required": "Enter your name",
+  "profile_description_label": "About you",
+  "profile_description_hint": "Tell us in a few words what brings you to Rayuela.",
+  "profile_username_label": "Username",
+  "profile_email_label": "Email",
+  "profile_email_locked": "Your email identifies your account, so it can't be changed.",
+  "profile_save": "Save changes",
+  "profile_saved": "Profile updated!",
+
+  "profile_stats_title": "Your journey",
+  "profile_stats_subtitle": "Missions, points and badges",
+  "profile_stats_missions": "Missions",
+  "profile_stats_points": "Points",
+  "profile_stats_badges": "Badges",
+  "profile_stats_by_project": "By project",
+  "profile_stats_points_short": "{count} pts",
+  "@profile_stats_points_short": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "profile_stats_streak": "{count, plural, one{1 day streak} other{{count} day streak}}",
+  "@profile_stats_streak": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "profile_since": "Exploring since {date}",
+  "@profile_since": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+
+  "avatar_explorer": "Explorer",
+  "avatar_naturalist": "Naturalist",
+  "avatar_bug_watcher": "Bug watcher",
+  "avatar_chronicler": "Chronicler",
+  "avatar_cartographer": "Cartographer",
+  "avatar_water_sentinel": "Water sentinel",
+  "avatar_night_watch": "Night watch",
+  "avatar_trailblazer": "Trailblazer",
+  "avatar_field_scientist": "Field scientist",
+  "avatar_forest_ranger": "Forest ranger",
+
   "error_no_internet": "No internet connection.",
   "error_no_internet_long": "No internet connection.\nCheck your signal and retry.",
   "error_server": "Something went wrong on our side.",

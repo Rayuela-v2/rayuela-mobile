@@ -31,6 +31,9 @@ class ApiPaths {
   static String checkin(String id) => '/checkin/$id';
   static String userCheckins(String projectId) => '/checkin/user/$projectId';
 
+  /// Aggregated activity of the signed-in user (profile screen).
+  static const String myCheckinStats = '/checkin/me/stats';
+
   // Leaderboard
   static String leaderboard(String projectId) => '/leaderboard/$projectId';
 

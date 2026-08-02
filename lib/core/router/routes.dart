@@ -8,6 +8,8 @@ class AppRoute {
   static const String register = 'register';
   static const String forgotPassword = 'forgot-password';
   static const String dashboard = 'dashboard';
+  static const String profile = 'profile';
+  static const String journey = 'profile-journey';
   static const String projectDetail = 'project-detail';
   static const String tasks = 'project-tasks';
   static const String checkin = 'project-checkin';
@@ -24,6 +26,8 @@ class AppPath {
   static const String register = '/register';
   static const String forgotPassword = '/forgot-password';
   static const String dashboard = '/dashboard';
+  static const String profile = '/profile';
+  static const String journey = '/profile/journey';
   static const String projectDetail = '/project/:projectId';
   static const String tasks = '/project/:projectId/tasks';
   static const String checkin = '/project/:projectId/checkin';
