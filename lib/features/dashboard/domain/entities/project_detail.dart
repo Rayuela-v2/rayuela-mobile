@@ -106,6 +106,15 @@ class TaskType {
   int get hashCode => name.hashCode ^ description.hashCode;
 }
 
+/// Where a badge sits in the community fading lifecycle.
+///
+/// Mirrors the backend's `BadgeStatus` (gamification.entity.ts). [fading]
+/// badges are *still earnable* until their window closes — that limited
+/// availability is the whole point of the strategy. [expired] ones can no
+/// longer be earned by anyone new, but are never hidden: whoever already has
+/// one keeps it, and the rule stays in the dependency graph.
+enum BadgeAvailability { active, fading, expired }
+
 class ProjectBadge {
   const ProjectBadge({
     required this.name,
@@ -114,6 +123,8 @@ class ProjectBadge {
     this.earned = false,
     this.previousBadges = const [],
     this.status = 'active',
+    this.expiresAt,
+    this.fadeReason,
     this.satisfied = false,
     this.checkinsAmount = 0,
     this.mustContribute = false,
@@ -134,8 +145,54 @@ class ProjectBadge {
   /// Backend field: `BadgeRule.previousBadges: string[]`.
   final List<String> previousBadges;
 
-  /// Dynamic badge status: 'active' | 'faded' | 'expired'.
+  /// Raw status as the backend resolved it *at fetch time*:
+  /// 'active' | 'faded' | 'expired' (`effectiveBadgeStatus` server-side).
+  ///
+  /// Prefer [availability] for anything user-facing — this value goes stale
+  /// in the offline cache, which can hand back a 'faded' whose window has
+  /// since closed.
   final String status;
+
+  /// End of the fading window, when the badge is 'faded'. Null otherwise.
+  ///
+  /// Only ever compare it against `DateTime.now()` at paint time: this object
+  /// outlives the day it was fetched, so a precomputed "3 days left" is a lie
+  /// by the next morning.
+  final DateTime? expiresAt;
+
+  /// Why the badge is fading, as written by the project admin.
+  final String? fadeReason;
+
+  /// The status to actually show, re-checked against the device clock.
+  ///
+  /// The backend is authoritative — it decides who gets awarded what — but
+  /// [status] is a snapshot, and `projects_local_source` replays this payload
+  /// for as long as the user stays offline. Closing an elapsed window here
+  /// keeps the app from advertising a countdown that already ran out; the
+  /// same rule as the server's, so online the two always agree.
+  BadgeAvailability get availability {
+    switch (status) {
+      case 'expired':
+        return BadgeAvailability.expired;
+      case 'faded':
+        final until = expiresAt;
+        if (until != null && !until.isAfter(DateTime.now())) {
+          return BadgeAvailability.expired;
+        }
+        return BadgeAvailability.fading;
+      default:
+        // Unknown values read as active, matching the backend's fallback.
+        return BadgeAvailability.active;
+    }
+  }
+
+  /// Time left in the fading window, or null when there is no live countdown.
+  Duration? get timeUntilExpiry {
+    if (availability != BadgeAvailability.fading || expiresAt == null) {
+      return null;
+    }
+    return expiresAt!.difference(DateTime.now());
+  }
 
   /// True when the current user satisfies this badge's rules in check-in history.
   final bool satisfied;
@@ -188,6 +245,8 @@ class ProjectBadge {
         earned: earned ?? this.earned,
         previousBadges: previousBadges,
         status: status ?? this.status,
+        expiresAt: expiresAt,
+        fadeReason: fadeReason,
         satisfied: satisfied ?? this.satisfied,
         checkinsAmount: checkinsAmount,
         mustContribute: mustContribute,

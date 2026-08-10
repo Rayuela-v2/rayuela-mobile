@@ -478,6 +478,60 @@ abstract class AppLocalizations {
   /// **'Yet to earn'**
   String get badge_locked;
 
+  /// No description provided for @badge_fading.
+  ///
+  /// In en, this message translates to:
+  /// **'Fading away!'**
+  String get badge_fading;
+
+  /// No description provided for @badge_fading_days.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 day left} other{{count} days left}}'**
+  String badge_fading_days(int count);
+
+  /// No description provided for @badge_fading_hours.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 hour left} other{{count} hours left}}'**
+  String badge_fading_hours(int count);
+
+  /// No description provided for @badge_fading_last_call.
+  ///
+  /// In en, this message translates to:
+  /// **'Last call!'**
+  String get badge_fading_last_call;
+
+  /// No description provided for @badge_fading_call_to_action.
+  ///
+  /// In en, this message translates to:
+  /// **'You can still earn it. After this, you can\'t.'**
+  String get badge_fading_call_to_action;
+
+  /// No description provided for @badge_expired.
+  ///
+  /// In en, this message translates to:
+  /// **'Faded away'**
+  String get badge_expired;
+
+  /// No description provided for @badge_expired_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody else can earn it now.'**
+  String get badge_expired_hint;
+
+  /// No description provided for @badge_expired_kept.
+  ///
+  /// In en, this message translates to:
+  /// **'You got it in time. It\'s yours for good.'**
+  String get badge_expired_kept;
+
+  /// No description provided for @badge_fade_reason.
+  ///
+  /// In en, this message translates to:
+  /// **'Why it\'s fading'**
+  String get badge_fade_reason;
+
   /// No description provided for @badge_requires.
   ///
   /// In en, this message translates to:

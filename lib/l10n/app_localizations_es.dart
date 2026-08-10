@@ -216,6 +216,51 @@ class AppLocalizationsEs extends AppLocalizations {
   String get badge_locked => 'Por conseguir';
 
   @override
+  String get badge_fading => '¡Se desvanece!';
+
+  @override
+  String badge_fading_days(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Quedan $count días',
+      one: 'Queda 1 día',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String badge_fading_hours(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Quedan $count horas',
+      one: 'Queda 1 hora',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get badge_fading_last_call => '¡Última oportunidad!';
+
+  @override
+  String get badge_fading_call_to_action =>
+      'Todavía podés conseguirla. Después, no.';
+
+  @override
+  String get badge_expired => 'Se desvaneció';
+
+  @override
+  String get badge_expired_hint => 'Ya nadie más puede conseguirla.';
+
+  @override
+  String get badge_expired_kept =>
+      'La conseguiste a tiempo. Es tuya para siempre.';
+
+  @override
+  String get badge_fade_reason => 'Por qué se desvanece';
+
+  @override
   String get badge_requires => 'Requiere';
 
   @override

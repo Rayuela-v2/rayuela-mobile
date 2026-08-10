@@ -215,6 +215,51 @@ class AppLocalizationsPt extends AppLocalizations {
   String get badge_locked => 'A conquistar';
 
   @override
+  String get badge_fading => 'Está desaparecendo!';
+
+  @override
+  String badge_fading_days(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Faltam $count dias',
+      one: 'Falta 1 dia',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String badge_fading_hours(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Faltam $count horas',
+      one: 'Falta 1 hora',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get badge_fading_last_call => 'Última chance!';
+
+  @override
+  String get badge_fading_call_to_action =>
+      'Ainda dá para conquistá-la. Depois, não.';
+
+  @override
+  String get badge_expired => 'Desapareceu';
+
+  @override
+  String get badge_expired_hint => 'Ninguém mais pode conquistá-la.';
+
+  @override
+  String get badge_expired_kept =>
+      'Você conquistou a tempo. É sua para sempre.';
+
+  @override
+  String get badge_fade_reason => 'Por que está desaparecendo';
+
+  @override
   String get badge_requires => 'Requer';
 
   @override

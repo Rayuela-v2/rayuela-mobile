@@ -212,6 +212,50 @@ class AppLocalizationsEn extends AppLocalizations {
   String get badge_locked => 'Yet to earn';
 
   @override
+  String get badge_fading => 'Fading away!';
+
+  @override
+  String badge_fading_days(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days left',
+      one: '1 day left',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String badge_fading_hours(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count hours left',
+      one: '1 hour left',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get badge_fading_last_call => 'Last call!';
+
+  @override
+  String get badge_fading_call_to_action =>
+      'You can still earn it. After this, you can\'t.';
+
+  @override
+  String get badge_expired => 'Faded away';
+
+  @override
+  String get badge_expired_hint => 'Nobody else can earn it now.';
+
+  @override
+  String get badge_expired_kept => 'You got it in time. It\'s yours for good.';
+
+  @override
+  String get badge_fade_reason => 'Why it\'s fading';
+
+  @override
   String get badge_requires => 'Requires';
 
   @override

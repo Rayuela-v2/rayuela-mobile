@@ -80,6 +80,23 @@
 
   "badge_earned": "Earned",
   "badge_locked": "Yet to earn",
+
+  "badge_fading": "Fading away!",
+  "badge_fading_days": "{count, plural, one{1 day left} other{{count} days left}}",
+  "@badge_fading_days": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "badge_fading_hours": "{count, plural, one{1 hour left} other{{count} hours left}}",
+  "@badge_fading_hours": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "badge_fading_last_call": "Last call!",
+  "badge_fading_call_to_action": "You can still earn it. After this, you can't.",
+  "badge_expired": "Faded away",
+  "badge_expired_hint": "Nobody else can earn it now.",
+  "badge_expired_kept": "You got it in time. It's yours for good.",
+  "badge_fade_reason": "Why it's fading",
+
   "badge_requires": "Requires",
   "badge_how_to_earn": "How to earn it",
   "badge_req_checkins": "{count, plural, one{1 mission} other{{count} missions}}",

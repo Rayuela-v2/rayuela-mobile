@@ -16,6 +16,8 @@ import '../../../../shared/widgets/linkified_text.dart';
 import '../../domain/entities/project_detail.dart';
 import '../providers/project_detail_providers.dart';
 import '../widgets/badge_dependency_graph.dart';
+import '../widgets/badge_fade_effect.dart';
+import '../widgets/badge_status_look.dart';
 import '../widgets/project_areas_map.dart';
 
 /// Single-project deep dive. Mirrors `views/ProjectView.vue` from the web
@@ -710,8 +712,11 @@ void _showBadgeDetails(BuildContext context, ProjectBadge badge) {
       final theme = Theme.of(sheetCtx);
       final t = AppLocalizations.of(sheetCtx)!;
       final earned = badge.earned;
-      final color =
-          earned ? theme.colorScheme.tertiary : theme.colorScheme.outline;
+      final look = BadgeStatusLook.of(badge, theme, t);
+      // The hero disc lights up for a badge you hold *or* one that's slipping
+      // away, so the sheet opens with the same urgency the grid promised.
+      final lit = earned || look.urgent;
+      final color = lit ? look.color : theme.colorScheme.outline;
 
       return SingleChildScrollView(
         child: Padding(
@@ -726,7 +731,7 @@ void _showBadgeDetails(BuildContext context, ProjectBadge badge) {
                 height: 148,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  gradient: earned
+                  gradient: lit
                       ? LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
@@ -736,12 +741,12 @@ void _showBadgeDetails(BuildContext context, ProjectBadge badge) {
                           ],
                         )
                       : null,
-                  color: earned ? null : color.withValues(alpha: 0.06),
+                  color: lit ? null : color.withValues(alpha: 0.06),
                   border: Border.all(
-                    color: color.withValues(alpha: earned ? 0.5 : 0.2),
-                    width: earned ? 2 : 1,
+                    color: color.withValues(alpha: lit ? 0.5 : 0.2),
+                    width: lit ? 2 : 1,
                   ),
-                  boxShadow: earned
+                  boxShadow: lit
                       ? [
                           BoxShadow(
                             color: color.withValues(alpha: 0.28),
@@ -752,12 +757,15 @@ void _showBadgeDetails(BuildContext context, ProjectBadge badge) {
                       : null,
                 ),
                 alignment: Alignment.center,
-                child: _BadgeMedia(
-                  key: ValueKey(badge.imageUrl),
-                  imageUrl: badge.imageUrl,
-                  earned: earned,
-                  color: color,
-                  size: 108,
+                child: BadgeFadeEffect(
+                  availability: badge.availability,
+                  child: _BadgeMedia(
+                    key: ValueKey(badge.imageUrl),
+                    imageUrl: badge.imageUrl,
+                    earned: earned,
+                    color: color,
+                    size: 108,
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -769,39 +777,54 @@ void _showBadgeDetails(BuildContext context, ProjectBadge badge) {
                 ),
               ),
               const SizedBox(height: 10),
-              // Status pill.
+              // Status pill. Carries the live countdown when the badge is
+              // fading, so the sheet is where you go to find out exactly how
+              // much time is left.
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                 decoration: BoxDecoration(
-                  color: earned
-                      ? theme.colorScheme.tertiaryContainer
-                      : theme.colorScheme.surfaceContainerHighest,
+                  color: look.urgent
+                      ? look.color.withValues(alpha: 0.16)
+                      : earned
+                          ? theme.colorScheme.tertiaryContainer
+                          : theme.colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(999),
+                  border: look.urgent
+                      ? Border.all(color: look.color.withValues(alpha: 0.5))
+                      : null,
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      earned ? Icons.check_circle : Icons.flag_outlined,
+                      look.icon,
                       size: 16,
-                      color: earned
-                          ? theme.colorScheme.onTertiaryContainer
-                          : theme.colorScheme.onSurfaceVariant,
+                      color: look.urgent
+                          ? look.color
+                          : earned
+                              ? theme.colorScheme.onTertiaryContainer
+                              : theme.colorScheme.onSurfaceVariant,
                     ),
                     const SizedBox(width: 6),
-                    Text(
-                      earned ? t.badge_earned : t.badge_locked,
-                      style: theme.textTheme.labelLarge?.copyWith(
-                        color: earned
-                            ? theme.colorScheme.onTertiaryContainer
-                            : theme.colorScheme.onSurfaceVariant,
-                        fontWeight: FontWeight.w600,
+                    Flexible(
+                      child: Text(
+                        look.label,
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          color: look.urgent
+                              ? look.color
+                              : earned
+                                  ? theme.colorScheme.onTertiaryContainer
+                                  : theme.colorScheme.onSurfaceVariant,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
+              _BadgeFadingNotice(badge: badge, look: look),
               if (badge.description != null &&
                   badge.description!.isNotEmpty) ...[
                 const SizedBox(height: 20),
@@ -846,6 +869,89 @@ void _showBadgeDetails(BuildContext context, ProjectBadge badge) {
       );
     },
   );
+}
+
+/// The fading story, spelled out under the status pill.
+///
+/// Renders nothing for an ordinary badge — the vast majority — so the sheet
+/// only grows when there's genuinely something at stake. When a badge is
+/// fading this is the nudge ("you can still get it, after this you can't")
+/// plus whatever motive the admin wrote. When it's gone it either
+/// congratulates you for making it in time or tells you plainly that the
+/// chance has passed.
+class _BadgeFadingNotice extends StatelessWidget {
+  const _BadgeFadingNotice({required this.badge, required this.look});
+
+  final ProjectBadge badge;
+  final BadgeStatusLook look;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
+    final fading = badge.availability == BadgeAvailability.fading;
+    final expired = badge.availability == BadgeAvailability.expired;
+    if (!fading && !expired) return const SizedBox.shrink();
+
+    final headline = fading
+        ? t.badge_fading_call_to_action
+        : badge.earned
+            ? t.badge_expired_kept
+            : t.badge_expired_hint;
+    final tone = fading ? look.color : theme.colorScheme.onSurfaceVariant;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 14),
+      child: Column(
+        children: [
+          Text(
+            headline,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: tone,
+              fontWeight: fading ? FontWeight.w600 : FontWeight.w400,
+              height: 1.35,
+            ),
+          ),
+          // The admin's motive, kept visually quieter than the call to action:
+          // it explains, it doesn't push.
+          if (badge.fadeReason != null && badge.fadeReason!.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHighest
+                    .withValues(alpha: 0.5),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    t.badge_fade_reason.toUpperCase(),
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                      letterSpacing: 1.2,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    badge.fadeReason!,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurface,
+                      height: 1.35,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
 }
 
 /// "How to earn it" card: turns the backend BadgeTemplate rule into a plain
@@ -952,9 +1058,15 @@ class _BadgeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     final earned = badge.earned;
-    final color =
-        earned ? theme.colorScheme.tertiary : theme.colorScheme.outline;
+    final look = BadgeStatusLook.of(badge, theme, t);
+    // A fading badge borrows the "won" treatment — gradient, glow, thicker
+    // border — but in amber. Same visual weight as an earned one, opposite
+    // meaning: this one pops because it's about to be gone, not because you
+    // have it. A flat tile would never make anyone hurry.
+    final lit = earned || look.urgent;
+    final color = look.urgent ? look.color : (earned ? look.color : theme.colorScheme.outline);
 
     return InkWell(
       onTap: () => _showBadgeDetails(context, badge),
@@ -963,9 +1075,7 @@ class _BadgeTile extends StatelessWidget {
         duration: const Duration(milliseconds: 220),
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          // Earned badges get a subtle gradient + glow so they pop visually.
-          // Inspired by the web app's green/checkmark styling for active badges.
-          gradient: earned
+          gradient: lit
               ? LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -975,17 +1085,17 @@ class _BadgeTile extends StatelessWidget {
                   ],
                 )
               : null,
-          color: earned ? null : color.withValues(alpha: 0.04),
+          color: lit ? null : color.withValues(alpha: 0.04),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: color.withValues(alpha: earned ? 0.5 : 0.15),
-            width: earned ? 1.5 : 1,
+            color: color.withValues(alpha: lit ? 0.5 : 0.15),
+            width: lit ? 1.5 : 1,
           ),
-          boxShadow: earned
+          boxShadow: lit
               ? [
                   BoxShadow(
-                    color: color.withValues(alpha: 0.2),
-                    blurRadius: 10,
+                    color: color.withValues(alpha: look.urgent ? 0.32 : 0.2),
+                    blurRadius: look.urgent ? 14 : 10,
                     offset: const Offset(0, 2),
                   ),
                 ]
@@ -999,12 +1109,15 @@ class _BadgeTile extends StatelessWidget {
                 Expanded(
                   child: LayoutBuilder(
                     builder: (context, constraints) {
-                      return _BadgeMedia(
-                        key: ValueKey(badge.imageUrl),
-                        imageUrl: badge.imageUrl,
-                        earned: earned,
-                        color: color,
-                        size: constraints.biggest.shortestSide,
+                      return BadgeFadeEffect(
+                        availability: badge.availability,
+                        child: _BadgeMedia(
+                          key: ValueKey(badge.imageUrl),
+                          imageUrl: badge.imageUrl,
+                          earned: earned,
+                          color: color,
+                          size: constraints.biggest.shortestSide,
+                        ),
                       );
                     },
                   ),
@@ -1017,33 +1130,33 @@ class _BadgeTile extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: theme.textTheme.labelMedium?.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: earned
+                    color: lit
                         ? theme.colorScheme.onSurface
                         : theme.colorScheme.onSurfaceVariant,
+                    // A badge nobody can earn any more is spent, not merely
+                    // locked — the strike-through says so without a word.
+                    decoration:
+                        badge.availability == BadgeAvailability.expired &&
+                                !earned
+                            ? TextDecoration.lineThrough
+                            : null,
                   ),
                 ),
               ],
             ),
-            if (earned)
-              // Tiny "earned" checkmark in the corner — mirrors the web app.
+            // One corner marker, three meanings: earned, ticking down, or
+            // gone. The countdown rides along so the grid answers "how long
+            // do I have?" without a tap.
+            if (earned || badge.availability != BadgeAvailability.active)
               Positioned(
                 top: -2,
                 right: -2,
-                child: Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.tertiary,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: theme.colorScheme.surface,
-                      width: 1.5,
-                    ),
-                  ),
-                  child: Icon(
-                    Icons.check,
-                    size: 12,
-                    color: theme.colorScheme.onTertiary,
-                  ),
+                child: BadgeStatusChip(
+                  look: look,
+                  // A bare tick reads better than `check_circle` inside an
+                  // already-circular chip this small.
+                  iconOverride:
+                      earned && !look.urgent ? Icons.check : null,
                 ),
               ),
           ],

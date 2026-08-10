@@ -80,6 +80,23 @@
 
   "badge_earned": "Conquistada",
   "badge_locked": "A conquistar",
+
+  "badge_fading": "Está desaparecendo!",
+  "badge_fading_days": "{count, plural, one{Falta 1 dia} other{Faltam {count} dias}}",
+  "@badge_fading_days": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "badge_fading_hours": "{count, plural, one{Falta 1 hora} other{Faltam {count} horas}}",
+  "@badge_fading_hours": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "badge_fading_last_call": "Última chance!",
+  "badge_fading_call_to_action": "Ainda dá para conquistá-la. Depois, não.",
+  "badge_expired": "Desapareceu",
+  "badge_expired_hint": "Ninguém mais pode conquistá-la.",
+  "badge_expired_kept": "Você conquistou a tempo. É sua para sempre.",
+  "badge_fade_reason": "Por que está desaparecendo",
+
   "badge_requires": "Requer",
   "badge_how_to_earn": "Como obtê-la",
   "badge_req_checkins": "{count, plural, one{1 missão} other{{count} missões}}",

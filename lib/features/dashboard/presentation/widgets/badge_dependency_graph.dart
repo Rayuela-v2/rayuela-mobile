@@ -4,7 +4,10 @@ import 'dart:math' as math;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/project_detail.dart';
+import 'badge_fade_effect.dart';
+import 'badge_status_look.dart';
 
 /// Sugiyama-style top-down DAG of badge dependencies. Mirrors the web app's
 /// `BadgeDependencyGraph.vue` (custom SVG), drawn here with [CustomPaint]
@@ -242,7 +245,8 @@ class _EdgePainter extends CustomPainter {
       final c2 = Offset(e.to.x, controlY);
 
       final isLinkSatisfied = e.from.badge.satisfied;
-      final isFaded = e.from.badge.status == 'faded';
+      final isFaded =
+          e.from.badge.availability != BadgeAvailability.active;
 
       final paint = Paint()
         ..style = PaintingStyle.stroke
@@ -333,25 +337,33 @@ class _BadgeNode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     final earned = badge.earned;
-    final isFaded = badge.status == 'faded';
-    final satisfied = badge.satisfied;
+    final look = BadgeStatusLook.of(badge, theme, t);
+    // `availability` re-checks the deadline against the clock, so a badge
+    // whose window closed while the payload sat in the offline cache stops
+    // being drawn as still-winnable.
+    final isFaded = badge.availability == BadgeAvailability.fading;
 
     final Color ring;
     if (earned) {
       ring = const Color(0xFF4CAF50);
-    } else if (isFaded && satisfied) {
-      ring = const Color(0xFFFF9800); // Orange for satisfied-but-faded
-    } else if (isFaded) {
-      ring = const Color(0xFFEF5350); // Red for unsatisfied faded
-    } else {
+    } else if (badge.availability == BadgeAvailability.active) {
       ring = theme.colorScheme.outline;
+    } else {
+      // Amber while the window is open, muted once it shut. Same source as
+      // the grid and the sheet, so the three views can't disagree.
+      ring = look.color;
     }
 
     return Tooltip(
-      message: badge.description == null
-          ? badge.name
-          : '${badge.name} — ${badge.description!}',
+      // The ring is a hint, not the message — the state has to be readable
+      // as words for anyone who can't tell amber from red.
+      message: [
+        badge.name,
+        if (badge.description != null) badge.description!,
+        look.label,
+      ].join(' — '),
       child: GestureDetector(
         onTap: onTap,
         child: AnimatedContainer(
@@ -369,10 +381,12 @@ class _BadgeNode extends StatelessWidget {
                       spreadRadius: 1,
                     ),
                   ]
-                : (isFaded && satisfied)
+                // Any fading badge glows, not just the ones you already
+                // qualify for — the countdown is news for everyone.
+                : isFaded
                     ? [
                         BoxShadow(
-                          color: const Color(0xFFFF9800).withValues(alpha: 0.35),
+                          color: look.color.withValues(alpha: 0.35),
                           blurRadius: 8,
                           spreadRadius: 1,
                         ),
@@ -381,17 +395,28 @@ class _BadgeNode extends StatelessWidget {
           ),
           child: Stack(
             fit: StackFit.expand,
+            // The countdown chip and the earned tick deliberately hang past
+            // the circle; the default hardEdge would shave them off.
+            clipBehavior: Clip.none,
             children: [
-              ClipOval(
-                child: _media(badge, radius, theme, earned: earned),
+              BadgeFadeEffect(
+                availability: badge.availability,
+                child: ClipOval(
+                  child: _media(badge, radius, theme, earned: earned),
+                ),
               ),
               if (!earned)
-                // Subtle lock veil so depth still reads "not yet".
+                // Subtle lock veil so depth still reads "not yet". Heavy only
+                // once the badge is truly gone — a fading one is still up for
+                // grabs, and burying it under a veil would say the opposite
+                // of what the amber ring and the countdown are shouting.
                 Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: theme.colorScheme.surface.withValues(
-                      alpha: isFaded ? 0.65 : 0.25,
+                      alpha: badge.availability == BadgeAvailability.expired
+                          ? 0.65
+                          : 0.25,
                     ),
                   ),
                 ),
@@ -412,6 +437,18 @@ class _BadgeNode extends StatelessWidget {
                       size: 12,
                     ),
                   ),
+                ),
+              // Countdown floating just above the node. The graph is the
+              // default view, so without this the remaining time lived only
+              // in the tooltip — which on a phone means behind a long-press,
+              // which means nowhere. Sits on top because the layer gap above
+              // is empty, and clear of the earned tick at bottom-right.
+              if (look.compactCountdown != null)
+                Positioned(
+                  top: -10,
+                  left: 0,
+                  right: 0,
+                  child: Center(child: BadgeStatusChip(look: look)),
                 ),
               // Caption underneath isn't ideal inside the circle — show the
               // first letters as a fallback when there's no image.

@@ -94,6 +94,107 @@ void main() {
       expect(entity.user!.badgesEarned, 0);
     });
 
+    test('carries the fading window and per-user satisfied through the merge',
+        () {
+      final expiresAt = DateTime.utc(2030, 3, 1, 12);
+      final dto = ProjectDetailDto.fromJson({
+        'id': 'p1',
+        'name': 'X',
+        'gamification': {
+          'badgesRules': [
+            {
+              'name': 'Fading one',
+              'status': 'faded',
+              'expiresAt': expiresAt.toIso8601String(),
+              'fadeReason': 'poca actividad',
+            },
+            {'name': 'Gone', 'status': 'expired'},
+            {'name': 'Normal'},
+          ],
+        },
+        'user': {
+          'isSubscribed': true,
+          'points': 0,
+          'badges': [
+            {'name': 'Fading one', 'active': false, 'satisfied': true},
+            {'name': 'Gone', 'active': true, 'satisfied': true},
+            {'name': 'Normal', 'active': false, 'satisfied': false},
+          ],
+        },
+      });
+
+      final fading = dto.badges.firstWhere((b) => b.name == 'Fading one');
+      expect(fading.status, 'faded');
+      expect(fading.expiresAt, expiresAt);
+      expect(fading.fadeReason, 'poca actividad');
+      // Only present on the overlay — reading it off the catalog pinned it false.
+      expect(fading.satisfied, isTrue);
+
+      final gone = dto.badges.firstWhere((b) => b.name == 'Gone');
+      expect(gone.status, 'expired');
+      expect(gone.expiresAt, isNull);
+      // An expired badge you already earned stays earned.
+      expect(gone.earned, isTrue);
+
+      final normal = dto.badges.firstWhere((b) => b.name == 'Normal');
+      expect(normal.status, 'active');
+      expect(normal.satisfied, isFalse);
+    });
+
+    test('ignores an unparseable expiresAt instead of throwing', () {
+      final dto = ProjectDetailDto.fromJson({
+        'id': 'p1',
+        'name': 'X',
+        'gamification': {
+          'badgesRules': [
+            {'name': 'A', 'status': 'faded', 'expiresAt': 'mañana'},
+          ],
+        },
+      });
+      expect(dto.badges.single.status, 'faded');
+      expect(dto.badges.single.expiresAt, isNull);
+    });
+
+    test('closes a window that elapsed while the payload sat in cache', () {
+      // The backend said 'faded' when this was fetched; the window has since
+      // run out and the device has been offline, so nothing refreshed it.
+      const stale = ProjectBadge(name: 'A', status: 'faded');
+      final elapsed = ProjectBadge(
+        name: 'A',
+        status: 'faded',
+        expiresAt: DateTime.now().subtract(const Duration(hours: 1)),
+      );
+      final live = ProjectBadge(
+        name: 'A',
+        status: 'faded',
+        expiresAt: DateTime.now().add(const Duration(days: 2)),
+      );
+
+      expect(elapsed.availability, BadgeAvailability.expired);
+      expect(elapsed.timeUntilExpiry, isNull);
+
+      expect(live.availability, BadgeAvailability.fading);
+      // 47, not 48: the clock advances between building it and reading it.
+      expect(live.timeUntilExpiry!.inHours, 47);
+
+      // No window at all: trust the server's word, don't invent an expiry.
+      expect(stale.availability, BadgeAvailability.fading);
+
+      expect(
+        const ProjectBadge(name: 'A', status: 'expired').availability,
+        BadgeAvailability.expired,
+      );
+      expect(
+        const ProjectBadge(name: 'A').availability,
+        BadgeAvailability.active,
+      );
+      // Corrupt status reads as active, same fallback as the backend.
+      expect(
+        const ProjectBadge(name: 'A', status: 'pizza').availability,
+        BadgeAvailability.active,
+      );
+    });
+
     test('handles a string-only badge in the catalog', () {
       final dto = ProjectDetailDto.fromJson({
         'id': 'p1',

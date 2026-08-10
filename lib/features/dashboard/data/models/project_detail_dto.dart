@@ -167,6 +167,8 @@ class ProjectBadgeDto {
     this.earned = false,
     this.previousBadges = const [],
     this.status = 'active',
+    this.expiresAt,
+    this.fadeReason,
     this.satisfied = false,
     this.checkinsAmount = 0,
     this.mustContribute = false,
@@ -180,7 +182,14 @@ class ProjectBadgeDto {
   final String? image;
   final bool earned;
   final List<String> previousBadges;
+
+  /// Already resolved against the fading window by the backend — 'faded' here
+  /// means the window is still open. See `effectiveBadgeStatus` server-side.
   final String status;
+
+  /// End of the fading window; only set while [status] is 'faded'.
+  final DateTime? expiresAt;
+  final String? fadeReason;
   final bool satisfied;
 
   // Earning rule (backend BadgeTemplate). Present on catalog badges; absent
@@ -231,6 +240,8 @@ class ProjectBadgeDto {
       earned: _asBool(m['active'] ?? m['earned']) ?? false,
       previousBadges: previous,
       status: status,
+      expiresAt: _asDate(m['expiresAt'] ?? m['_expiresAt']),
+      fadeReason: _firstString(m, const ['fadeReason', '_fadeReason']),
       satisfied: satisfied,
       checkinsAmount:
           _asInt(m['checkinsAmount'] ?? m['_checkinsAmount']) ?? 0,
@@ -250,6 +261,8 @@ class ProjectBadgeDto {
         earned: earned,
         previousBadges: previousBadges,
         status: status,
+        expiresAt: expiresAt,
+        fadeReason: fadeReason,
         satisfied: satisfied,
         checkinsAmount: checkinsAmount,
         mustContribute: mustContribute,
@@ -359,8 +372,15 @@ List<ProjectBadgeDto> _mergeBadges({
       previousBadges: c.previousBadges.isNotEmpty
           ? c.previousBadges
           : overlay.previousBadges,
+      // Lifecycle belongs to the rule, so it comes from the catalog — the
+      // backend already resolved the fading window on both lists.
       status: c.status,
-      satisfied: c.satisfied,
+      expiresAt: c.expiresAt,
+      fadeReason: c.fadeReason,
+      // ...but `satisfied` is evaluated against *this user's* check-ins, so
+      // it only ever exists on the overlay. Reading it off the catalog left
+      // it permanently false for subscribed users.
+      satisfied: overlay.satisfied,
       checkinsAmount: c.checkinsAmount,
       mustContribute: c.mustContribute,
       taskType: c.taskType,
@@ -496,6 +516,17 @@ int? _asInt(Object? v) {
   if (v is int) return v;
   if (v is num) return v.toInt();
   if (v is String) return int.tryParse(v);
+  return null;
+}
+
+/// Mongo serialises dates as ISO-8601 strings, but a cached payload that was
+/// re-encoded locally can carry an epoch int. Take both, and treat anything
+/// unparseable as absent rather than throwing mid-parse.
+DateTime? _asDate(Object? v) {
+  if (v == null) return null;
+  if (v is DateTime) return v;
+  if (v is int) return DateTime.fromMillisecondsSinceEpoch(v, isUtc: true);
+  if (v is String && v.isNotEmpty) return DateTime.tryParse(v);
   return null;
 }
 

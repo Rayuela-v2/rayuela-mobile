@@ -80,6 +80,23 @@
 
   "badge_earned": "Conseguida",
   "badge_locked": "Por conseguir",
+
+  "badge_fading": "¡Se desvanece!",
+  "badge_fading_days": "{count, plural, one{Queda 1 día} other{Quedan {count} días}}",
+  "@badge_fading_days": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "badge_fading_hours": "{count, plural, one{Queda 1 hora} other{Quedan {count} horas}}",
+  "@badge_fading_hours": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "badge_fading_last_call": "¡Última oportunidad!",
+  "badge_fading_call_to_action": "Todavía podés conseguirla. Después, no.",
+  "badge_expired": "Se desvaneció",
+  "badge_expired_hint": "Ya nadie más puede conseguirla.",
+  "badge_expired_kept": "La conseguiste a tiempo. Es tuya para siempre.",
+  "badge_fade_reason": "Por qué se desvanece",
+
   "badge_requires": "Requiere",
   "badge_how_to_earn": "Cómo obtenerla",
   "badge_req_checkins": "{count, plural, one{1 misión} other{{count} misiones}}",
