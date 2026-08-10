@@ -425,6 +425,50 @@
   "common_retry": "Reintentar",
   "common_logout": "Cerrar sesión",
 
+  "profile_title": "Mi perfil",
+  "profile_avatar_change": "Cambiar avatar",
+  "profile_avatar_picker_title": "Elegí tu rol de expedición",
+  "profile_avatar_picker_subtitle": "Así te van a ver el resto de exploradores en Rayuela.",
+  "profile_name_label": "Nombre",
+  "profile_name_required": "Ingresá tu nombre",
+  "profile_description_label": "Sobre vos",
+  "profile_description_hint": "Contá en pocas palabras qué te trae a Rayuela.",
+  "profile_username_label": "Usuario",
+  "profile_email_label": "Correo",
+  "profile_email_locked": "Tu correo identifica tu cuenta, por eso no se puede cambiar.",
+  "profile_save": "Guardar cambios",
+  "profile_saved": "¡Perfil actualizado!",
+
+  "profile_stats_title": "Tu recorrido",
+  "profile_stats_subtitle": "Misiones, puntos e insignias",
+  "profile_stats_missions": "Misiones",
+  "profile_stats_points": "Puntos",
+  "profile_stats_badges": "Insignias",
+  "profile_stats_by_project": "Por proyecto",
+  "profile_stats_points_short": "{count} pts",
+  "@profile_stats_points_short": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "profile_stats_streak": "{count, plural, one{1 día seguido} other{{count} días seguidos}}",
+  "@profile_stats_streak": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "profile_since": "Explorando desde {date}",
+  "@profile_since": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+
+  "avatar_explorer": "Explorador/a",
+  "avatar_naturalist": "Naturalista",
+  "avatar_bug_watcher": "Observador/a de bichos",
+  "avatar_chronicler": "Cronista",
+  "avatar_cartographer": "Cartógrafo/a",
+  "avatar_water_sentinel": "Centinela del agua",
+  "avatar_night_watch": "Vigía de la noche",
+  "avatar_trailblazer": "Senderista",
+  "avatar_field_scientist": "Científico/a de campo",
+  "avatar_forest_ranger": "Guardabosques",
+
   "error_no_internet": "Sin conexión a internet.",
   "error_no_internet_long": "Sin conexión a internet.\nVerificá tu señal y reintentá.",
   "error_server": "Algo salió mal de nuestro lado.",

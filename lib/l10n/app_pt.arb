@@ -425,6 +425,50 @@
   "common_retry": "Tentar novamente",
   "common_logout": "Sair",
 
+  "profile_title": "Meu perfil",
+  "profile_avatar_change": "Trocar avatar",
+  "profile_avatar_picker_title": "Escolha seu papel na expedição",
+  "profile_avatar_picker_subtitle": "É assim que os outros exploradores vão te ver no Rayuela.",
+  "profile_name_label": "Nome",
+  "profile_name_required": "Digite seu nome",
+  "profile_description_label": "Sobre você",
+  "profile_description_hint": "Conte em poucas palavras o que te traz ao Rayuela.",
+  "profile_username_label": "Usuário",
+  "profile_email_label": "E-mail",
+  "profile_email_locked": "Seu e-mail identifica sua conta, por isso não pode ser alterado.",
+  "profile_save": "Salvar alterações",
+  "profile_saved": "Perfil atualizado!",
+
+  "profile_stats_title": "Sua jornada",
+  "profile_stats_subtitle": "Missões, pontos e insígnias",
+  "profile_stats_missions": "Missões",
+  "profile_stats_points": "Pontos",
+  "profile_stats_badges": "Insígnias",
+  "profile_stats_by_project": "Por projeto",
+  "profile_stats_points_short": "{count} pts",
+  "@profile_stats_points_short": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "profile_stats_streak": "{count, plural, one{1 dia seguido} other{{count} dias seguidos}}",
+  "@profile_stats_streak": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "profile_since": "Explorando desde {date}",
+  "@profile_since": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+
+  "avatar_explorer": "Explorador(a)",
+  "avatar_naturalist": "Naturalista",
+  "avatar_bug_watcher": "Observador(a) de bichos",
+  "avatar_chronicler": "Cronista",
+  "avatar_cartographer": "Cartógrafo(a)",
+  "avatar_water_sentinel": "Sentinela da água",
+  "avatar_night_watch": "Vigia da noite",
+  "avatar_trailblazer": "Trilheiro(a)",
+  "avatar_field_scientist": "Cientista de campo",
+  "avatar_forest_ranger": "Guarda florestal",
+
   "error_no_internet": "Sem conexão com a internet.",
   "error_no_internet_long": "Sem conexão com a internet.\nVerifique seu sinal e tente novamente.",
   "error_server": "Algo deu errado do nosso lado.",

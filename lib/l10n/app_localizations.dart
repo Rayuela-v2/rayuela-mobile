@@ -1588,6 +1588,198 @@ abstract class AppLocalizations {
   /// **'Log out'**
   String get common_logout;
 
+  /// No description provided for @profile_title.
+  ///
+  /// In en, this message translates to:
+  /// **'My profile'**
+  String get profile_title;
+
+  /// No description provided for @profile_avatar_change.
+  ///
+  /// In en, this message translates to:
+  /// **'Change avatar'**
+  String get profile_avatar_change;
+
+  /// No description provided for @profile_avatar_picker_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick your expedition role'**
+  String get profile_avatar_picker_title;
+
+  /// No description provided for @profile_avatar_picker_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This is how other explorers will see you on Rayuela.'**
+  String get profile_avatar_picker_subtitle;
+
+  /// No description provided for @profile_name_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get profile_name_label;
+
+  /// No description provided for @profile_name_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your name'**
+  String get profile_name_required;
+
+  /// No description provided for @profile_description_label.
+  ///
+  /// In en, this message translates to:
+  /// **'About you'**
+  String get profile_description_label;
+
+  /// No description provided for @profile_description_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us in a few words what brings you to Rayuela.'**
+  String get profile_description_hint;
+
+  /// No description provided for @profile_username_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
+  String get profile_username_label;
+
+  /// No description provided for @profile_email_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get profile_email_label;
+
+  /// No description provided for @profile_email_locked.
+  ///
+  /// In en, this message translates to:
+  /// **'Your email identifies your account, so it can\'t be changed.'**
+  String get profile_email_locked;
+
+  /// No description provided for @profile_save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get profile_save;
+
+  /// No description provided for @profile_saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated!'**
+  String get profile_saved;
+
+  /// No description provided for @profile_stats_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Your journey'**
+  String get profile_stats_title;
+
+  /// No description provided for @profile_stats_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Missions, points and badges'**
+  String get profile_stats_subtitle;
+
+  /// No description provided for @profile_stats_missions.
+  ///
+  /// In en, this message translates to:
+  /// **'Missions'**
+  String get profile_stats_missions;
+
+  /// No description provided for @profile_stats_points.
+  ///
+  /// In en, this message translates to:
+  /// **'Points'**
+  String get profile_stats_points;
+
+  /// No description provided for @profile_stats_badges.
+  ///
+  /// In en, this message translates to:
+  /// **'Badges'**
+  String get profile_stats_badges;
+
+  /// No description provided for @profile_stats_by_project.
+  ///
+  /// In en, this message translates to:
+  /// **'By project'**
+  String get profile_stats_by_project;
+
+  /// No description provided for @profile_stats_points_short.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} pts'**
+  String profile_stats_points_short(int count);
+
+  /// No description provided for @profile_stats_streak.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 day streak} other{{count} day streak}}'**
+  String profile_stats_streak(int count);
+
+  /// No description provided for @profile_since.
+  ///
+  /// In en, this message translates to:
+  /// **'Exploring since {date}'**
+  String profile_since(String date);
+
+  /// No description provided for @avatar_explorer.
+  ///
+  /// In en, this message translates to:
+  /// **'Explorer'**
+  String get avatar_explorer;
+
+  /// No description provided for @avatar_naturalist.
+  ///
+  /// In en, this message translates to:
+  /// **'Naturalist'**
+  String get avatar_naturalist;
+
+  /// No description provided for @avatar_bug_watcher.
+  ///
+  /// In en, this message translates to:
+  /// **'Bug watcher'**
+  String get avatar_bug_watcher;
+
+  /// No description provided for @avatar_chronicler.
+  ///
+  /// In en, this message translates to:
+  /// **'Chronicler'**
+  String get avatar_chronicler;
+
+  /// No description provided for @avatar_cartographer.
+  ///
+  /// In en, this message translates to:
+  /// **'Cartographer'**
+  String get avatar_cartographer;
+
+  /// No description provided for @avatar_water_sentinel.
+  ///
+  /// In en, this message translates to:
+  /// **'Water sentinel'**
+  String get avatar_water_sentinel;
+
+  /// No description provided for @avatar_night_watch.
+  ///
+  /// In en, this message translates to:
+  /// **'Night watch'**
+  String get avatar_night_watch;
+
+  /// No description provided for @avatar_trailblazer.
+  ///
+  /// In en, this message translates to:
+  /// **'Trailblazer'**
+  String get avatar_trailblazer;
+
+  /// No description provided for @avatar_field_scientist.
+  ///
+  /// In en, this message translates to:
+  /// **'Field scientist'**
+  String get avatar_field_scientist;
+
+  /// No description provided for @avatar_forest_ranger.
+  ///
+  /// In en, this message translates to:
+  /// **'Forest ranger'**
+  String get avatar_forest_ranger;
+
   /// No description provided for @error_no_internet.
   ///
   /// In en, this message translates to:

@@ -177,6 +177,29 @@ class AuthController extends StateNotifier<AuthState> {
     );
   }
 
+  /// Save profile edits and swap the authenticated user in place, so every
+  /// screen bound to [authControllerProvider] (dashboard greeting, avatar)
+  /// updates without a re-fetch. Returns the error on failure.
+  Future<AppException?> updateProfile({
+    String? completeName,
+    String? description,
+    String? profileImage,
+  }) async {
+    if (state is! AuthStateAuthenticated) return null;
+    final res = await _repo.updateProfile(
+      completeName: completeName,
+      description: description,
+      profileImage: profileImage,
+    );
+    return switch (res) {
+      Success<AuthUser>(:final value) => () {
+          state = AuthStateAuthenticated(value);
+          return null;
+        }(),
+      Failure<AuthUser>(:final error) => error,
+    };
+  }
+
   /// Called by the refresh interceptor when the refresh token fails.
   void forceSignOut() {
     state = const AuthStateUnauthenticated(reason: 'Session expired');

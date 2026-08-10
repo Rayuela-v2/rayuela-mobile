@@ -10,6 +10,7 @@ import '../../../../shared/widgets/language_picker.dart';
 import '../../../../shared/widgets/last_updated_chip.dart';
 import '../../../auth/presentation/providers/auth_controller.dart';
 import '../../../checkin/presentation/widgets/outbox_badge.dart';
+import '../../../profile/presentation/widgets/user_avatar.dart';
 import '../providers/projects_providers.dart';
 import '../widgets/project_card.dart';
 
@@ -37,13 +38,19 @@ class DashboardScreen extends ConsumerWidget {
           // the queue. Auto-hides when the system is idle.
           const SyncStatusBadge(),
           const LanguagePickerButton(),
-          IconButton(
-            tooltip: t.common_logout,
-            onPressed: () async {
-              await ref.read(authControllerProvider.notifier).logout();
-            },
-            icon: const Icon(Icons.logout),
-          ),
+          // Logout moved into the profile screen — the avatar is the entry
+          // point, like every other app the volunteers already use.
+          if (authState is AuthStateAuthenticated)
+            IconButton(
+              tooltip: t.profile_title,
+              onPressed: () => context.pushNamed(AppRoute.profile),
+              icon: UserAvatar(
+                imageValue: authState.user.profileImageUrl,
+                fallbackLabel: authState.user.completeName,
+                radius: 16,
+              ),
+            ),
+          const SizedBox(width: 4),
         ],
       ),
       body: RefreshIndicator(
