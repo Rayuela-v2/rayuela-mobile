@@ -10,6 +10,9 @@ import '../../../../features/auth/presentation/providers/auth_controller.dart';
 import '../../../../features/checkin/presentation/widgets/user_checkins_view.dart';
 import '../../../../features/leaderboard/presentation/providers/leaderboard_providers.dart';
 import '../../../../features/leaderboard/presentation/widgets/leaderboard_view.dart';
+import '../../../../features/notifications/domain/entities/app_notification.dart';
+import '../../../../features/notifications/presentation/providers/notifications_providers.dart';
+import '../../../../features/notifications/presentation/widgets/badge_fading_popup.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../../../shared/widgets/linkified_text.dart';
@@ -36,6 +39,7 @@ class ProjectDetailScreen extends ConsumerWidget {
     super.key,
     required this.projectId,
     this.fallbackName,
+    this.focusBadge,
   });
 
   final String projectId;
@@ -44,6 +48,12 @@ class ProjectDetailScreen extends ConsumerWidget {
   /// already knows the project name; pass it in via the route's
   /// queryParameter so we don't show "Loading..." for half a second.
   final String? fallbackName;
+
+  /// Name of a badge to open the detail sheet for once the project loads.
+  /// Set by the `?badge=` query parameter, which is how the notification
+  /// centre lands the user on the badge it was actually talking about
+  /// instead of dumping them on the project and making them hunt for it.
+  final String? focusBadge;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -77,7 +87,11 @@ class ProjectDetailScreen extends ConsumerWidget {
             ),
           );
         }
-        return _SubscribedProjectView(detail: detail, title: title);
+        return _SubscribedProjectView(
+          detail: detail,
+          title: title,
+          focusBadge: focusBadge,
+        );
       },
       error: (error, _) => Scaffold(
         appBar: AppBar(title: title),
@@ -109,10 +123,15 @@ class ProjectDetailScreen extends ConsumerWidget {
 /// so the primary action is always one tap away without ever duplicating a
 /// visible control.
 class _SubscribedProjectView extends ConsumerStatefulWidget {
-  const _SubscribedProjectView({required this.detail, required this.title});
+  const _SubscribedProjectView({
+    required this.detail,
+    required this.title,
+    this.focusBadge,
+  });
 
   final ProjectDetail detail;
   final Widget title;
+  final String? focusBadge;
 
   @override
   ConsumerState<_SubscribedProjectView> createState() =>
@@ -128,6 +147,10 @@ class _SubscribedProjectViewState
   int _tabIndex = 0;
   bool _inlineButtonVisible = false;
 
+  /// One interruption per visit, however many times the pending-popup
+  /// provider re-emits underneath us.
+  bool _popupHandled = false;
+
   @override
   void initState() {
     super.initState();
@@ -137,6 +160,25 @@ class _SubscribedProjectViewState
         setState(() => _tabIndex = _tabController.index);
       }
     });
+
+    // Deep link from the notification centre: open the badge it was about.
+    // After the first frame, not during it — this pushes a route.
+    final focus = widget.focusBadge;
+    if (focus != null && focus.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _openBadge(focus));
+    }
+  }
+
+  /// Opens the detail sheet for a badge by name, if the catalog still has
+  /// one. A renamed or deleted badge just means no sheet — never a crash.
+  void _openBadge(String name) {
+    if (!mounted) return;
+    for (final badge in widget.detail.badges) {
+      if (badge.name == name) {
+        _showBadgeDetails(context, badge);
+        return;
+      }
+    }
   }
 
   @override
@@ -160,6 +202,23 @@ class _SubscribedProjectViewState
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
     final detail = widget.detail;
+
+    // Watched, not a one-shot at mount: the notification is written by the
+    // sync this very screen kicks off, so checking once on the first frame
+    // loses the race and the popup only turns up on some later visit.
+    // Watching covers both orderings — already pending, or arriving after.
+    final AppNotification? pending =
+        ref.watch(pendingPopupProvider(detail.id)).asData?.value;
+    if (pending != null && !_popupHandled) {
+      // Latch during build so a rebuild can't queue a second dialog.
+      _popupHandled = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        showPendingBadgePopup(context, ref, pending: pending).then((goTo) {
+          if (goTo != null) _openBadge(goTo);
+        });
+      });
+    }
 
     return Scaffold(
       appBar: AppBar(

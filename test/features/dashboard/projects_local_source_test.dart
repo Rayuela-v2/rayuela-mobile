@@ -116,5 +116,89 @@ void main() {
       expect(d.badges.first.earned, isTrue);
       expect(d.user!.points, 100);
     });
+
+    test('keeps the fading window and the earning rule through the cache',
+        () async {
+      // Every screen renders from cache on its first frame, so anything
+      // dropped here is invisible until the network answers — and stays
+      // invisible for good while offline.
+      final expiresAt = DateTime.utc(2026, 7, 1, 9);
+      final detail = ProjectDetail(
+        id: 'p1',
+        name: 'Plaza',
+        description: 'd',
+        available: true,
+        badges: [
+          ProjectBadge(
+            name: 'Explorador',
+            status: 'faded',
+            expiresAt: expiresAt,
+            fadeReason: 'poca actividad',
+            satisfied: true,
+            checkinsAmount: 5,
+            mustContribute: true,
+            taskType: 'observation',
+            areaId: 'North',
+            timeIntervalId: 'Fines de semana',
+          ),
+        ],
+      );
+
+      await local.writeDetail(
+        userId: 'u1',
+        projectId: 'p1',
+        detail: detail,
+        fetchedAt: DateTime.utc(2026, 6, 1, 12),
+      );
+
+      final badge =
+          (await local.readDetail(userId: 'u1', projectId: 'p1'))!
+              .value
+              .badges
+              .single;
+
+      expect(badge.status, 'faded');
+      expect(badge.expiresAt, expiresAt);
+      expect(badge.fadeReason, 'poca actividad');
+      expect(badge.satisfied, isTrue);
+      expect(badge.checkinsAmount, 5);
+      expect(badge.mustContribute, isTrue);
+      expect(badge.taskType, 'observation');
+      expect(badge.areaId, 'North');
+      expect(badge.timeIntervalId, 'Fines de semana');
+
+      // The countdown has to survive, not just the raw fields.
+      expect(
+        badge.availabilityAt(DateTime.utc(2026, 6, 20)),
+        BadgeAvailability.fading,
+      );
+    });
+
+    test('a badge cached before this change decodes to sane defaults',
+        () async {
+      // Rows written by the previous build simply lack the new keys.
+      const detail = ProjectDetail(
+        id: 'p1',
+        name: 'Plaza',
+        description: 'd',
+        available: true,
+        badges: [ProjectBadge(name: 'Legacy')],
+      );
+      await local.writeDetail(
+        userId: 'u1',
+        projectId: 'p1',
+        detail: detail,
+        fetchedAt: DateTime.utc(2026, 6, 1, 12),
+      );
+
+      final badge =
+          (await local.readDetail(userId: 'u1', projectId: 'p1'))!
+              .value
+              .badges
+              .single;
+      expect(badge.status, 'active');
+      expect(badge.expiresAt, isNull);
+      expect(badge.availability, BadgeAvailability.active);
+    });
   });
 }

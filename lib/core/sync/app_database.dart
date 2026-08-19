@@ -33,7 +33,7 @@ class AppDatabase {
   /// Current schema version. Bump this whenever a new migration is added
   /// in [_migrations]. The DB engine guarantees `onUpgrade` runs exactly
   /// once per version step on existing installs.
-  static const int schemaVersion = 1;
+  static const int schemaVersion = 2;
 
   /// Open (or create) the local database.
   ///
@@ -113,6 +113,7 @@ class AppDatabase {
   /// edit existing entries (released installs already ran them).
   static final Map<int, Future<void> Function(Database db)> _migrations = {
     1: _migrateToV1,
+    2: _migrateToV2,
   };
 
   static Future<void> _migrateToV1(Database db) async {
@@ -192,5 +193,40 @@ class AppDatabase {
         )
       ''');
     }
+  }
+
+  /// The in-app notification centre.
+  ///
+  /// Deliberately NOT a cache: rows are derived locally from what sync sees
+  /// (a badge that started fading, one whose window closed) and they are the
+  /// only record that the user was ever told. Two consequences:
+  ///
+  ///   * `id` is a deterministic fingerprint of the event, so re-syncing the
+  ///     same project ten times inserts one row. `INSERT OR IGNORE` does the
+  ///     whole dedupe — no read-modify-write, no races.
+  ///   * this table must survive a cache wipe. Clearing it re-announces
+  ///     everything the user already read.
+  ///
+  /// Type-specific fields live in `data_json` rather than as columns, so a
+  /// new notification kind is a new `type` string and nothing else.
+  static Future<void> _migrateToV2(Database db) async {
+    await db.execute('''
+      CREATE TABLE app_notifications (
+        id           TEXT PRIMARY KEY,
+        user_id      TEXT NOT NULL,
+        type         TEXT NOT NULL,
+        project_id   TEXT NOT NULL,
+        subject      TEXT NOT NULL,
+        data_json    TEXT NOT NULL,
+        created_at   TEXT NOT NULL,
+        read_at      TEXT,
+        seen_at      TEXT
+      )
+    ''');
+    // The centre lists newest-first per user; the bell counts unread.
+    await db.execute(
+      'CREATE INDEX idx_notifications_user_created '
+      'ON app_notifications(user_id, created_at DESC)',
+    );
   }
 }

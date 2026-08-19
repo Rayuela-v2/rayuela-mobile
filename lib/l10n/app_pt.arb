@@ -97,6 +97,33 @@
   "badge_expired_kept": "Você conquistou a tempo. É sua para sempre.",
   "badge_fade_reason": "Por que está desaparecendo",
 
+  "notifications_title": "Novidades",
+  "notifications_empty": "Tudo calmo por aqui",
+  "notifications_empty_hint": "Quando uma insígnia começar a desaparecer, a gente avisa.",
+  "notifications_mark_all_read": "Marcar tudo como lido",
+  "notifications_unread": "{count, plural, one{1 novidade não lida} other{{count} novidades não lidas}}",
+  "@notifications_unread": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "notification_badge_fading_title": "«{badge}» está desaparecendo",
+  "@notification_badge_fading_title": {
+    "placeholders": { "badge": { "type": "String" } }
+  },
+  "notification_badge_fading_body": "Você ainda pode conquistá-la em {project}.",
+  "@notification_badge_fading_body": {
+    "placeholders": { "project": { "type": "String" } }
+  },
+  "notification_badge_expired_title": "«{badge}» desapareceu",
+  "@notification_badge_expired_title": {
+    "placeholders": { "badge": { "type": "String" } }
+  },
+  "notification_badge_expired_body": "Ninguém mais pode conquistá-la em {project}.",
+  "@notification_badge_expired_body": {
+    "placeholders": { "project": { "type": "String" } }
+  },
+  "notification_popup_go": "Ver insígnia",
+  "notification_popup_later": "Agora não",
+
   "badge_requires": "Requer",
   "badge_how_to_earn": "Como obtê-la",
   "badge_req_checkins": "{count, plural, one{1 missão} other{{count} missões}}",

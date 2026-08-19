@@ -80,6 +80,8 @@ dependencies:
   # fails to build on Flutter 3.29+ where those symbols are gone.
   workmanager: ^0.6.0
   url_launcher: ^6.3.2
+  flutter_local_notifications: ^22.3.0
+  timezone: ^0.11.1
 
   # Planned in later phases (added here so pubspec is stable):
   # firebase_core: ^3.6.0

@@ -97,6 +97,33 @@
   "badge_expired_kept": "La conseguiste a tiempo. Es tuya para siempre.",
   "badge_fade_reason": "Por qué se desvanece",
 
+  "notifications_title": "Novedades",
+  "notifications_empty": "Todo tranquilo por acá",
+  "notifications_empty_hint": "Cuando una insignia empiece a desvanecerse, te avisamos.",
+  "notifications_mark_all_read": "Marcar todo como leído",
+  "notifications_unread": "{count, plural, one{1 novedad sin leer} other{{count} novedades sin leer}}",
+  "@notifications_unread": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "notification_badge_fading_title": "«{badge}» se está desvaneciendo",
+  "@notification_badge_fading_title": {
+    "placeholders": { "badge": { "type": "String" } }
+  },
+  "notification_badge_fading_body": "Todavía la podés conseguir en {project}.",
+  "@notification_badge_fading_body": {
+    "placeholders": { "project": { "type": "String" } }
+  },
+  "notification_badge_expired_title": "«{badge}» se desvaneció",
+  "@notification_badge_expired_title": {
+    "placeholders": { "badge": { "type": "String" } }
+  },
+  "notification_badge_expired_body": "Ya nadie más puede conseguirla en {project}.",
+  "@notification_badge_expired_body": {
+    "placeholders": { "project": { "type": "String" } }
+  },
+  "notification_popup_go": "Ver insignia",
+  "notification_popup_later": "Ahora no",
+
   "badge_requires": "Requiere",
   "badge_how_to_earn": "Cómo obtenerla",
   "badge_req_checkins": "{count, plural, one{1 misión} other{{count} misiones}}",
