@@ -534,5 +534,15 @@
   "wizard_confirm": "Confirm",
   "wizard_step2_guide_confirmation": "Let's confirm this information before finishing",
   "location_using_current": "Using current location",
-  "wizard_date_today": "Today"
+  "wizard_date_today": "Today",
+
+  "forgot_title": "Forgot your password?",
+  "forgot_subtitle": "Enter your email and we'll send you a link to set a new password.",
+  "forgot_submit": "Send link",
+  "forgot_sent_title": "Check your email",
+  "forgot_sent_body": "If an account exists for {email}, we sent it a link to set a new password.",
+  "@forgot_sent_body": {
+    "placeholders": { "email": { "type": "String" } }
+  },
+  "forgot_back_to_login": "Back to log in"
 }

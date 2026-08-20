@@ -156,6 +156,14 @@ class AuthController extends StateNotifier<AuthState> {
     };
   }
 
+  Future<AppException?> forgotPassword(String email) async {
+    final res = await _repo.forgotPassword(email);
+    return switch (res) {
+      Success<void>() => null,
+      Failure<void>(:final error) => error,
+    };
+  }
+
   Future<void> logout() async {
     await _repo.logout();
     // Best-effort: drop any cached Google account so the next sign-in

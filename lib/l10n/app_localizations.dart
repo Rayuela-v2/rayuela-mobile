@@ -2061,6 +2061,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Today'**
   String get wizard_date_today;
+
+  /// No description provided for @forgot_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot your password?'**
+  String get forgot_title;
+
+  /// No description provided for @forgot_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email and we\'ll send you a link to set a new password.'**
+  String get forgot_subtitle;
+
+  /// No description provided for @forgot_submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Send link'**
+  String get forgot_submit;
+
+  /// No description provided for @forgot_sent_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your email'**
+  String get forgot_sent_title;
+
+  /// No description provided for @forgot_sent_body.
+  ///
+  /// In en, this message translates to:
+  /// **'If an account exists for {email}, we sent it a link to set a new password.'**
+  String forgot_sent_body(String email);
+
+  /// No description provided for @forgot_back_to_login.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to log in'**
+  String get forgot_back_to_login;
 }
 
 class _AppLocalizationsDelegate

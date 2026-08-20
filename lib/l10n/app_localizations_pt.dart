@@ -1187,4 +1187,25 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get wizard_date_today => 'Hoje';
+
+  @override
+  String get forgot_title => 'Esqueceu sua senha?';
+
+  @override
+  String get forgot_subtitle =>
+      'Digite seu e-mail e enviaremos um link para criar uma nova senha.';
+
+  @override
+  String get forgot_submit => 'Enviar link';
+
+  @override
+  String get forgot_sent_title => 'Verifique seu e-mail';
+
+  @override
+  String forgot_sent_body(String email) {
+    return 'Se existir uma conta com $email, enviamos um link para criar uma nova senha.';
+  }
+
+  @override
+  String get forgot_back_to_login => 'Voltar ao login';
 }

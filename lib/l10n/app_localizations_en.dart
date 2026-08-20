@@ -1182,4 +1182,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get wizard_date_today => 'Today';
+
+  @override
+  String get forgot_title => 'Forgot your password?';
+
+  @override
+  String get forgot_subtitle =>
+      'Enter your email and we\'ll send you a link to set a new password.';
+
+  @override
+  String get forgot_submit => 'Send link';
+
+  @override
+  String get forgot_sent_title => 'Check your email';
+
+  @override
+  String forgot_sent_body(String email) {
+    return 'If an account exists for $email, we sent it a link to set a new password.';
+  }
+
+  @override
+  String get forgot_back_to_login => 'Back to log in';
 }

@@ -1189,4 +1189,25 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get wizard_date_today => 'Hoy';
+
+  @override
+  String get forgot_title => '¿Olvidaste tu contraseña?';
+
+  @override
+  String get forgot_subtitle =>
+      'Ingresa tu correo y te enviamos un enlace para crear una nueva contraseña.';
+
+  @override
+  String get forgot_submit => 'Enviar enlace';
+
+  @override
+  String get forgot_sent_title => 'Revisa tu correo';
+
+  @override
+  String forgot_sent_body(String email) {
+    return 'Si existe una cuenta con $email, le enviamos un enlace para crear una nueva contraseña.';
+  }
+
+  @override
+  String get forgot_back_to_login => 'Volver al inicio de sesión';
 }

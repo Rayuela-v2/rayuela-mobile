@@ -262,9 +262,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: TextButton(
                     onPressed: _submitting
                         ? null
-                        : () {
-                            // TODO(phase1): push ForgotPasswordScreen.
-                          },
+                        : () => context.pushNamed(AppRoute.forgotPassword),
                     child: Text(t.login_forgot),
                   ),
                 ),

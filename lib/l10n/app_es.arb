@@ -534,5 +534,12 @@
   "wizard_confirm": "Confirmar",
   "wizard_step2_guide_confirmation": "Confirmemos esta información antes de terminar",
   "location_using_current": "Usando ubicación actual",
-  "wizard_date_today": "Hoy"
+  "wizard_date_today": "Hoy",
+
+  "forgot_title": "¿Olvidaste tu contraseña?",
+  "forgot_subtitle": "Ingresa tu correo y te enviamos un enlace para crear una nueva contraseña.",
+  "forgot_submit": "Enviar enlace",
+  "forgot_sent_title": "Revisa tu correo",
+  "forgot_sent_body": "Si existe una cuenta con {email}, le enviamos un enlace para crear una nueva contraseña.",
+  "forgot_back_to_login": "Volver al inicio de sesión"
 }
