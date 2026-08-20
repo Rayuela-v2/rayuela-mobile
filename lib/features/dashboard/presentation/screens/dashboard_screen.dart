@@ -10,6 +10,7 @@ import '../../../../shared/widgets/language_picker.dart';
 import '../../../../shared/widgets/last_updated_chip.dart';
 import '../../../auth/presentation/providers/auth_controller.dart';
 import '../../../checkin/presentation/widgets/outbox_badge.dart';
+import '../../../notifications/presentation/widgets/notification_bell.dart';
 import '../../../profile/presentation/widgets/user_avatar.dart';
 import '../providers/projects_providers.dart';
 import '../widgets/project_card.dart';
@@ -37,6 +38,9 @@ class DashboardScreen extends ConsumerWidget {
           // first thing the user sees when something is going on with
           // the queue. Auto-hides when the system is idle.
           const SyncStatusBadge(),
+          // Only for signed-in users: notifications are per-account, and an
+          // empty bell on the public dashboard is a dead end.
+          if (authState is AuthStateAuthenticated) const NotificationBell(),
           const LanguagePickerButton(),
           // Logout moved into the profile screen — the avatar is the entry
           // point, like every other app the volunteers already use.

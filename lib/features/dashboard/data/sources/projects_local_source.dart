@@ -193,12 +193,31 @@ List<TaskType> _decodeTaskTypes(Object? raw) {
   }).whereType<TaskType>().toList(growable: false);
 }
 
+/// The whole badge, not a summary of it.
+///
+/// This used to persist five fields, which meant every badge read back from
+/// the cache was a plain locked badge: no fading status, no countdown, no
+/// "how to earn it". Offline — and on the first frame of every screen, which
+/// always renders from cache before the network answers — the entire fading
+/// feature quietly disappeared.
+///
+/// Old rows simply lack the newer keys and decode to the defaults; the next
+/// sync overwrites them, so no migration is needed.
 Map<String, Object?> _encodeBadge(ProjectBadge b) => {
       'name': b.name,
       'description': b.description,
       'imageUrl': b.imageUrl,
       'earned': b.earned,
       'previousBadges': b.previousBadges,
+      'status': b.status,
+      'expiresAt': b.expiresAt?.toIso8601String(),
+      'fadeReason': b.fadeReason,
+      'satisfied': b.satisfied,
+      'checkinsAmount': b.checkinsAmount,
+      'mustContribute': b.mustContribute,
+      'taskType': b.taskType,
+      'areaId': b.areaId,
+      'timeIntervalId': b.timeIntervalId,
     };
 
 List<ProjectBadge> _decodeBadges(Object? raw) {
@@ -210,6 +229,15 @@ List<ProjectBadge> _decodeBadges(Object? raw) {
       imageUrl: m['imageUrl']?.toString(),
       earned: m['earned'] == true,
       previousBadges: _decodeStringList(m['previousBadges']),
+      status: m['status']?.toString() ?? 'active',
+      expiresAt: DateTime.tryParse(m['expiresAt']?.toString() ?? ''),
+      fadeReason: m['fadeReason']?.toString(),
+      satisfied: m['satisfied'] == true,
+      checkinsAmount: (m['checkinsAmount'] as num?)?.toInt() ?? 0,
+      mustContribute: m['mustContribute'] == true,
+      taskType: m['taskType']?.toString(),
+      areaId: m['areaId']?.toString(),
+      timeIntervalId: m['timeIntervalId']?.toString(),
     );
   }).toList(growable: false);
 }

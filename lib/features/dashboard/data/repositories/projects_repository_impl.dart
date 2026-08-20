@@ -23,12 +23,20 @@ class ProjectsRepositoryImpl implements ProjectsRepository {
     this._remote, {
     AuthUser Function()? currentUser,
     ProjectsLocalSource? local,
+    Future<void> Function(String userId, ProjectDetail detail)? onDetailSynced,
   })  : _currentUser = currentUser,
-        _local = local;
+        _local = local,
+        _onDetailSynced = onDetailSynced;
 
   final ProjectsRemoteSource _remote;
   final ProjectsLocalSource? _local;
   final AuthUser Function()? _currentUser;
+
+  /// Called with every freshly-fetched project detail. The notification
+  /// centre hangs off this to spot badges that started (or finished) fading
+  /// — the repository itself stays ignorant of what a notification is.
+  final Future<void> Function(String userId, ProjectDetail detail)?
+      _onDetailSynced;
 
   @override
   Future<Result<List<ProjectSummary>>> getSubscribedProjects() async {
@@ -119,15 +127,9 @@ class ProjectsRepositoryImpl implements ProjectsRepository {
           Failure(:final error) => throw error,
         };
       },
-      writeLocal: (value, _) async {
-        if (local == null || userId.isEmpty) return;
-        await local.writeDetail(
-          userId: userId,
-          projectId: id,
-          detail: value,
-          fetchedAt: DateTime.now(),
-        );
-      },
+      // Same funnel as the Future-based path so a detail can't reach the
+      // user through one route and skip the notification scan on the other.
+      writeLocal: (value, _) => _writeDetailCache(id, value),
     );
   }
 
@@ -165,12 +167,21 @@ class ProjectsRepositoryImpl implements ProjectsRepository {
   Future<void> _writeDetailCache(String id, ProjectDetail detail) async {
     final local = _local;
     final userId = _userId();
-    if (local == null || userId.isEmpty) return;
-    await local.writeDetail(
+    if (userId.isEmpty) return;
+
+    await local?.writeDetail(
       userId: userId,
       projectId: id,
       detail: detail,
       fetchedAt: DateTime.now(),
     );
+
+    // Never let a notification-side failure take down a project load: the
+    // user came here to see the project, not the bell.
+    try {
+      await _onDetailSynced?.call(userId, detail);
+    } catch (_) {
+      // Intentionally swallowed — the next sync re-derives the same events.
+    }
   }
 }

@@ -256,6 +256,56 @@ class AppLocalizationsEn extends AppLocalizations {
   String get badge_fade_reason => 'Why it\'s fading';
 
   @override
+  String get notifications_title => 'What\'s new';
+
+  @override
+  String get notifications_empty => 'All quiet here';
+
+  @override
+  String get notifications_empty_hint =>
+      'When a badge starts fading, we\'ll let you know.';
+
+  @override
+  String get notifications_mark_all_read => 'Mark all as read';
+
+  @override
+  String notifications_unread(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count unread updates',
+      one: '1 unread update',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String notification_badge_fading_title(String badge) {
+    return '\"$badge\" is fading away';
+  }
+
+  @override
+  String notification_badge_fading_body(String project) {
+    return 'You can still earn it in $project.';
+  }
+
+  @override
+  String notification_badge_expired_title(String badge) {
+    return '\"$badge\" faded away';
+  }
+
+  @override
+  String notification_badge_expired_body(String project) {
+    return 'Nobody else can earn it in $project now.';
+  }
+
+  @override
+  String get notification_popup_go => 'See badge';
+
+  @override
+  String get notification_popup_later => 'Not now';
+
+  @override
   String get badge_requires => 'Requires';
 
   @override

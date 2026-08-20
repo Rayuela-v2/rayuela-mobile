@@ -260,6 +260,56 @@ class AppLocalizationsPt extends AppLocalizations {
   String get badge_fade_reason => 'Por que está desaparecendo';
 
   @override
+  String get notifications_title => 'Novidades';
+
+  @override
+  String get notifications_empty => 'Tudo calmo por aqui';
+
+  @override
+  String get notifications_empty_hint =>
+      'Quando uma insígnia começar a desaparecer, a gente avisa.';
+
+  @override
+  String get notifications_mark_all_read => 'Marcar tudo como lido';
+
+  @override
+  String notifications_unread(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count novidades não lidas',
+      one: '1 novidade não lida',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String notification_badge_fading_title(String badge) {
+    return '«$badge» está desaparecendo';
+  }
+
+  @override
+  String notification_badge_fading_body(String project) {
+    return 'Você ainda pode conquistá-la em $project.';
+  }
+
+  @override
+  String notification_badge_expired_title(String badge) {
+    return '«$badge» desapareceu';
+  }
+
+  @override
+  String notification_badge_expired_body(String project) {
+    return 'Ninguém mais pode conquistá-la em $project.';
+  }
+
+  @override
+  String get notification_popup_go => 'Ver insígnia';
+
+  @override
+  String get notification_popup_later => 'Agora não';
+
+  @override
   String get badge_requires => 'Requer';
 
   @override

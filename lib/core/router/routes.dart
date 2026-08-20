@@ -15,6 +15,7 @@ class AppRoute {
   static const String checkin = 'project-checkin';
   static const String checkinResult = 'project-checkin-result';
   static const String pendingData = 'pending-data';
+  static const String notifications = 'notifications';
   static const String adminNotSupported = 'admin-not-supported';
 }
 
@@ -33,5 +34,6 @@ class AppPath {
   static const String checkin = '/project/:projectId/checkin';
   static const String checkinResult = '/project/:projectId/checkin/result';
   static const String pendingData = '/pending-data';
+  static const String notifications = '/notifications';
   static const String adminNotSupported = '/admin-not-supported';
 }

@@ -97,6 +97,33 @@
   "badge_expired_kept": "You got it in time. It's yours for good.",
   "badge_fade_reason": "Why it's fading",
 
+  "notifications_title": "What's new",
+  "notifications_empty": "All quiet here",
+  "notifications_empty_hint": "When a badge starts fading, we'll let you know.",
+  "notifications_mark_all_read": "Mark all as read",
+  "notifications_unread": "{count, plural, one{1 unread update} other{{count} unread updates}}",
+  "@notifications_unread": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "notification_badge_fading_title": "\"{badge}\" is fading away",
+  "@notification_badge_fading_title": {
+    "placeholders": { "badge": { "type": "String" } }
+  },
+  "notification_badge_fading_body": "You can still earn it in {project}.",
+  "@notification_badge_fading_body": {
+    "placeholders": { "project": { "type": "String" } }
+  },
+  "notification_badge_expired_title": "\"{badge}\" faded away",
+  "@notification_badge_expired_title": {
+    "placeholders": { "badge": { "type": "String" } }
+  },
+  "notification_badge_expired_body": "Nobody else can earn it in {project} now.",
+  "@notification_badge_expired_body": {
+    "placeholders": { "project": { "type": "String" } }
+  },
+  "notification_popup_go": "See badge",
+  "notification_popup_later": "Not now",
+
   "badge_requires": "Requires",
   "badge_how_to_earn": "How to earn it",
   "badge_req_checkins": "{count, plural, one{1 mission} other{{count} missions}}",

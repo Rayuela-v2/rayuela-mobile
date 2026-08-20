@@ -15,6 +15,7 @@ import '../../features/checkin/presentation/screens/step3_result_screen.dart';
 import '../../features/dashboard/domain/entities/project_detail.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/dashboard/presentation/screens/project_detail_screen.dart';
+import '../../features/notifications/presentation/screens/notifications_screen.dart';
 import '../../features/profile/presentation/screens/journey_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/tasks/presentation/screens/tasks_screen.dart';
@@ -80,6 +81,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           return ProjectDetailScreen(
             projectId: projectId,
             fallbackName: projectName,
+            focusBadge: state.uri.queryParameters['badge'],
           );
         },
       ),
@@ -174,6 +176,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: AppPath.pendingData,
         name: AppRoute.pendingData,
         builder: (_, __) => const PendingDataScreen(),
+      ),
+      GoRoute(
+        path: AppPath.notifications,
+        name: AppRoute.notifications,
+        builder: (_, __) => const NotificationsScreen(),
       ),
       GoRoute(
         path: AppPath.adminNotSupported,

@@ -4,6 +4,7 @@ import '../../../../core/cache/cached_value.dart';
 import '../../../../shared/providers/core_providers.dart';
 import '../../../auth/domain/entities/auth_user.dart';
 import '../../../auth/presentation/providers/auth_controller.dart';
+import '../../../notifications/presentation/providers/notifications_providers.dart';
 import '../../data/repositories/projects_repository_impl.dart';
 import '../../data/sources/projects_local_source.dart';
 import '../../data/sources/projects_remote_source.dart';
@@ -27,6 +28,24 @@ final projectsRepositoryProvider = Provider<ProjectsRepository>((ref) {
     currentUser: () {
       final state = ref.read(authControllerProvider);
       return state is AuthStateAuthenticated ? state.user : _emptyUser;
+    },
+    onDetailSynced: (userId, detail) async {
+      final recorded = await ref
+          .read(badgeNotificationRecorderProvider)
+          .record(userId: userId, detail: detail);
+      // Only wake the bell and the list when something actually landed —
+      // every project open would otherwise rebuild them for nothing.
+      if (recorded > 0) {
+        ref.read(notificationsRevisionProvider.notifier).state++;
+      }
+
+      // Re-book the OS reminders on every sync, not just when something is
+      // new: this is also what retires them after an admin restores a badge
+      // or moves its deadline.
+      await ref.read(badgeReminderSchedulerProvider).sync(
+            detail: detail,
+            t: await resolveLocalizations(ref),
+          );
     },
   );
 });

@@ -170,13 +170,20 @@ class ProjectBadge {
   /// for as long as the user stays offline. Closing an elapsed window here
   /// keeps the app from advertising a countdown that already ran out; the
   /// same rule as the server's, so online the two always agree.
-  BadgeAvailability get availability {
+  BadgeAvailability get availability => availabilityAt(DateTime.now());
+
+  /// [availability] as of an explicit instant.
+  ///
+  /// Anything planning ahead — booking a reminder, deciding what a deadline
+  /// will mean tomorrow — has to pin the clock, or it silently mixes "now"
+  /// into an otherwise pure calculation and becomes untestable.
+  BadgeAvailability availabilityAt(DateTime now) {
     switch (status) {
       case 'expired':
         return BadgeAvailability.expired;
       case 'faded':
         final until = expiresAt;
-        if (until != null && !until.isAfter(DateTime.now())) {
+        if (until != null && !until.isAfter(now)) {
           return BadgeAvailability.expired;
         }
         return BadgeAvailability.fading;

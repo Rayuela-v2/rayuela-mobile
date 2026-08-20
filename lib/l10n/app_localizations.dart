@@ -532,6 +532,72 @@ abstract class AppLocalizations {
   /// **'Why it\'s fading'**
   String get badge_fade_reason;
 
+  /// No description provided for @notifications_title.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s new'**
+  String get notifications_title;
+
+  /// No description provided for @notifications_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'All quiet here'**
+  String get notifications_empty;
+
+  /// No description provided for @notifications_empty_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'When a badge starts fading, we\'ll let you know.'**
+  String get notifications_empty_hint;
+
+  /// No description provided for @notifications_mark_all_read.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all as read'**
+  String get notifications_mark_all_read;
+
+  /// No description provided for @notifications_unread.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 unread update} other{{count} unread updates}}'**
+  String notifications_unread(int count);
+
+  /// No description provided for @notification_badge_fading_title.
+  ///
+  /// In en, this message translates to:
+  /// **'\"{badge}\" is fading away'**
+  String notification_badge_fading_title(String badge);
+
+  /// No description provided for @notification_badge_fading_body.
+  ///
+  /// In en, this message translates to:
+  /// **'You can still earn it in {project}.'**
+  String notification_badge_fading_body(String project);
+
+  /// No description provided for @notification_badge_expired_title.
+  ///
+  /// In en, this message translates to:
+  /// **'\"{badge}\" faded away'**
+  String notification_badge_expired_title(String badge);
+
+  /// No description provided for @notification_badge_expired_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody else can earn it in {project} now.'**
+  String notification_badge_expired_body(String project);
+
+  /// No description provided for @notification_popup_go.
+  ///
+  /// In en, this message translates to:
+  /// **'See badge'**
+  String get notification_popup_go;
+
+  /// No description provided for @notification_popup_later.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get notification_popup_later;
+
   /// No description provided for @badge_requires.
   ///
   /// In en, this message translates to:
