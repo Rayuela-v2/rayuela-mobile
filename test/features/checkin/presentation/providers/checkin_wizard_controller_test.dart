@@ -95,10 +95,11 @@ void main() {
     final controller = build();
     await controller.initLocation();
 
-    expect(controller.state.taskType, isNull);
-
-    controller.setTaskType(const TaskType(name: 'obs'));
+    // First available type is preselected.
     expect(controller.state.taskType, const TaskType(name: 'obs'));
+
+    controller.setTaskType(const TaskType(name: 'pic'));
+    expect(controller.state.taskType, const TaskType(name: 'pic'));
   });
 
   test('preset task type with empty catalog backfills availableTaskTypes',
@@ -139,7 +140,7 @@ void main() {
   });
 
   test('submit fails if taskType is null', () async {
-    final controller = build();
+    final controller = build(availableTaskTypes: const []);
     await controller.initLocation();
 
     final outcome = await controller.submit();

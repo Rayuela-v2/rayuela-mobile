@@ -136,6 +136,45 @@ class _Step1TaskTypeState extends ConsumerState<Step1TaskType> {
           ),
         ),
         const SizedBox(height: 12),
+        if (state.taskType?.description != null &&
+            state.taskType!.description!.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
+            child: Container(
+              constraints: const BoxConstraints(maxHeight: 120),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xFFC97B2E).withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: const Color(0xFFC97B2E),
+                  width: 1.5,
+                ),
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.wizard_step1_description,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                        color: const Color(0xFF3A2810).withValues(alpha: 0.6),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    LinkifiedText(
+                      text: state.taskType!.description!,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         // The grid takes whatever vertical room is left and scrolls, so every
         // task type is reachable regardless of how many the project has.
         Expanded(
@@ -172,44 +211,6 @@ class _Step1TaskTypeState extends ConsumerState<Step1TaskType> {
                   },
                 ),
         ),
-        if (state.taskType?.description != null &&
-            state.taskType!.description!.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
-            child: Container(
-              constraints: const BoxConstraints(maxHeight: 120),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
-                ),
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.wizard_step1_description,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2,
-                        color: const Color(0xFF3A2810).withValues(alpha: 0.6),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    LinkifiedText(
-                      text: state.taskType!.description!,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
         WizardFooter(
           child: SizedBox(
             width: double.infinity,

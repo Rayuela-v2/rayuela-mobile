@@ -150,7 +150,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get project_view_tasks => 'Ver misiones';
 
   @override
-  String get project_add_checkin => 'Emprender misión';
+  String get project_add_checkin => 'Reportar misión';
 
   @override
   String get project_subscribe => 'Suscribirse al proyecto';
@@ -845,7 +845,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get checkins_empty_body =>
-      'Tus misiones para este proyecto aparecerán aquí. Emprendé una misión y registrá la primera para empezar a ganar puntos.';
+      'Tus misiones para este proyecto aparecerán aquí. Reportá una misión y registrá la primera para empezar a ganar puntos.';
 
   @override
   String get checkins_card_default_kind => 'Misión';
@@ -1096,7 +1096,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'El servidor está tardando en responder. Probá en un momento.';
 
   @override
-  String get wizard_step1_guide => '¡Hola! ¿Qué misión vas a emprender hoy?';
+  String get wizard_step1_guide => '¡Hola! ¿Qué misión querés reportar hoy?';
 
   @override
   String get wizard_step1_title => 'TIPO DE MISIÓN';

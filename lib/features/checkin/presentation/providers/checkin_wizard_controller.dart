@@ -36,12 +36,17 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
 
   /// Resolves the preselected task type from the [initialTaskType] name,
   /// preferring the matching entry in [available] (which carries the
-  /// description) and falling back to a name-only [TaskType].
+  /// description) and falling back to a name-only [TaskType]. With no
+  /// preselection, defaults to the first of [available] so step 1 never
+  /// starts empty (selecting later would otherwise reflow the grid to make
+  /// room for the description box).
   static TaskType? _resolveTaskType(
     String? initialTaskType,
     List<TaskType> available,
   ) {
-    if (initialTaskType == null) return null;
+    if (initialTaskType == null) {
+      return available.isEmpty ? null : available.first;
+    }
     for (final t in available) {
       if (t.name == initialTaskType) return t;
     }
