@@ -136,44 +136,13 @@ class _Step1TaskTypeState extends ConsumerState<Step1TaskType> {
           ),
         ),
         const SizedBox(height: 12),
-        if (state.taskType?.description != null &&
-            state.taskType!.description!.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
-            child: Container(
-              constraints: const BoxConstraints(maxHeight: 120),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xFFC97B2E).withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: const Color(0xFFC97B2E),
-                  width: 1.5,
-                ),
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.wizard_step1_description,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2,
-                        color: const Color(0xFF3A2810).withValues(alpha: 0.6),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    LinkifiedText(
-                      text: state.taskType!.description!,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+        // Fixed-height box: the grid below must not shift as the selection
+        // changes between short and long descriptions. Only shown when at
+        // least one option has a description, so it never toggles per-tap.
+        if (options.any((t) => t.description?.isNotEmpty ?? false))
+          _DescriptionBox(
+            key: ValueKey(state.taskType?.name),
+            text: state.taskType?.description ?? '',
           ),
         // The grid takes whatever vertical room is left and scrolls, so every
         // task type is reachable regardless of how many the project has.
@@ -231,6 +200,73 @@ class _Step1TaskTypeState extends ConsumerState<Step1TaskType> {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Fixed-size description card. Long text scrolls inside it (with a visible
+/// scrollbar) instead of growing the box or being truncated.
+class _DescriptionBox extends StatefulWidget {
+  const _DescriptionBox({super.key, required this.text});
+
+  final String text;
+
+  @override
+  State<_DescriptionBox> createState() => _DescriptionBoxState();
+}
+
+class _DescriptionBoxState extends State<_DescriptionBox> {
+  final _scroll = ScrollController();
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
+      child: Container(
+        height: 132,
+        padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
+        decoration: BoxDecoration(
+          color: const Color(0xFFC97B2E).withValues(alpha: 0.12),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0xFFC97B2E), width: 1.5),
+        ),
+        child: Scrollbar(
+          controller: _scroll,
+          thumbVisibility: true,
+          child: SingleChildScrollView(
+            controller: _scroll,
+            padding: const EdgeInsets.only(right: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.wizard_step1_description,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,
+                    color: const Color(0xFF3A2810).withValues(alpha: 0.6),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                LinkifiedText(
+                  text: widget.text.isEmpty ? '—' : widget.text,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: Colors.black87,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
