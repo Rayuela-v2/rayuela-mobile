@@ -11,8 +11,8 @@ class LocationSummaryCard extends StatelessWidget {
     required this.resolving,
     this.errorMessage,
     required this.onRetry,
-    required this.onPickOnMap,
-    required this.onClearManual,
+    this.onPickOnMap,
+    this.onClearManual,
   });
 
   final Position? position;
@@ -20,8 +20,10 @@ class LocationSummaryCard extends StatelessWidget {
   final bool resolving;
   final String? errorMessage;
   final VoidCallback onRetry;
-  final VoidCallback onPickOnMap;
-  final VoidCallback onClearManual;
+
+  /// Null hides the edit/clear buttons (project disallows manual location).
+  final VoidCallback? onPickOnMap;
+  final VoidCallback? onClearManual;
 
   @override
   Widget build(BuildContext context) {
@@ -72,20 +74,23 @@ class LocationSummaryCard extends StatelessWidget {
             Expanded(
               child: Text(
                 t.location_pinned_manual,
-                style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF37474F)),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Color(0xFF37474F)),
               ),
             ),
-            IconButton(
-              icon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF5EDD6),
-                  borderRadius: BorderRadius.circular(8),
+            if (onPickOnMap != null)
+              IconButton(
+                icon: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF5EDD6),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.edit_outlined,
+                      size: 20, color: Color(0xFF3A2810)),
                 ),
-                child: const Icon(Icons.edit_outlined, size: 20, color: Color(0xFF3A2810)),
+                onPressed: onPickOnMap,
               ),
-              onPressed: onPickOnMap,
-            ),
           ],
         ),
       );
@@ -100,20 +105,23 @@ class LocationSummaryCard extends StatelessWidget {
           Expanded(
             child: Text(
               t.location_using_current,
-              style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF37474F)),
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold, color: Color(0xFF37474F)),
             ),
           ),
-          IconButton(
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF5EDD6),
-                borderRadius: BorderRadius.circular(8),
+          if (onPickOnMap != null)
+            IconButton(
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF5EDD6),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.edit_outlined,
+                    size: 20, color: Color(0xFF3A2810)),
               ),
-              child: const Icon(Icons.edit_outlined, size: 20, color: Color(0xFF3A2810)),
+              onPressed: onPickOnMap,
             ),
-            onPressed: onPickOnMap,
-          ),
         ],
       ),
     );
@@ -131,7 +139,8 @@ class _Card extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: background ?? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+        color: background ??
+            theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
       ),

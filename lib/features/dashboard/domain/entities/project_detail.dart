@@ -29,6 +29,7 @@ class ProjectDetail {
     this.taskTypes = const <TaskType>[],
     this.areas = const [],
     this.user,
+    this.manualLocation = true,
   });
 
   final String id;
@@ -64,6 +65,10 @@ class ProjectDetail {
   /// game profile yet).
   final ProjectUserStats? user;
 
+  /// Whether the admin lets volunteers edit the check-in location.
+  /// Defaults to true so old caches keep the previous behaviour.
+  final bool manualLocation;
+
   bool get isSubscribed => user?.isSubscribed ?? false;
 
   ProjectDetail copyWith({ProjectUserStats? user}) {
@@ -81,6 +86,7 @@ class ProjectDetail {
       taskTypes: taskTypes,
       areas: areas,
       user: user ?? this.user,
+      manualLocation: manualLocation,
     );
   }
 }

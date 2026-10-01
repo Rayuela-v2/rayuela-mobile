@@ -147,6 +147,7 @@ Object _encodeDetail(ProjectDetail d) => {
       'badges': d.badges.map(_encodeBadge).toList(),
       'taskTypes': d.taskTypes.map((t) => {'name': t.name, 'description': t.description}).toList(),
       'areas': d.areas.map(_encodeArea).toList(),
+      'manualLocation': d.manualLocation,
       'user': d.user == null ? null : _encodeUserStats(d.user!),
     };
 
@@ -173,6 +174,7 @@ ProjectDetail _decodeDetail(Object? raw) {
     taskTypes: _decodeTaskTypes(raw['taskTypes']),
     areas: _decodeAreas(raw['areas']),
     user: _decodeUserStats(raw['user']),
+    manualLocation: raw['manualLocation'] != false,
   );
 }
 

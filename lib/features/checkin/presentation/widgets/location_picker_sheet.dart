@@ -18,12 +18,17 @@ class LocationPickerSheet extends StatefulWidget {
   const LocationPickerSheet({
     super.key,
     this.initial,
+    this.readOnly = false,
   });
 
   final LatLng? initial;
 
+  /// Large view only: no pin dropping, just a Close button.
+  final bool readOnly;
+
   /// Convenience launcher. Shows the sheet at ~85% screen height.
-  static Future<LatLng?> show(BuildContext context, {LatLng? initial}) {
+  static Future<LatLng?> show(BuildContext context,
+      {LatLng? initial, bool readOnly = false}) {
     return showModalBottomSheet<LatLng>(
       context: context,
       isScrollControlled: true,
@@ -34,7 +39,7 @@ class LocationPickerSheet extends StatefulWidget {
         ),
         child: SizedBox(
           height: MediaQuery.of(context).size.height * 0.85,
-          child: LocationPickerSheet(initial: initial),
+          child: LocationPickerSheet(initial: initial, readOnly: readOnly),
         ),
       ),
     );
@@ -71,7 +76,9 @@ class _LocationPickerSheetState extends State<LocationPickerSheet> {
             children: [
               Expanded(
                 child: Text(
-                  t.location_picker_title,
+                  widget.readOnly
+                      ? t.location_using_current
+                      : t.location_picker_title,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -99,7 +106,7 @@ class _LocationPickerSheetState extends State<LocationPickerSheet> {
                   initialZoom: widget.initial == null ? 6 : 16,
                   minZoom: 2,
                   maxZoom: 19,
-                  onTap: _onTap,
+                  onTap: widget.readOnly ? null : _onTap,
                   interactionOptions: const InteractionOptions(
                     flags: InteractiveFlag.pinchZoom |
                         InteractiveFlag.drag |
@@ -167,7 +174,9 @@ class _LocationPickerSheetState extends State<LocationPickerSheet> {
                 bottom: 6,
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 6, vertical: 2,),
+                    horizontal: 6,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.surface.withValues(alpha: 0.85),
                     borderRadius: BorderRadius.circular(4),
@@ -183,31 +192,39 @@ class _LocationPickerSheetState extends State<LocationPickerSheet> {
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-          child: Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+          child: widget.readOnly
+              ? SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(t.common_close),
                   ),
-                  child: Text(t.common_cancel),
+                )
+              : Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        child: Text(t.common_cancel),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      flex: 2,
+                      child: FilledButton.icon(
+                        onPressed: () => Navigator.of(context).pop(_picked),
+                        style: FilledButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        icon: const Icon(Icons.check),
+                        label: Text(t.location_picker_use_this),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                flex: 2,
-                child: FilledButton.icon(
-                  onPressed: () => Navigator.of(context).pop(_picked),
-                  style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                  icon: const Icon(Icons.check),
-                  label: Text(t.location_picker_use_this),
-                ),
-              ),
-            ],
-          ),
         ),
       ],
     );

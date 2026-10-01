@@ -43,6 +43,7 @@ class ProjectDetailDto {
     this.taskTypes = const <TaskType>[],
     this.areas = const [],
     this.user,
+    this.manualLocation = true,
   });
 
   final String id;
@@ -58,6 +59,7 @@ class ProjectDetailDto {
   final List<TaskType> taskTypes;
   final List<ProjectAreaDto> areas;
   final ProjectUserStatsDto? user;
+  final bool manualLocation;
 
   factory ProjectDetailDto.fromJson(Object? raw) {
     final json = _asMap(raw);
@@ -123,6 +125,7 @@ class ProjectDetailDto {
       taskTypes: taskTypes,
       areas: areas,
       user: user,
+      manualLocation: _asBool(json['manualLocation']) ?? true,
     );
   }
 
@@ -141,6 +144,7 @@ class ProjectDetailDto {
       taskTypes: taskTypes,
       areas: areas.map((a) => a.toEntity()).toList(growable: false),
       user: user?.toEntity(),
+      manualLocation: manualLocation,
     );
   }
 

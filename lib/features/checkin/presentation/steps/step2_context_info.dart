@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../dashboard/presentation/providers/project_detail_providers.dart';
 import '../../domain/entities/checkin_submission_outcome.dart';
 import '../providers/checkin_wizard_controller.dart';
 import '../widgets/location_picker_sheet.dart';
@@ -30,13 +31,19 @@ class Step2ContextInfo extends ConsumerWidget {
     final notifier = ref.read(checkinWizardProvider(args).notifier);
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
+    final canEditLocation = ref
+            .watch(projectDetailValueProvider(args.projectId))
+            .valueOrNull
+            ?.manualLocation ??
+        true;
 
     // Derived effective LatLng
     LatLng? effectiveLatLng;
     if (state.manualLatLng != null) {
       effectiveLatLng = state.manualLatLng;
     } else if (state.position != null) {
-      effectiveLatLng = LatLng(state.position!.latitude, state.position!.longitude);
+      effectiveLatLng =
+          LatLng(state.position!.latitude, state.position!.longitude);
     }
 
     final isCustomDate = state.customDateTime != null;
@@ -85,13 +92,17 @@ class Step2ContextInfo extends ConsumerWidget {
             resolving: state.resolvingLocation,
             errorMessage: localError,
             onRetry: notifier.initLocation,
-            onPickOnMap: () async {
-              final picked = await LocationPickerSheet.show(context, initial: effectiveLatLng);
-              if (picked != null) {
-                notifier.setManualLocation(picked);
-              }
-            },
-            onClearManual: notifier.clearManualLocation,
+            onPickOnMap: !canEditLocation
+                ? null
+                : () async {
+                    final picked = await LocationPickerSheet.show(context,
+                        initial: effectiveLatLng);
+                    if (picked != null) {
+                      notifier.setManualLocation(picked);
+                    }
+                  },
+            onClearManual:
+                canEditLocation ? notifier.clearManualLocation : null,
           ),
         ),
         if (effectiveLatLng != null) ...[
@@ -103,12 +114,21 @@ class Step2ContextInfo extends ConsumerWidget {
               child: Container(
                 height: 140,
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black.withValues(alpha: 0.08)),
+                  border:
+                      Border.all(color: Colors.black.withValues(alpha: 0.08)),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: FlutterMap(
                   key: ValueKey(effectiveLatLng),
                   options: MapOptions(
+                    onTap: (_, __) async {
+                      final picked = await LocationPickerSheet.show(
+                        context,
+                        initial: effectiveLatLng,
+                        readOnly: !canEditLocation,
+                      );
+                      if (picked != null) notifier.setManualLocation(picked);
+                    },
                     initialCenter: effectiveLatLng,
                     initialZoom: 15,
                     interactionOptions: const InteractionOptions(
@@ -117,7 +137,8 @@ class Step2ContextInfo extends ConsumerWidget {
                   ),
                   children: [
                     TileLayer(
-                      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      urlTemplate:
+                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                       userAgentPackageName: 'com.rayuela.mobile',
                     ),
                     MarkerLayer(
@@ -210,11 +231,13 @@ class Step2ContextInfo extends ConsumerWidget {
                       color: const Color(0xFFF5EDD6),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Icon(Icons.edit_outlined, size: 20, color: Color(0xFF3A2810)),
+                    child: const Icon(Icons.edit_outlined,
+                        size: 20, color: Color(0xFF3A2810)),
                   ),
                   onPressed: () async {
                     final now = DateTime.now();
-                    final initialDate = activeDateTime.isAfter(now) ? now : activeDateTime;
+                    final initialDate =
+                        activeDateTime.isAfter(now) ? now : activeDateTime;
                     final selectedDate = await showDatePicker(
                       context: context,
                       initialDate: initialDate,
@@ -251,7 +274,8 @@ class Step2ContextInfo extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: TextButton.icon(
               onPressed: notifier.clearCustomDateTime,
-              icon: const Icon(Icons.restore, size: 16, color: Color(0xFFC97B2E)),
+              icon:
+                  const Icon(Icons.restore, size: 16, color: Color(0xFFC97B2E)),
               label: Text(
                 l10n.wizard_step4_restore,
                 style: const TextStyle(
@@ -307,7 +331,8 @@ class Step2ContextInfo extends ConsumerWidget {
                     const SizedBox(width: 16),
                     Expanded(
                       child: _AddActionButton(
-                        onPressed: () => notifier.pickImage(ImageSource.gallery),
+                        onPressed: () =>
+                            notifier.pickImage(ImageSource.gallery),
                         icon: Icons.photo_library,
                         label: l10n.wizard_step2_gal,
                       ),
@@ -343,7 +368,8 @@ class Step2ContextInfo extends ConsumerWidget {
                 padding: const EdgeInsets.only(bottom: 12),
                 child: Text(
                   localError,
-                  style: theme.textTheme.bodySmall?.copyWith(color: Colors.red[200]),
+                  style: theme.textTheme.bodySmall
+                      ?.copyWith(color: Colors.red[200]),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -364,16 +390,19 @@ class Step2ContextInfo extends ConsumerWidget {
                   disabledBackgroundColor: Colors.white.withValues(alpha: 0.1),
                   disabledForegroundColor: Colors.white.withValues(alpha: 0.3),
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
                 child: state.isSubmitting
                     ? const SizedBox.square(
                         dimension: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        child: CircularProgressIndicator(
+                            strokeWidth: 2, color: Colors.white),
                       )
                     : Text(
                         l10n.wizard_confirm,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
                       ),
               ),
             ),
