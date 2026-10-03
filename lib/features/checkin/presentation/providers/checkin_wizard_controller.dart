@@ -20,6 +20,7 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
     String? taskId,
     String? initialTaskType,
     List<TaskType> availableTaskTypes = const [],
+    bool manualLocation = false,
   })  : _repository = repository,
         _locationService = locationService,
         super(CheckinWizardState(
@@ -29,6 +30,7 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
           // (deep-link from the tasks list), so start past step 1 and lock it.
           step: initialTaskType != null ? 1 : 0,
           taskTypeLocked: initialTaskType != null,
+          manualLocation: manualLocation,
           taskType: _resolveTaskType(initialTaskType, availableTaskTypes),
           availableTaskTypes:
               _resolveAvailableTaskTypes(initialTaskType, availableTaskTypes),
@@ -136,6 +138,7 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
   }
 
   void setManualLocation(LatLng latLng) {
+    if (!state.manualLocation) return;
     state = state.copyWith(
       manualLatLng: latLng,
       clearError: true,
@@ -147,6 +150,7 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
   }
 
   void setCustomDateTime(DateTime dateTime) {
+    if (!state.manualLocation) return;
     if (dateTime.isAfter(DateTime.now())) {
       state = state.copyWith(
         error: "wizard_error_future_date",
@@ -238,12 +242,14 @@ class CheckinWizardArgs {
     this.taskId,
     this.initialTaskType,
     this.availableTaskTypes = const [],
+    this.manualLocation = false,
   });
 
   final String projectId;
   final String? taskId;
   final String? initialTaskType;
   final List<TaskType> availableTaskTypes;
+  final bool manualLocation;
 
   @override
   bool operator ==(Object other) =>
@@ -253,6 +259,7 @@ class CheckinWizardArgs {
           projectId == other.projectId &&
           taskId == other.taskId &&
           initialTaskType == other.initialTaskType &&
+          manualLocation == other.manualLocation &&
           listEquals(availableTaskTypes, other.availableTaskTypes);
 
   @override
@@ -260,7 +267,8 @@ class CheckinWizardArgs {
       projectId.hashCode ^
       taskId.hashCode ^
       initialTaskType.hashCode ^
-      availableTaskTypes.hashCode;
+      availableTaskTypes.hashCode ^
+      manualLocation.hashCode;
 }
 
 final checkinWizardProvider = StateNotifierProvider.autoDispose.family<
@@ -272,5 +280,6 @@ final checkinWizardProvider = StateNotifierProvider.autoDispose.family<
     taskId: args.taskId,
     initialTaskType: args.initialTaskType,
     availableTaskTypes: args.availableTaskTypes,
+    manualLocation: args.manualLocation,
   );
 });

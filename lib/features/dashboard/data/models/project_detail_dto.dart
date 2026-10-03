@@ -34,6 +34,7 @@ class ProjectDetailDto {
     required this.name,
     required this.description,
     required this.available,
+    this.manualLocation = false,
     this.image,
     this.web,
     this.gamificationStrategy,
@@ -43,13 +44,13 @@ class ProjectDetailDto {
     this.taskTypes = const <TaskType>[],
     this.areas = const [],
     this.user,
-    this.manualLocation = true,
   });
 
   final String id;
   final String name;
   final String description;
   final bool available;
+  final bool manualLocation;
   final String? image;
   final String? web;
   final String? gamificationStrategy;
@@ -59,7 +60,6 @@ class ProjectDetailDto {
   final List<TaskType> taskTypes;
   final List<ProjectAreaDto> areas;
   final ProjectUserStatsDto? user;
-  final bool manualLocation;
 
   factory ProjectDetailDto.fromJson(Object? raw) {
     final json = _asMap(raw);
@@ -110,6 +110,7 @@ class ProjectDetailDto {
       name: _firstString(json, const ['name']) ?? '',
       description: _firstString(json, const ['description']) ?? '',
       available: _asBool(json['available']) ?? true,
+      manualLocation: _asBool(json['manualLocation']) ?? false,
       image: _firstString(json, const ['image']),
       web: _firstString(json, const ['web', 'website']),
       gamificationStrategy: _firstString(
@@ -125,7 +126,6 @@ class ProjectDetailDto {
       taskTypes: taskTypes,
       areas: areas,
       user: user,
-      manualLocation: _asBool(json['manualLocation']) ?? true,
     );
   }
 
@@ -135,6 +135,7 @@ class ProjectDetailDto {
       name: name,
       description: description,
       available: available,
+      manualLocation: manualLocation,
       imageUrl: image,
       website: web,
       gamificationStrategy: gamificationStrategy,
@@ -144,7 +145,6 @@ class ProjectDetailDto {
       taskTypes: taskTypes,
       areas: areas.map((a) => a.toEntity()).toList(growable: false),
       user: user?.toEntity(),
-      manualLocation: manualLocation,
     );
   }
 

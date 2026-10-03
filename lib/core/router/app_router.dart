@@ -138,13 +138,16 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             taskTypes = const <TaskType>[];
           }
 
-          
+          final bool manualLocation = qp['manualLocation'] == 'true' ||
+              (extra is Map && extra['manualLocation'] == true);
+
           return CheckinWizardScreen(
             args: CheckinWizardArgs(
               projectId: projectId,
               taskId: qp['taskId'],
               initialTaskType: qp['taskType'],
               availableTaskTypes: taskTypes,
+              manualLocation: manualLocation,
             ),
           );
         },

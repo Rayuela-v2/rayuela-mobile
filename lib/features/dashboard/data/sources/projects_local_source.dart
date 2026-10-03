@@ -139,6 +139,7 @@ Object _encodeDetail(ProjectDetail d) => {
       'name': d.name,
       'description': d.description,
       'available': d.available,
+      'manualLocation': d.manualLocation,
       'imageUrl': d.imageUrl,
       'website': d.website,
       'gamificationStrategy': d.gamificationStrategy,
@@ -147,7 +148,6 @@ Object _encodeDetail(ProjectDetail d) => {
       'badges': d.badges.map(_encodeBadge).toList(),
       'taskTypes': d.taskTypes.map((t) => {'name': t.name, 'description': t.description}).toList(),
       'areas': d.areas.map(_encodeArea).toList(),
-      'manualLocation': d.manualLocation,
       'user': d.user == null ? null : _encodeUserStats(d.user!),
     };
 
@@ -165,6 +165,7 @@ ProjectDetail _decodeDetail(Object? raw) {
     name: (raw['name'] ?? '').toString(),
     description: (raw['description'] ?? '').toString(),
     available: raw['available'] == true,
+    manualLocation: raw['manualLocation'] == true,
     imageUrl: raw['imageUrl']?.toString(),
     website: raw['website']?.toString(),
     gamificationStrategy: raw['gamificationStrategy']?.toString(),
@@ -174,7 +175,6 @@ ProjectDetail _decodeDetail(Object? raw) {
     taskTypes: _decodeTaskTypes(raw['taskTypes']),
     areas: _decodeAreas(raw['areas']),
     user: _decodeUserStats(raw['user']),
-    manualLocation: raw['manualLocation'] != false,
   );
 }
 

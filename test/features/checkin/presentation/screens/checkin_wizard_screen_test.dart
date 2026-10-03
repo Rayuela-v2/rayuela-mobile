@@ -131,6 +131,9 @@ void main() {
     expect(find.textContaining('EVIDENCE'), findsOneWidget);
     expect(find.text('Using current location'), findsOneWidget);
 
+    // Verify edit buttons are NOT present since manualLocation defaults to false
+    expect(find.byIcon(Icons.edit_outlined), findsNothing);
+
     // Tap "Confirm" button
     await tester.tap(find.text('Confirm'));
     await tester.pumpAndSettle();
@@ -138,5 +141,34 @@ void main() {
     // Verify submission is processed and navigates to the result screen
     verify(() => repository.submitCheckin(any())).called(1);
     expect(find.text('Result Screen'), findsOneWidget);
+  });
+
+  testWidgets('CheckinWizardScreen shows edit buttons when manualLocation is true', (tester) async {
+    const args = CheckinWizardArgs(
+      projectId: 'p1',
+      availableTaskTypes: [
+        TaskType(name: 'Clean'),
+      ],
+      manualLocation: true,
+    );
+
+    await tester.pumpWidget(
+      _hostWith(
+        child: const CheckinWizardScreen(args: args),
+        overrides: [
+          checkinsRepositoryProvider.overrideWithValue(repository),
+          locationServiceProvider.overrideWithValue(locationService),
+        ],
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Clean'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Next →'));
+    await tester.pumpAndSettle();
+
+    // With manualLocation: true, edit icon buttons are rendered (location + date/time)
+    expect(find.byIcon(Icons.edit_outlined), findsNWidgets(2));
   });
 }

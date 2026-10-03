@@ -281,7 +281,10 @@ void _openCheckin(BuildContext context, ProjectDetail detail) {
   context.pushNamed(
     AppRoute.checkin,
     pathParameters: {'projectId': detail.id},
-    queryParameters: {'projectName': detail.name},
+    queryParameters: {
+      'projectName': detail.name,
+      'manualLocation': detail.manualLocation.toString(),
+    },
     extra: detail.taskTypes,
   );
 }

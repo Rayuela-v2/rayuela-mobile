@@ -22,6 +22,7 @@ class ProjectDetail {
     required this.available,
     this.imageUrl,
     this.website,
+    this.manualLocation = false,
     this.gamificationStrategy,
     this.recommendationStrategy,
     this.leaderboardStrategy,
@@ -29,7 +30,6 @@ class ProjectDetail {
     this.taskTypes = const <TaskType>[],
     this.areas = const [],
     this.user,
-    this.manualLocation = true,
   });
 
   final String id;
@@ -38,6 +38,9 @@ class ProjectDetail {
   final bool available;
   final String? imageUrl;
   final String? website;
+
+  /// Whether deferred check-ins (manual time and location editing) are enabled for this project.
+  final bool manualLocation;
 
   /// One of `BASIC` / `ELASTIC`. Display-only on mobile; the web admin
   /// configures the value, mobile just shows a chip.
@@ -65,13 +68,12 @@ class ProjectDetail {
   /// game profile yet).
   final ProjectUserStats? user;
 
-  /// Whether the admin lets volunteers edit the check-in location.
-  /// Defaults to true so old caches keep the previous behaviour.
-  final bool manualLocation;
-
   bool get isSubscribed => user?.isSubscribed ?? false;
 
-  ProjectDetail copyWith({ProjectUserStats? user}) {
+  ProjectDetail copyWith({
+    ProjectUserStats? user,
+    bool? manualLocation,
+  }) {
     return ProjectDetail(
       id: id,
       name: name,
@@ -79,6 +81,7 @@ class ProjectDetail {
       available: available,
       imageUrl: imageUrl,
       website: website,
+      manualLocation: manualLocation ?? this.manualLocation,
       gamificationStrategy: gamificationStrategy,
       recommendationStrategy: recommendationStrategy,
       leaderboardStrategy: leaderboardStrategy,
@@ -86,7 +89,6 @@ class ProjectDetail {
       taskTypes: taskTypes,
       areas: areas,
       user: user ?? this.user,
-      manualLocation: manualLocation,
     );
   }
 }

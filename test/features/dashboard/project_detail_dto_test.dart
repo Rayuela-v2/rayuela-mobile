@@ -38,6 +38,7 @@ void main() {
 
       expect(dto.id, 'p1');
       expect(dto.name, 'River watchers');
+      expect(dto.manualLocation, false);
       expect(dto.gamificationStrategy, 'ELASTIC');
       expect(dto.recommendationStrategy, 'ADAPTIVE');
       expect(dto.leaderboardStrategy, 'POINTS_FIRST');
