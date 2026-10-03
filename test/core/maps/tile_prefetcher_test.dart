@@ -61,7 +61,6 @@ void main() {
       cache: cache,
       // 1 tile cap forces the abort branch even for the smallest box.
       config: const TilePrefetchConfig(
-        maxZoom: 17,
         maxTiles: 1,
       ),
     );

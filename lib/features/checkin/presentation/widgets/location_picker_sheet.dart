@@ -28,7 +28,7 @@ class LocationPickerSheet extends StatefulWidget {
 
   /// Convenience launcher. Shows the sheet at ~85% screen height.
   static Future<LatLng?> show(BuildContext context,
-      {LatLng? initial, bool readOnly = false}) {
+      {LatLng? initial, bool readOnly = false,}) {
     return showModalBottomSheet<LatLng>(
       context: context,
       isScrollControlled: true,

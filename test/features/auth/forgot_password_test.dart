@@ -139,7 +139,7 @@ void main() {
     testWidgets('shows error banner when repository fails', (tester) async {
       when(() => mockAuthRepo.forgotPassword(any())).thenAnswer(
         (_) async => const Failure(
-          NetworkException(message: 'No internet connection'),
+          NetworkException(),
         ),
       );
 

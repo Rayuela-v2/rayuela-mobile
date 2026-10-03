@@ -96,7 +96,7 @@ class Step2ContextInfo extends ConsumerWidget {
                 ? null
                 : () async {
                     final picked = await LocationPickerSheet.show(context,
-                        initial: effectiveLatLng);
+                        initial: effectiveLatLng,);
                     if (picked != null) {
                       notifier.setManualLocation(picked);
                     }
@@ -232,7 +232,7 @@ class Step2ContextInfo extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Icon(Icons.edit_outlined,
-                        size: 20, color: Color(0xFF3A2810)),
+                        size: 20, color: Color(0xFF3A2810),),
                   ),
                   onPressed: () async {
                     final now = DateTime.now();
@@ -391,18 +391,18 @@ class Step2ContextInfo extends ConsumerWidget {
                   disabledForegroundColor: Colors.white.withValues(alpha: 0.3),
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),),
                 ),
                 child: state.isSubmitting
                     ? const SizedBox.square(
                         dimension: 20,
                         child: CircularProgressIndicator(
-                            strokeWidth: 2, color: Colors.white),
+                            strokeWidth: 2, color: Colors.white,),
                       )
                     : Text(
                         l10n.wizard_confirm,
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
+                            fontWeight: FontWeight.bold, fontSize: 16,),
                       ),
               ),
             ),

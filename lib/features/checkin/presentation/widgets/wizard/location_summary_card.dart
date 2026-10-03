@@ -75,7 +75,7 @@ class LocationSummaryCard extends StatelessWidget {
               child: Text(
                 t.location_pinned_manual,
                 style: const TextStyle(
-                    fontWeight: FontWeight.bold, color: Color(0xFF37474F)),
+                    fontWeight: FontWeight.bold, color: Color(0xFF37474F),),
               ),
             ),
             if (onPickOnMap != null)
@@ -87,7 +87,7 @@ class LocationSummaryCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(Icons.edit_outlined,
-                      size: 20, color: Color(0xFF3A2810)),
+                      size: 20, color: Color(0xFF3A2810),),
                 ),
                 onPressed: onPickOnMap,
               ),
@@ -106,7 +106,7 @@ class LocationSummaryCard extends StatelessWidget {
             child: Text(
               t.location_using_current,
               style: const TextStyle(
-                  fontWeight: FontWeight.bold, color: Color(0xFF37474F)),
+                  fontWeight: FontWeight.bold, color: Color(0xFF37474F),),
             ),
           ),
           if (onPickOnMap != null)
@@ -118,7 +118,7 @@ class LocationSummaryCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(Icons.edit_outlined,
-                    size: 20, color: Color(0xFF3A2810)),
+                    size: 20, color: Color(0xFF3A2810),),
               ),
               onPressed: onPickOnMap,
             ),

@@ -64,7 +64,7 @@ void main() {
       'user_id': 'u1',
       'project_id': 'p1',
       'payload_json': '{"keep":"me"}',
-      'fetched_at': DateTime.utc(2026, 1, 1).toIso8601String(),
+      'fetched_at': DateTime.utc(2026, 1).toIso8601String(),
     });
     await legacy.close();
 
@@ -89,7 +89,7 @@ void main() {
       'project_id': 'p1',
       'subject': 'A',
       'data_json': '{}',
-      'created_at': DateTime.utc(2026, 1, 1).toIso8601String(),
+      'created_at': DateTime.utc(2026, 1).toIso8601String(),
     });
     await first.close();
 

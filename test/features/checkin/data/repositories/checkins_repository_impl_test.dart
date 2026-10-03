@@ -183,7 +183,6 @@ void main() {
     when(() => remote.submit(any(), idempotencyKey: any(named: 'idempotencyKey')))
         .thenAnswer((_) async => const Failure(ValidationException(
               message: 'bad',
-              fieldErrors: {},
             ),),);
 
     final result = await build().submitCheckin(_req());

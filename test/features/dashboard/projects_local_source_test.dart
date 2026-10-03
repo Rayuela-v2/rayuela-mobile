@@ -72,7 +72,7 @@ void main() {
         gamificationStrategy: 'BASIC',
         recommendationStrategy: 'SIMPLE',
         leaderboardStrategy: 'POINTS_FIRST',
-        badges: const [
+        badges: [
           ProjectBadge(
             name: 'Pioneer',
             description: 'first 10',
@@ -80,7 +80,7 @@ void main() {
             previousBadges: ['Newbie'],
           ),
         ],
-        taskTypes: const [
+        taskTypes: [
           TaskType(name: 'observation'),
           TaskType(name: 'cleanup'),
         ],
@@ -92,7 +92,7 @@ void main() {
             ],
           ),
         ],
-        user: const ProjectUserStats(
+        user: ProjectUserStats(
           isSubscribed: true,
           points: 100,
           badgesEarned: 2,

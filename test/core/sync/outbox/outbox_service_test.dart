@@ -14,7 +14,6 @@ import 'package:rayuela_mobile/core/sync/outbox/outbox_entry.dart';
 import 'package:rayuela_mobile/core/sync/outbox/outbox_sender.dart';
 import 'package:rayuela_mobile/core/sync/outbox/outbox_service.dart';
 import 'package:rayuela_mobile/core/sync/outbox/sync_status.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:uuid/uuid.dart';
 
