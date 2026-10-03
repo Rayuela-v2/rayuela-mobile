@@ -93,11 +93,20 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^4.0.0
   mocktail: ^1.0.4
+  flutter_launcher_icons: ^0.14.1
 
   # Phase 2 — runs the SQLite implementation on host VMs (CI + local
   # `flutter test`) by linking against the FFI bindings instead of the
   # platform plugin. Production code stays on the regular `sqflite` API.
   sqflite_common_ffi: ^2.3.3
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: assets/icons/app_icon.png
+  adaptive_icon_background: "#0B3556"
+  adaptive_icon_foreground: assets/icons/app_icon_foreground.png
 
 flutter:
   uses-material-design: true
