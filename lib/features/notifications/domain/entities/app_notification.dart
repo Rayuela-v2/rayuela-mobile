@@ -41,6 +41,7 @@ class AppNotification {
     this.projectName,
     this.fadeReason,
     this.expiresAt,
+    this.earned = false,
     this.readAt,
     this.seenAt,
   });
@@ -60,6 +61,10 @@ class AppNotification {
 
   /// Deadline of the fading window, for the countdown. Null on expiry rows.
   final DateTime? expiresAt;
+
+  /// The user already owned the badge when this was recorded — the copy
+  /// reassures them instead of urging them to hurry.
+  final bool earned;
 
   /// Set once the user opened the centre and saw this row listed.
   final DateTime? readAt;
@@ -85,6 +90,7 @@ class AppNotification {
           if (projectName != null) 'projectName': projectName,
           if (fadeReason != null) 'fadeReason': fadeReason,
           if (expiresAt != null) 'expiresAt': expiresAt!.toIso8601String(),
+          if (earned) 'earned': true,
         }),
         'created_at': createdAt.toIso8601String(),
         'read_at': readAt?.toIso8601String(),
@@ -115,6 +121,7 @@ class AppNotification {
       projectName: data['projectName'] as String?,
       fadeReason: data['fadeReason'] as String?,
       expiresAt: DateTime.tryParse(data['expiresAt'] as String? ?? ''),
+      earned: data['earned'] == true,
       readAt: DateTime.tryParse(row['read_at'] as String? ?? ''),
       seenAt: DateTime.tryParse(row['seen_at'] as String? ?? ''),
     );

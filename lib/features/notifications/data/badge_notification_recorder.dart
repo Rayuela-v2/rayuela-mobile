@@ -83,6 +83,7 @@ class BadgeNotificationRecorder {
               projectName: detail.name,
               fadeReason: badge.fadeReason,
               expiresAt: badge.expiresAt,
+              earned: badge.earned,
             ),
           );
 
@@ -102,6 +103,7 @@ class BadgeNotificationRecorder {
               createdAt: now,
               projectName: detail.name,
               fadeReason: badge.fadeReason,
+              earned: badge.earned,
             ),
           );
 

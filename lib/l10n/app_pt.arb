@@ -121,6 +121,22 @@
   "@notification_badge_expired_body": {
     "placeholders": { "project": { "type": "String" } }
   },
+  "notification_badge_fading_earned_title": "“{badge}” está desvanecendo… mas já é sua",
+  "@notification_badge_fading_earned_title": {
+    "placeholders": { "badge": { "type": "String" } }
+  },
+  "notification_badge_fading_earned_body": "Você já a tem, então fique tranquilo(a): ninguém a tira de você. Ela só desvanece para quem ainda não a conquistou em {project}.",
+  "@notification_badge_fading_earned_body": {
+    "placeholders": { "project": { "type": "String" } }
+  },
+  "notification_badge_expired_earned_title": "“{badge}” desvaneceu, e você a tem",
+  "@notification_badge_expired_earned_title": {
+    "placeholders": { "badge": { "type": "String" } }
+  },
+  "notification_badge_expired_earned_body": "Ninguém mais pode conquistá-la em {project}, mas a sua continua sua. Você é um dos poucos que conseguiu!",
+  "@notification_badge_expired_earned_body": {
+    "placeholders": { "project": { "type": "String" } }
+  },
   "notification_popup_go": "Ver insígnia",
   "notification_popup_later": "Agora não",
 

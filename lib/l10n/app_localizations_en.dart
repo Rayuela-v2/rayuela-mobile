@@ -300,6 +300,26 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String notification_badge_fading_earned_title(String badge) {
+    return '“$badge” is fading… but it\'s already yours';
+  }
+
+  @override
+  String notification_badge_fading_earned_body(String project) {
+    return 'You\'ve already got it, so no worries: nobody can take it from you. It only fades for those who haven\'t earned it yet in $project.';
+  }
+
+  @override
+  String notification_badge_expired_earned_title(String badge) {
+    return '“$badge” has faded, and you have it';
+  }
+
+  @override
+  String notification_badge_expired_earned_body(String project) {
+    return 'Nobody else can earn it in $project anymore, but yours is still yours. You\'re one of the few who made it!';
+  }
+
+  @override
   String get notification_popup_go => 'See badge';
 
   @override

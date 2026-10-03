@@ -110,9 +110,8 @@ class _NotificationTile extends ConsumerWidget {
 
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      tileColor: highlight
-          ? theme.colorScheme.primary.withValues(alpha: 0.05)
-          : null,
+      tileColor:
+          highlight ? theme.colorScheme.primary.withValues(alpha: 0.05) : null,
       leading: CircleAvatar(
         backgroundColor: accent.withValues(alpha: 0.15),
         child: Icon(

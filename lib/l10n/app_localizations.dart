@@ -586,6 +586,30 @@ abstract class AppLocalizations {
   /// **'Nobody else can earn it in {project} now.'**
   String notification_badge_expired_body(String project);
 
+  /// No description provided for @notification_badge_fading_earned_title.
+  ///
+  /// In en, this message translates to:
+  /// **'“{badge}” is fading… but it\'s already yours'**
+  String notification_badge_fading_earned_title(String badge);
+
+  /// No description provided for @notification_badge_fading_earned_body.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve already got it, so no worries: nobody can take it from you. It only fades for those who haven\'t earned it yet in {project}.'**
+  String notification_badge_fading_earned_body(String project);
+
+  /// No description provided for @notification_badge_expired_earned_title.
+  ///
+  /// In en, this message translates to:
+  /// **'“{badge}” has faded, and you have it'**
+  String notification_badge_expired_earned_title(String badge);
+
+  /// No description provided for @notification_badge_expired_earned_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody else can earn it in {project} anymore, but yours is still yours. You\'re one of the few who made it!'**
+  String notification_badge_expired_earned_body(String project);
+
   /// No description provided for @notification_popup_go.
   ///
   /// In en, this message translates to:

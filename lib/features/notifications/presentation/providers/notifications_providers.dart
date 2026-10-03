@@ -63,8 +63,7 @@ final notificationsListProvider =
 
 /// Drives the bell's badge. Kept separate from the list so the app bar
 /// doesn't decode every row just to show a number.
-final unreadNotificationsCountProvider =
-    FutureProvider<int>((ref) async {
+final unreadNotificationsCountProvider = FutureProvider<int>((ref) async {
   ref.watch(notificationsRevisionProvider);
   final userId = ref.watch(notificationsUserIdProvider);
   if (userId.isEmpty) return 0;
@@ -102,8 +101,7 @@ class NotificationsController {
     _bump();
   }
 
-  void _bump() =>
-      _ref.read(notificationsRevisionProvider.notifier).state++;
+  void _bump() => _ref.read(notificationsRevisionProvider.notifier).state++;
 }
 
 final notificationsControllerProvider =

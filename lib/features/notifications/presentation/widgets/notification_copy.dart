@@ -9,19 +9,23 @@ import '../../domain/entities/app_notification.dart';
 /// the same event.
 extension AppNotificationCopy on AppNotification {
   String title(AppLocalizations t) => switch (type) {
-        AppNotificationType.badgeFading =>
-          t.notification_badge_fading_title(subject),
-        AppNotificationType.badgeExpired =>
-          t.notification_badge_expired_title(subject),
+        AppNotificationType.badgeFading => earned
+            ? t.notification_badge_fading_earned_title(subject)
+            : t.notification_badge_fading_title(subject),
+        AppNotificationType.badgeExpired => earned
+            ? t.notification_badge_expired_earned_title(subject)
+            : t.notification_badge_expired_title(subject),
       };
 
   String body(AppLocalizations t) {
     final project = projectName ?? '';
     return switch (type) {
-      AppNotificationType.badgeFading =>
-        t.notification_badge_fading_body(project),
-      AppNotificationType.badgeExpired =>
-        t.notification_badge_expired_body(project),
+      AppNotificationType.badgeFading => earned
+          ? t.notification_badge_fading_earned_body(project)
+          : t.notification_badge_fading_body(project),
+      AppNotificationType.badgeExpired => earned
+          ? t.notification_badge_expired_earned_body(project)
+          : t.notification_badge_expired_body(project),
     };
   }
 
@@ -30,7 +34,7 @@ extension AppNotificationCopy on AppNotification {
   /// A row sits in the centre long after its deadline, so this is computed
   /// against the clock every time it's read — never frozen at write time.
   String? countdown(AppLocalizations t) {
-    if (type != AppNotificationType.badgeFading || !windowStillOpen) {
+    if (type != AppNotificationType.badgeFading || earned || !windowStillOpen) {
       return null;
     }
     final left = expiresAt!.difference(DateTime.now());

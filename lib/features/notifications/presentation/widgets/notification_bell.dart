@@ -21,7 +21,8 @@ class NotificationBell extends ConsumerWidget {
 
     return IconButton(
       // The count is decoration; screen readers get it as words.
-      tooltip: unread > 0 ? t.notifications_unread(unread) : t.notifications_title,
+      tooltip:
+          unread > 0 ? t.notifications_unread(unread) : t.notifications_title,
       onPressed: () => context.pushNamed(AppRoute.notifications),
       icon: Stack(
         clipBehavior: Clip.none,

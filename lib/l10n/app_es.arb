@@ -121,6 +121,22 @@
   "@notification_badge_expired_body": {
     "placeholders": { "project": { "type": "String" } }
   },
+  "notification_badge_fading_earned_title": "«{badge}» se está desvaneciendo… pero ya es tuya",
+  "@notification_badge_fading_earned_title": {
+    "placeholders": { "badge": { "type": "String" } }
+  },
+  "notification_badge_fading_earned_body": "Vos ya la tenés, así que quedate tranquilo: nadie te la saca. Solo se desvanece para quienes todavía no la consiguieron en {project}.",
+  "@notification_badge_fading_earned_body": {
+    "placeholders": { "project": { "type": "String" } }
+  },
+  "notification_badge_expired_earned_title": "«{badge}» se desvaneció, y vos la tenés",
+  "@notification_badge_expired_earned_title": {
+    "placeholders": { "badge": { "type": "String" } }
+  },
+  "notification_badge_expired_earned_body": "Ya nadie más puede conseguirla en {project}, pero la tuya sigue siendo tuya. ¡Sos de los pocos que la lograron!",
+  "@notification_badge_expired_earned_body": {
+    "placeholders": { "project": { "type": "String" } }
+  },
   "notification_popup_go": "Ver insignia",
   "notification_popup_later": "Ahora no",
 

@@ -121,6 +121,22 @@
   "@notification_badge_expired_body": {
     "placeholders": { "project": { "type": "String" } }
   },
+  "notification_badge_fading_earned_title": "“{badge}” is fading… but it's already yours",
+  "@notification_badge_fading_earned_title": {
+    "placeholders": { "badge": { "type": "String" } }
+  },
+  "notification_badge_fading_earned_body": "You've already got it, so no worries: nobody can take it from you. It only fades for those who haven't earned it yet in {project}.",
+  "@notification_badge_fading_earned_body": {
+    "placeholders": { "project": { "type": "String" } }
+  },
+  "notification_badge_expired_earned_title": "“{badge}” has faded, and you have it",
+  "@notification_badge_expired_earned_title": {
+    "placeholders": { "badge": { "type": "String" } }
+  },
+  "notification_badge_expired_earned_body": "Nobody else can earn it in {project} anymore, but yours is still yours. You're one of the few who made it!",
+  "@notification_badge_expired_earned_body": {
+    "placeholders": { "project": { "type": "String" } }
+  },
   "notification_popup_go": "See badge",
   "notification_popup_later": "Not now",
 

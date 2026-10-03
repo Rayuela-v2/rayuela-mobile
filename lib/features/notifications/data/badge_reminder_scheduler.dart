@@ -206,7 +206,8 @@ class BadgeReminderScheduler {
     final ios = _plugin.resolvePlatformSpecificImplementation<
         IOSFlutterLocalNotificationsPlugin>();
     if (ios != null) {
-      return await ios.requestPermissions(alert: true, badge: true, sound: true) ??
+      return await ios.requestPermissions(
+              alert: true, badge: true, sound: true) ??
           false;
     }
     return true;

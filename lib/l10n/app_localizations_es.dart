@@ -305,6 +305,26 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String notification_badge_fading_earned_title(String badge) {
+    return '«$badge» se está desvaneciendo… pero ya es tuya';
+  }
+
+  @override
+  String notification_badge_fading_earned_body(String project) {
+    return 'Vos ya la tenés, así que quedate tranquilo: nadie te la saca. Solo se desvanece para quienes todavía no la consiguieron en $project.';
+  }
+
+  @override
+  String notification_badge_expired_earned_title(String badge) {
+    return '«$badge» se desvaneció, y vos la tenés';
+  }
+
+  @override
+  String notification_badge_expired_earned_body(String project) {
+    return 'Ya nadie más puede conseguirla en $project, pero la tuya sigue siendo tuya. ¡Sos de los pocos que la lograron!';
+  }
+
+  @override
   String get notification_popup_go => 'Ver insignia';
 
   @override
