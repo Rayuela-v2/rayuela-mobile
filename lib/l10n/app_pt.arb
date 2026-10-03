@@ -91,6 +91,8 @@
     "placeholders": { "count": { "type": "int" } }
   },
   "badge_fading_last_call": "Última chance!",
+  "badge_fading_earned_pill": "Você já tem",
+  "badge_fading_earned_hint": "Você já a tem, fique tranquilo(a): é sua para sempre. Ela só desvanece para quem ainda não a conquistou.",
   "badge_fading_call_to_action": "Ainda dá para conquistá-la. Depois, não.",
   "badge_expired": "Desapareceu",
   "badge_expired_hint": "Ninguém mais pode conquistá-la.",

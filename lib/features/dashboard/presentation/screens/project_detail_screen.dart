@@ -953,7 +953,9 @@ class _BadgeFadingNotice extends StatelessWidget {
     if (!fading && !expired) return const SizedBox.shrink();
 
     final headline = fading
-        ? t.badge_fading_call_to_action
+        ? (badge.earned
+            ? t.badge_fading_earned_hint
+            : t.badge_fading_call_to_action)
         : badge.earned
             ? t.badge_expired_kept
             : t.badge_expired_hint;

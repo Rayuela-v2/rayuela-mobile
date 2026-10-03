@@ -240,6 +240,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get badge_fading_last_call => 'Last call!';
 
   @override
+  String get badge_fading_earned_pill => 'You have it';
+
+  @override
+  String get badge_fading_earned_hint =>
+      'You already have it, no worries: it\'s yours for good. It only fades for those who haven\'t earned it yet.';
+
+  @override
   String get badge_fading_call_to_action =>
       'You can still earn it. After this, you can\'t.';
 
@@ -301,7 +308,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String notification_badge_fading_earned_title(String badge) {
-    return '“$badge” is fading… but it\'s already yours';
+    return '“$badge” is fading… but it\'s already yours!';
   }
 
   @override
@@ -311,7 +318,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String notification_badge_expired_earned_title(String badge) {
-    return '“$badge” has faded, and you have it';
+    return '“$badge” has faded, and you have it!';
   }
 
   @override

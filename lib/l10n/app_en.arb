@@ -91,6 +91,8 @@
     "placeholders": { "count": { "type": "int" } }
   },
   "badge_fading_last_call": "Last call!",
+  "badge_fading_earned_pill": "You have it",
+  "badge_fading_earned_hint": "You already have it, no worries: it's yours for good. It only fades for those who haven't earned it yet.",
   "badge_fading_call_to_action": "You can still earn it. After this, you can't.",
   "badge_expired": "Faded away",
   "badge_expired_hint": "Nobody else can earn it now.",
@@ -121,7 +123,7 @@
   "@notification_badge_expired_body": {
     "placeholders": { "project": { "type": "String" } }
   },
-  "notification_badge_fading_earned_title": "“{badge}” is fading… but it's already yours",
+  "notification_badge_fading_earned_title": "“{badge}” is fading… but it's already yours!",
   "@notification_badge_fading_earned_title": {
     "placeholders": { "badge": { "type": "String" } }
   },
@@ -129,7 +131,7 @@
   "@notification_badge_fading_earned_body": {
     "placeholders": { "project": { "type": "String" } }
   },
-  "notification_badge_expired_earned_title": "“{badge}” has faded, and you have it",
+  "notification_badge_expired_earned_title": "“{badge}” has faded, and you have it!",
   "@notification_badge_expired_earned_title": {
     "placeholders": { "badge": { "type": "String" } }
   },

@@ -502,6 +502,18 @@ abstract class AppLocalizations {
   /// **'Last call!'**
   String get badge_fading_last_call;
 
+  /// No description provided for @badge_fading_earned_pill.
+  ///
+  /// In en, this message translates to:
+  /// **'You have it'**
+  String get badge_fading_earned_pill;
+
+  /// No description provided for @badge_fading_earned_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'You already have it, no worries: it\'s yours for good. It only fades for those who haven\'t earned it yet.'**
+  String get badge_fading_earned_hint;
+
   /// No description provided for @badge_fading_call_to_action.
   ///
   /// In en, this message translates to:
@@ -589,7 +601,7 @@ abstract class AppLocalizations {
   /// No description provided for @notification_badge_fading_earned_title.
   ///
   /// In en, this message translates to:
-  /// **'“{badge}” is fading… but it\'s already yours'**
+  /// **'“{badge}” is fading… but it\'s already yours!'**
   String notification_badge_fading_earned_title(String badge);
 
   /// No description provided for @notification_badge_fading_earned_body.
@@ -601,7 +613,7 @@ abstract class AppLocalizations {
   /// No description provided for @notification_badge_expired_earned_title.
   ///
   /// In en, this message translates to:
-  /// **'“{badge}” has faded, and you have it'**
+  /// **'“{badge}” has faded, and you have it!'**
   String notification_badge_expired_earned_title(String badge);
 
   /// No description provided for @notification_badge_expired_earned_body.

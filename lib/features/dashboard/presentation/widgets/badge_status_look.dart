@@ -58,8 +58,10 @@ class BadgeStatusLook {
         final left = badge.timeUntilExpiry;
         return BadgeStatusLook(
           color: RayuelaColors.warning,
-          icon: Icons.hourglass_bottom,
-          label: '${t.badge_fading} · ${_countdown(left, t)}',
+          icon: badge.earned ? Icons.workspace_premium : Icons.hourglass_bottom,
+          label: badge.earned
+              ? '${t.badge_fading_earned_pill} · ${_countdown(left, t)}'
+              : '${t.badge_fading} · ${_countdown(left, t)}',
           urgent: true,
           compactCountdown: _compactCountdown(left),
         );

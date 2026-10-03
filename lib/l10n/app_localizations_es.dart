@@ -244,6 +244,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get badge_fading_last_call => '¡Última oportunidad!';
 
   @override
+  String get badge_fading_earned_pill => 'Ya la tenés';
+
+  @override
+  String get badge_fading_earned_hint =>
+      'Ya la tenés, tranquilo: es tuya para siempre. Solo se desvanece para quienes todavía no la consiguieron.';
+
+  @override
   String get badge_fading_call_to_action =>
       'Todavía podés conseguirla. Después, no.';
 
@@ -306,7 +313,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String notification_badge_fading_earned_title(String badge) {
-    return '«$badge» se está desvaneciendo… pero ya es tuya';
+    return '«$badge» se está desvaneciendo… pero ya es tuya!';
   }
 
   @override
@@ -316,7 +323,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String notification_badge_expired_earned_title(String badge) {
-    return '«$badge» se desvaneció, y vos la tenés';
+    return '«$badge» se desvaneció, y vos la tenés!';
   }
 
   @override

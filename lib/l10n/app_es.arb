@@ -91,6 +91,8 @@
     "placeholders": { "count": { "type": "int" } }
   },
   "badge_fading_last_call": "¡Última oportunidad!",
+  "badge_fading_earned_pill": "Ya la tenés",
+  "badge_fading_earned_hint": "Ya la tenés, tranquilo: es tuya para siempre. Solo se desvanece para quienes todavía no la consiguieron.",
   "badge_fading_call_to_action": "Todavía podés conseguirla. Después, no.",
   "badge_expired": "Se desvaneció",
   "badge_expired_hint": "Ya nadie más puede conseguirla.",
@@ -121,7 +123,7 @@
   "@notification_badge_expired_body": {
     "placeholders": { "project": { "type": "String" } }
   },
-  "notification_badge_fading_earned_title": "«{badge}» se está desvaneciendo… pero ya es tuya",
+  "notification_badge_fading_earned_title": "«{badge}» se está desvaneciendo… pero ya es tuya!",
   "@notification_badge_fading_earned_title": {
     "placeholders": { "badge": { "type": "String" } }
   },
@@ -129,7 +131,7 @@
   "@notification_badge_fading_earned_body": {
     "placeholders": { "project": { "type": "String" } }
   },
-  "notification_badge_expired_earned_title": "«{badge}» se desvaneció, y vos la tenés",
+  "notification_badge_expired_earned_title": "«{badge}» se desvaneció, y vos la tenés!",
   "@notification_badge_expired_earned_title": {
     "placeholders": { "badge": { "type": "String" } }
   },

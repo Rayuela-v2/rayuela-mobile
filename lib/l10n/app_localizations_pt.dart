@@ -243,6 +243,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get badge_fading_last_call => 'Última chance!';
 
   @override
+  String get badge_fading_earned_pill => 'Você já tem';
+
+  @override
+  String get badge_fading_earned_hint =>
+      'Você já a tem, fique tranquilo(a): é sua para sempre. Ela só desvanece para quem ainda não a conquistou.';
+
+  @override
   String get badge_fading_call_to_action =>
       'Ainda dá para conquistá-la. Depois, não.';
 
