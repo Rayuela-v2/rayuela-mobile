@@ -8,6 +8,7 @@ class LocationSummaryCard extends StatelessWidget {
     super.key,
     this.position,
     this.manualLatLng,
+    this.allowManualLocation = true,
     required this.resolving,
     this.errorMessage,
     required this.onRetry,
@@ -17,6 +18,7 @@ class LocationSummaryCard extends StatelessWidget {
 
   final Position? position;
   final LatLng? manualLatLng;
+  final bool allowManualLocation;
   final bool resolving;
   final String? errorMessage;
   final VoidCallback onRetry;
@@ -78,7 +80,7 @@ class LocationSummaryCard extends StatelessWidget {
                     fontWeight: FontWeight.bold, color: Color(0xFF37474F),),
               ),
             ),
-            if (onPickOnMap != null)
+            if (allowManualLocation && onPickOnMap != null)
               IconButton(
                 icon: Container(
                   padding: const EdgeInsets.all(8),
@@ -109,7 +111,7 @@ class LocationSummaryCard extends StatelessWidget {
                   fontWeight: FontWeight.bold, color: Color(0xFF37474F),),
             ),
           ),
-          if (onPickOnMap != null)
+          if (allowManualLocation && onPickOnMap != null)
             IconButton(
               icon: Container(
                 padding: const EdgeInsets.all(8),

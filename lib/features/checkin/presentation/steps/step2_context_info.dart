@@ -89,6 +89,7 @@ class Step2ContextInfo extends ConsumerWidget {
           child: LocationSummaryCard(
             position: state.position,
             manualLatLng: state.manualLatLng,
+            allowManualLocation: state.manualLocation,
             resolving: state.resolvingLocation,
             errorMessage: localError,
             onRetry: notifier.initLocation,
@@ -224,46 +225,47 @@ class Step2ContextInfo extends ConsumerWidget {
                     ],
                   ),
                 ),
-                IconButton(
-                  icon: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF5EDD6),
-                      borderRadius: BorderRadius.circular(8),
+                if (state.manualLocation)
+                  IconButton(
+                    icon: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF5EDD6),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.edit_outlined,
+                          size: 20, color: Color(0xFF3A2810),),
                     ),
-                    child: const Icon(Icons.edit_outlined,
-                        size: 20, color: Color(0xFF3A2810),),
+                    onPressed: () async {
+                      final now = DateTime.now();
+                      final initialDate =
+                          activeDateTime.isAfter(now) ? now : activeDateTime;
+                      final selectedDate = await showDatePicker(
+                        context: context,
+                        initialDate: initialDate,
+                        firstDate: DateTime(2000),
+                        lastDate: now,
+                      );
+                      if (selectedDate == null) return;
+
+                      if (!context.mounted) return;
+
+                      final selectedTime = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.fromDateTime(activeDateTime),
+                      );
+                      if (selectedTime == null) return;
+
+                      final finalDateTime = DateTime(
+                        selectedDate.year,
+                        selectedDate.month,
+                        selectedDate.day,
+                        selectedTime.hour,
+                        selectedTime.minute,
+                      );
+                      notifier.setCustomDateTime(finalDateTime);
+                    },
                   ),
-                  onPressed: () async {
-                    final now = DateTime.now();
-                    final initialDate =
-                        activeDateTime.isAfter(now) ? now : activeDateTime;
-                    final selectedDate = await showDatePicker(
-                      context: context,
-                      initialDate: initialDate,
-                      firstDate: DateTime(2000),
-                      lastDate: now,
-                    );
-                    if (selectedDate == null) return;
-
-                    if (!context.mounted) return;
-
-                    final selectedTime = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.fromDateTime(activeDateTime),
-                    );
-                    if (selectedTime == null) return;
-
-                    final finalDateTime = DateTime(
-                      selectedDate.year,
-                      selectedDate.month,
-                      selectedDate.day,
-                      selectedTime.hour,
-                      selectedTime.minute,
-                    );
-                    notifier.setCustomDateTime(finalDateTime);
-                  },
-                ),
               ],
             ),
           ),

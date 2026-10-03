@@ -14,6 +14,7 @@ class CheckinWizardState {
     this.taskType,
     this.availableTaskTypes = const [],
     this.taskTypeLocked = false,
+    this.manualLocation = false,
     this.images = const [],
     this.position,
     this.manualLatLng,
@@ -32,6 +33,9 @@ class CheckinWizardState {
   /// True when the task type was preselected (e.g. deep-linked from the tasks
   /// list), so step 1's picker is skipped and excluded from the progress UI.
   final bool taskTypeLocked;
+
+  /// Whether deferred check-in (manual time and coordinates editing) is enabled for this project.
+  final bool manualLocation;
 
   final List<XFile> images;
   final Position? position;
@@ -58,6 +62,7 @@ class CheckinWizardState {
     TaskType? taskType,
     List<TaskType>? availableTaskTypes,
     bool? taskTypeLocked,
+    bool? manualLocation,
     List<XFile>? images,
     Position? position,
     LatLng? manualLatLng,
@@ -76,6 +81,7 @@ class CheckinWizardState {
       taskType: taskType ?? this.taskType,
       availableTaskTypes: availableTaskTypes ?? this.availableTaskTypes,
       taskTypeLocked: taskTypeLocked ?? this.taskTypeLocked,
+      manualLocation: manualLocation ?? this.manualLocation,
       images: images ?? this.images,
       position: position ?? this.position,
       manualLatLng: clearManualLatLng ? null : (manualLatLng ?? this.manualLatLng),

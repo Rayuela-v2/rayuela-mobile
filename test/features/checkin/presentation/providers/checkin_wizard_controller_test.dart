@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rayuela_mobile/core/error/result.dart';
 import 'package:rayuela_mobile/features/checkin/domain/entities/checkin_request.dart';
@@ -50,6 +51,7 @@ void main() {
       TaskType(name: 'obs'),
       TaskType(name: 'pic'),
     ],
+    bool manualLocation = true,
   }) {
     return CheckinWizardController(
       repository: repository,
@@ -58,6 +60,7 @@ void main() {
       taskId: taskId,
       initialTaskType: initialTaskType,
       availableTaskTypes: availableTaskTypes,
+      manualLocation: manualLocation,
     );
   }
 
@@ -189,7 +192,7 @@ void main() {
     expect(captured.imagePaths, isEmpty);
   });
 
-  test('setCustomDateTime and clearCustomDateTime update customDateTime state', () async {
+  test('setCustomDateTime and clearCustomDateTime update customDateTime state when manualLocation is true', () async {
     final controller = build();
     await controller.initLocation();
 
@@ -202,6 +205,22 @@ void main() {
 
     controller.clearCustomDateTime();
     expect(controller.state.customDateTime, isNull);
+  });
+
+  test('setCustomDateTime and setManualLocation are ignored when manualLocation is false', () async {
+    final controller = build(manualLocation: false);
+    await controller.initLocation();
+
+    expect(controller.state.manualLocation, false);
+    expect(controller.state.customDateTime, isNull);
+    expect(controller.state.manualLatLng, isNull);
+
+    final targetDateTime = DateTime.utc(2026, 5, 20, 10, 30);
+    controller.setCustomDateTime(targetDateTime);
+    expect(controller.state.customDateTime, isNull);
+
+    controller.setManualLocation(const LatLng(10, 20));
+    expect(controller.state.manualLatLng, isNull);
   });
 
   test('successful submit with customDateTime uses customDateTime in CheckinRequest', () async {

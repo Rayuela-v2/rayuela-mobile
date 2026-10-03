@@ -128,6 +128,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
   }
 
   void _startCheckin(BuildContext context, TaskItem task) {
+    final detail = ref.read(projectDetailValueProvider(widget.projectId)).asData?.value;
     context.pushNamed(
       AppRoute.checkin,
       pathParameters: {'projectId': widget.projectId},
@@ -135,7 +136,9 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
         'taskType': task.type,
         'taskName': task.name,
         if (task.id.isNotEmpty) 'taskId': task.id,
+        if (detail != null) 'manualLocation': detail.manualLocation.toString(),
       },
+      extra: detail?.taskTypes,
     );
   }
 }

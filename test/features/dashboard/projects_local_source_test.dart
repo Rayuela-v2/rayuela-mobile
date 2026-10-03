@@ -5,7 +5,6 @@ import 'package:rayuela_mobile/features/dashboard/data/sources/projects_local_so
 import 'package:rayuela_mobile/features/dashboard/domain/entities/project_area.dart';
 import 'package:rayuela_mobile/features/dashboard/domain/entities/project_detail.dart';
 import 'package:rayuela_mobile/features/dashboard/domain/entities/project_summary.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() {
