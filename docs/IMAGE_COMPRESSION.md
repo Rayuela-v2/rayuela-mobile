@@ -6,13 +6,14 @@ Documentación técnica del pipeline de compresión y reducción de resolución 
 
 ## 1. Motivación y Contexto
 
-Los voluntarios de Rayuela realizan observaciones en campo (reservas naturales, costas, parques), donde la conectividad celular es limitada, costosa o inestable.
+El **objetivo principal** de esta implementación es **cuidar el uso del almacenamiento (storage)**, dado que la capacidad de almacenamiento de objetos (S3) es limitada.
 
-Las cámaras de smartphones modernos capturan fotos a resoluciones masivas ($12\text{ a }48\text{ MP}+$), generando archivos de **$3\text{ a }15\text{ MB}+$ cada una**. Subir 3 fotos crudas en un check-in implicaba:
-- Transferir entre **$10\text{ y }45\text{ MB}$** por reporte en la red móvil.
-- Alto riesgo de timeout (límite de 90s) y fallos en subida.
-- Saturación del almacenamiento local (`ImageStore` en sandbox) mientras los check-ins esperan en el Outbox.
-- Consumo excesivo e innecesario de almacenamiento de objetos S3 en el backend.
+Las cámaras de smartphones actuales capturan fotos a resoluciones masivas ($12\text{ a }48\text{ MP}+$), generando archivos de entre **$3\text{ y }15\text{ MB}+$ cada una**. Para los fines de la plataforma Rayuela (validar observaciones ciudadanas, especímenes y tareas comunitarias), no es necesaria tanta calidad ni resoluciones extremas de impresión.
+
+Al establecer un **tamaño estándar máximo unificado (1600px)** y comprimir a JPEG (calidad 80):
+- **Cuidado del storage (Meta principal):** El consumo de espacio en Garage S3 se reduce más de un 90%, evitando saturar los límites de almacenamiento.
+- **Estandarización:** Todas las imágenes que ingresan al sistema quedan unificadas en un formato y dimensión coherente, independientemente de la cámara del dispositivo.
+- **Menor consumo de datos y memoria:** Se reduce drásticamente el peso de las subidas en red móvil y el espacio ocupado en el sandbox del dispositivo móvil (`ImageStore` / SQLite Outbox).
 
 ---
 
