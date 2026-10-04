@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../checkin/presentation/utils/checkin_image_url.dart';
 import '../../domain/entities/project_detail.dart';
 import 'badge_fade_effect.dart';
 import 'badge_status_look.dart';
@@ -510,7 +511,7 @@ class _BadgeNode extends StatelessWidget {
       }
     } else {
       image = CachedNetworkImage(
-        imageUrl: url,
+        imageUrl: resolveStorageUrl(url),
         fit: BoxFit.cover,
         width: radius * 2,
         height: radius * 2,
