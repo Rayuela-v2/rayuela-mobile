@@ -5,6 +5,7 @@ import '../../../../core/router/routes.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/checkin_result.dart';
 import '../../domain/entities/checkin_submission_outcome.dart';
+import '../utils/checkin_image_url.dart';
 import '../widgets/wizard/companion_avatar.dart';
 import '../widgets/wizard/companion_bubble.dart';
 
@@ -313,7 +314,7 @@ class _BadgeCircle extends StatelessWidget {
           child: ClipOval(
             child: (badge.imageUrl != null && badge.imageUrl!.isNotEmpty)
                 ? Image.network(
-                    badge.imageUrl!,
+                    resolveStorageUrl(badge.imageUrl!),
                     fit: BoxFit.cover,
                     errorBuilder: (_, __, ___) => const _BadgeFallbackIcon(),
                   )

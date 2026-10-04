@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/linkified_text.dart';
+import '../../../checkin/presentation/utils/checkin_image_url.dart';
 import '../../domain/entities/project_summary.dart';
 
 class ProjectCard extends StatelessWidget {
@@ -96,7 +97,7 @@ class _CoverImage extends StatelessWidget {
       );
     }
     return CachedNetworkImage(
-      imageUrl: url!,
+      imageUrl: resolveStorageUrl(url!),
       fit: BoxFit.cover,
       placeholder: (_, __) => Container(
         color: Theme.of(context).colorScheme.surfaceContainerHighest,

@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/router/routes.dart';
 import '../../../../features/auth/presentation/providers/auth_controller.dart';
+import '../../../../features/checkin/presentation/utils/checkin_image_url.dart';
 import '../../../../features/checkin/presentation/widgets/user_checkins_view.dart';
 import '../../../../features/leaderboard/presentation/providers/leaderboard_providers.dart';
 import '../../../../features/leaderboard/presentation/widgets/leaderboard_view.dart';
@@ -1280,7 +1281,7 @@ class _BadgeMedia extends StatelessWidget {
       }
     } else {
       image = CachedNetworkImage(
-        imageUrl: imageUrl!,
+        imageUrl: resolveStorageUrl(imageUrl!),
         width: size,
         height: size,
         fit: BoxFit.cover,
