@@ -47,6 +47,11 @@ final imageStoreProvider = Provider<ImageStore>((ref) {
   throw UnimplementedError('Override in bootstrap');
 });
 
+/// Strategy for compressing check-in images before persistence or upload.
+final imageCompressorProvider = Provider<ImageCompressor>((ref) {
+  return const FlutterImageCompressorImpl();
+});
+
 /// Reactive view over the device's network state, layered with a
 /// reachability probe so the outbox drainer can distinguish "interface
 /// up" from "backend reachable".
