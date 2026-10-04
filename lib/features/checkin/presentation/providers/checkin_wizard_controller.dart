@@ -1,9 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 import '../../../../core/error/app_exception.dart';
+import '../../../../core/storage/image_store.dart';
+import '../../../../shared/providers/core_providers.dart';
 import '../../../dashboard/domain/entities/project_detail.dart';
 import '../../domain/entities/checkin_request.dart';
 import '../../domain/entities/checkin_submission_outcome.dart';
@@ -16,6 +22,8 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
   CheckinWizardController({
     required CheckinsRepository repository,
     required LocationService locationService,
+    ImageCompressor? compressor,
+    ImagePicker? picker,
     required String projectId,
     String? taskId,
     String? initialTaskType,
@@ -23,6 +31,8 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
     bool manualLocation = false,
   })  : _repository = repository,
         _locationService = locationService,
+        _compressor = compressor ?? const FlutterImageCompressorImpl(),
+        _picker = picker ?? ImagePicker(),
         super(CheckinWizardState(
           projectId: projectId,
           taskId: taskId,
@@ -71,7 +81,8 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
 
   final CheckinsRepository _repository;
   final LocationService _locationService;
-  final _picker = ImagePicker();
+  final ImageCompressor _compressor;
+  final ImagePicker _picker;
 
   Future<void> initLocation() async {
     if (state.resolvingLocation) return;
@@ -113,7 +124,8 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
           maxWidth: 1920,
         );
         if (shot != null) {
-          state = state.copyWith(images: [...state.images, shot]);
+          final processed = await _compressImage(shot);
+          state = state.copyWith(images: [...state.images, processed]);
         }
       } else {
         final remaining = 3 - state.images.length;
@@ -123,12 +135,50 @@ class CheckinWizardController extends StateNotifier<CheckinWizardState> {
           maxWidth: 1920,
           limit: remaining,
         );
+        if (picked.isEmpty) return;
+        final toProcess = picked.take(remaining).toList();
+        final processed = await Future.wait(toProcess.map(_compressImage));
         state = state.copyWith(
-          images: [...state.images, ...picked.take(remaining)],
+          images: [...state.images, ...processed],
         );
       }
     } catch (e) {
       state = state.copyWith(error: e.toString());
+    }
+  }
+
+  /// Compresses the image and writes the result to a temporary cache file.
+  ///
+  /// Zero-friction fail-open guarantee: if compression fails, throws, or returns
+  /// empty bytes, this method silently falls back to returning [original] so the
+  /// volunteer's contribution is never blocked.
+  Future<XFile> _compressImage(XFile original) async {
+    try {
+      final bytes = await _compressor.compressToJpeg(original.path);
+      if (bytes.isEmpty) {
+        return original;
+      }
+      final tempDir = await _resolveTempDir();
+      final targetPath = p.join(
+        tempDir.path,
+        'checkin_${DateTime.now().microsecondsSinceEpoch}_${p.basenameWithoutExtension(original.path)}.jpg',
+      );
+      final tempFile = File(targetPath);
+      await tempFile.writeAsBytes(bytes, flush: true);
+      return XFile(tempFile.path);
+    } catch (e, st) {
+      debugPrint(
+        '[CheckinWizardController] Image compression failed, falling back to original: $e\n$st',
+      );
+      return original;
+    }
+  }
+
+  Future<Directory> _resolveTempDir() async {
+    try {
+      return await getTemporaryDirectory();
+    } catch (_) {
+      return Directory.systemTemp;
     }
   }
 
@@ -276,6 +326,7 @@ final checkinWizardProvider = StateNotifierProvider.autoDispose.family<
   return CheckinWizardController(
     repository: ref.watch(checkinsRepositoryProvider),
     locationService: ref.watch(locationServiceProvider),
+    compressor: ref.watch(imageCompressorProvider),
     projectId: args.projectId,
     taskId: args.taskId,
     initialTaskType: args.initialTaskType,

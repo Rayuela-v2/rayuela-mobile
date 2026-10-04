@@ -8,6 +8,7 @@
 | [`MIGRACION_RESUMEN.md`](./MIGRACION_RESUMEN.md) | Resumen narrativo de la migración con decisiones de diseño. |
 | [`OFFLINE_SYNC_PLAN.md`](./OFFLINE_SYNC_PLAN.md) | **Plan original** del sistema offline: trade‑offs, esquema de datos, riesgos, criterios de aceptación. Es el doc de "por qué". |
 | [`OFFLINE_CHECKINS.md`](./OFFLINE_CHECKINS.md) | **Walkthrough humano** del sistema offline con diagramas (Mermaid). Es el doc de "cómo funciona". Léelo antes de tocar código del flujo de check‑ins. |
+| [`IMAGE_COMPRESSION.md`](./IMAGE_COMPRESSION.md) | **Compresión y optimización de imágenes**: pipeline de reducción de tamaño/resolución, fail-open y métricas comparativas. |
 | [`BACKGROUND_SYNC_SETUP.md`](./BACKGROUND_SYNC_SETUP.md) | Configuración nativa Android / iOS para `workmanager`. Pasos manuales en `Info.plist` y `AppDelegate.swift`. |
 | [`CHANGELOG_OFFLINE.md`](./CHANGELOG_OFFLINE.md) | Notas de release de Phase 2: lo que se ship‑eó, qué chequear al cortar, limitaciones conocidas. |
 

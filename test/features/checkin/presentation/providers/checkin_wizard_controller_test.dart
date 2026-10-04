@@ -1,8 +1,13 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rayuela_mobile/core/error/result.dart';
+import 'package:rayuela_mobile/core/storage/image_store.dart';
 import 'package:rayuela_mobile/features/checkin/domain/entities/checkin_request.dart';
 import 'package:rayuela_mobile/features/checkin/domain/entities/checkin_submission_outcome.dart';
 import 'package:rayuela_mobile/features/checkin/domain/repositories/checkins_repository.dart';
@@ -12,6 +17,8 @@ import 'package:rayuela_mobile/features/dashboard/domain/entities/project_detail
 
 class _MockCheckinsRepository extends Mock implements CheckinsRepository {}
 class _MockLocationService extends Mock implements LocationService {}
+class _MockImagePicker extends Mock implements ImagePicker {}
+class _MockImageCompressor extends Mock implements ImageCompressor {}
 class _FakeCheckinRequest extends Fake implements CheckinRequest {}
 
 void main() {
@@ -21,11 +28,15 @@ void main() {
 
   late _MockCheckinsRepository repository;
   late _MockLocationService locationService;
+  late _MockImagePicker picker;
+  late _MockImageCompressor compressor;
   late Position fakePosition;
 
   setUp(() {
     repository = _MockCheckinsRepository();
     locationService = _MockLocationService();
+    picker = _MockImagePicker();
+    compressor = _MockImageCompressor();
     fakePosition = Position(
       latitude: -34.6037,
       longitude: -58.3816,
@@ -52,10 +63,14 @@ void main() {
       TaskType(name: 'pic'),
     ],
     bool manualLocation = true,
+    ImageCompressor? imageCompressor,
+    ImagePicker? imagePicker,
   }) {
     return CheckinWizardController(
       repository: repository,
       locationService: locationService,
+      compressor: imageCompressor ?? const PassthroughImageCompressor(),
+      picker: imagePicker ?? picker,
       projectId: projectId,
       taskId: taskId,
       initialTaskType: initialTaskType,
@@ -260,5 +275,128 @@ void main() {
       controller.state.error,
       'Location services are turned off. Enable them to check in.',
     );
+  });
+
+  group('pickImage with compression and fail-open fallback', () {
+    late Directory tempDir;
+
+    setUp(() async {
+      tempDir = await Directory.systemTemp.createTemp('wizard_test_');
+    });
+
+    tearDown(() async {
+      if (await tempDir.exists()) {
+        await tempDir.delete(recursive: true);
+      }
+    });
+
+    test('camera photo is compressed and added to state', () async {
+      final rawFile = File('${tempDir.path}/raw_camera.jpg')
+        ..writeAsBytesSync([1, 2, 3]);
+      final rawXFile = XFile(rawFile.path);
+
+      when(() => picker.pickImage(
+            source: ImageSource.camera,
+            imageQuality: 80,
+            maxWidth: 1920,
+          )).thenAnswer((_) async => rawXFile);
+
+      when(() => compressor.compressToJpeg(
+            rawXFile.path,
+            maxLongEdge: any(named: 'maxLongEdge'),
+            quality: any(named: 'quality'),
+          )).thenAnswer((_) async => Uint8List.fromList([9, 9, 9]));
+
+      final controller =
+          build(imageCompressor: compressor, imagePicker: picker);
+      await controller.pickImage(ImageSource.camera);
+
+      expect(controller.state.images, hasLength(1));
+      final processed = controller.state.images.first;
+      expect(processed.path, isNot(rawXFile.path));
+      expect(File(processed.path).readAsBytesSync(), [9, 9, 9]);
+      expect(controller.state.error, isNull);
+    });
+
+    test('gallery photos are compressed and added to state', () async {
+      final f1 = File('${tempDir.path}/g1.jpg')..writeAsBytesSync([1]);
+      final f2 = File('${tempDir.path}/g2.jpg')..writeAsBytesSync([2]);
+
+      when(() => picker.pickMultiImage(
+            imageQuality: 80,
+            maxWidth: 1920,
+            limit: 3,
+          )).thenAnswer((_) async => [XFile(f1.path), XFile(f2.path)]);
+
+      when(() => compressor.compressToJpeg(
+            any(),
+            maxLongEdge: any(named: 'maxLongEdge'),
+            quality: any(named: 'quality'),
+          )).thenAnswer((_) async => Uint8List.fromList([8, 8]));
+
+      final controller =
+          build(imageCompressor: compressor, imagePicker: picker);
+      await controller.pickImage(ImageSource.gallery);
+
+      expect(controller.state.images, hasLength(2));
+      expect(File(controller.state.images[0].path).readAsBytesSync(), [8, 8]);
+      expect(File(controller.state.images[1].path).readAsBytesSync(), [8, 8]);
+      expect(controller.state.error, isNull);
+    });
+
+    test('falls back silently to original XFile when compressor throws',
+        () async {
+      final rawFile = File('${tempDir.path}/unsupported.png')
+        ..writeAsBytesSync([5, 6, 7]);
+      final rawXFile = XFile(rawFile.path);
+
+      when(() => picker.pickImage(
+            source: ImageSource.camera,
+            imageQuality: 80,
+            maxWidth: 1920,
+          )).thenAnswer((_) async => rawXFile);
+
+      when(() => compressor.compressToJpeg(
+            rawXFile.path,
+            maxLongEdge: any(named: 'maxLongEdge'),
+            quality: any(named: 'quality'),
+          )).thenThrow(Exception('Codec failed'));
+
+      final controller =
+          build(imageCompressor: compressor, imagePicker: picker);
+      await controller.pickImage(ImageSource.camera);
+
+      // Fail-open: Original image is retained without showing error
+      expect(controller.state.images, hasLength(1));
+      expect(controller.state.images.first.path, rawXFile.path);
+      expect(controller.state.error, isNull);
+    });
+
+    test('falls back silently to original XFile when compressor returns empty bytes',
+        () async {
+      final rawFile = File('${tempDir.path}/empty_result.jpg')
+        ..writeAsBytesSync([7, 8]);
+      final rawXFile = XFile(rawFile.path);
+
+      when(() => picker.pickImage(
+            source: ImageSource.camera,
+            imageQuality: 80,
+            maxWidth: 1920,
+          )).thenAnswer((_) async => rawXFile);
+
+      when(() => compressor.compressToJpeg(
+            rawXFile.path,
+            maxLongEdge: any(named: 'maxLongEdge'),
+            quality: any(named: 'quality'),
+          )).thenAnswer((_) async => Uint8List(0));
+
+      final controller =
+          build(imageCompressor: compressor, imagePicker: picker);
+      await controller.pickImage(ImageSource.camera);
+
+      expect(controller.state.images, hasLength(1));
+      expect(controller.state.images.first.path, rawXFile.path);
+      expect(controller.state.error, isNull);
+    });
   });
 }

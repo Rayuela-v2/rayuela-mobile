@@ -43,18 +43,23 @@ class FlutterImageCompressorImpl implements ImageCompressor {
     int maxLongEdge = 1600,
     int quality = 80,
   }) async {
-    final bytes = await FlutterImageCompress.compressWithFile(
-      sourcePath,
-      minWidth: maxLongEdge,
-      minHeight: maxLongEdge,
-      quality: quality,
-    );
-    if (bytes == null) {
-      // Fallback: ship the original bytes uncompressed. Better to upload
-      // a heavier image than to drop the user's check-in.
+    try {
+      final bytes = await FlutterImageCompress.compressWithFile(
+        sourcePath,
+        minWidth: maxLongEdge,
+        minHeight: maxLongEdge,
+        quality: quality,
+      );
+      if (bytes == null || bytes.isEmpty) {
+        // Fallback: ship the original bytes uncompressed. Better to upload
+        // a heavier image than to drop the user's check-in.
+        return File(sourcePath).readAsBytes();
+      }
+      return Uint8List.fromList(bytes);
+    } catch (_) {
+      // Fallback on platform/codec errors to ensure zero user friction.
       return File(sourcePath).readAsBytes();
     }
-    return Uint8List.fromList(bytes);
   }
 }
 
