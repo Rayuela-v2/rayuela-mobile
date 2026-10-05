@@ -20,7 +20,7 @@ dependencies:
   go_router: ^14.2.7
 
   # Networking
-  dio: ^5.7.0
+  dio: ^5.11.1
   pretty_dio_logger: ^1.4.0
   # MediaType for typed multipart uploads (transitive via dio, but we
   # import it directly in checkins_remote_source.dart so declare it).
