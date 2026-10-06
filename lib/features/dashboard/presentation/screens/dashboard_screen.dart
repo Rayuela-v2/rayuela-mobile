@@ -8,6 +8,7 @@ import '../../../../shared/widgets/empty_state.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../../../shared/widgets/language_picker.dart';
 import '../../../../shared/widgets/last_updated_chip.dart';
+import '../../../../shared/widgets/theme_toggle_button.dart';
 import '../../../auth/presentation/providers/auth_controller.dart';
 import '../../../checkin/presentation/widgets/outbox_badge.dart';
 import '../../../notifications/presentation/widgets/notification_bell.dart';
@@ -41,6 +42,7 @@ class DashboardScreen extends ConsumerWidget {
           // Only for signed-in users: notifications are per-account, and an
           // empty bell on the public dashboard is a dead end.
           if (authState is AuthStateAuthenticated) const NotificationBell(),
+          const ThemeToggleButton(),
           const LanguagePickerButton(),
           // Logout moved into the profile screen — the avatar is the entry
           // point, like every other app the volunteers already use.

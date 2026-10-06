@@ -943,6 +943,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get router_param_checkin_result => 'resultado da missão';
 
   @override
+  String get theme_toggle_tooltip => 'Alternar modo claro/escuro';
+
+  @override
   String get language_picker_tooltip => 'Idioma';
 
   @override

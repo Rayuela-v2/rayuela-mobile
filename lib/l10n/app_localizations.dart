@@ -1606,6 +1606,12 @@ abstract class AppLocalizations {
   /// **'mission result'**
   String get router_param_checkin_result;
 
+  /// No description provided for @theme_toggle_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle light/dark mode'**
+  String get theme_toggle_tooltip;
+
   /// No description provided for @language_picker_tooltip.
   ///
   /// In en, this message translates to:

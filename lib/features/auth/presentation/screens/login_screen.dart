@@ -8,6 +8,7 @@ import '../../../../core/router/routes.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../../../shared/widgets/language_picker.dart';
+import '../../../../shared/widgets/theme_toggle_button.dart';
 import '../providers/auth_controller.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -195,6 +196,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         actions: const [
+          ThemeToggleButton(),
           LanguagePickerButton(),
           SizedBox(width: 4),
         ],

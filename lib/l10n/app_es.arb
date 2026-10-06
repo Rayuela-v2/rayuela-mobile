@@ -454,6 +454,7 @@
   "router_param_project_id": "el id del proyecto",
   "router_param_checkin_result": "el resultado de la misión",
 
+  "theme_toggle_tooltip": "Cambiar modo claro/oscuro",
   "language_picker_tooltip": "Idioma",
   "language_picker_title": "Idioma",
   "language_picker_subtitle": "Elegí el idioma que querés usar en toda la app. El cambio se aplica al instante.",

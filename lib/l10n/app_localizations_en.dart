@@ -937,6 +937,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get router_param_checkin_result => 'mission result';
 
   @override
+  String get theme_toggle_tooltip => 'Toggle light/dark mode';
+
+  @override
   String get language_picker_tooltip => 'Language';
 
   @override
