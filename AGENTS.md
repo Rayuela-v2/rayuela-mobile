@@ -4,7 +4,8 @@ This file defines the mobile-specific standards and workflows for the Rayuela Fl
 
 ## Mobile Overview
 
-`rayuela-mobile` is a Flutter-based mobile application designed for citizen-science volunteers. It allows users to subscribe to projects, view their progress, and perform check-ins (GPS + Photo) to contribute data.
+`rayuela-mobile` is a Flutter-based mobile application designed for citizen-science **Contributors** (*Personas colaboradoras*). It allows users to subscribe to projects, view their progress, and perform check-ins (GPS + Photo) to contribute data.
+- **ACTOR TERMINOLOGY (`Persona colaboradora` / `Contributor`):** When referring to the participant role in documentation, diagrams, or UI copy, ALWAYS use **"Persona colaboradora"** in Spanish and **"Contributor"** in English.
 
 ## Stack
 - **Framework:** Flutter 3.27+
