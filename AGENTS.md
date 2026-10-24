@@ -16,6 +16,7 @@ This file defines the mobile-specific standards and workflows for the Rayuela Fl
 
 ## Development Commands
 - `flutter pub get` — Install dependencies
+- `flutter gen-l10n` — Regenerate localization classes from `lib/l10n/app_{es,en,pt}.arb`
 - `flutter run --dart-define-from-file=.env.development` — Run with local environment config
 - `flutter test` — Run all unit and widget tests
 - `flutter analyze` — Run static analysis
@@ -38,6 +39,11 @@ Configuration is managed via `--dart-define-from-file`.
 - Development: `.env.development` (Use `10.0.2.2` for localhost on Android emulators).
 
 ## Coding Standards
+- **Localization / i18n (ZERO HARDCODED STRINGS):**
+  * **NEVER hardcode user-facing text** in Flutter widgets, screens, dialogs, snackbars, tooltips, placeholders, empty states, or error messages.
+  * **ALWAYS use `AppLocalizations`** (`AppLocalizations.of(context)!` / `l10n.<key>`) for all UI text.
+  * Every time you introduce or update user-facing text, you **MUST** define the key in **ALL THREE** ARB files: `lib/l10n/app_es.arb`, `lib/l10n/app_en.arb`, and `lib/l10n/app_pt.arb`, and run `flutter gen-l10n` to regenerate the Dart localization classes.
+  * Never leave un-translated strings or raw translation keys in the UI.
 - **Defensive Parsing:** Hand-write DTO `fromJson` methods to handle backend wire-shape changes gracefully without crashing the app.
 - **Provider Scope:** Use `ProviderScope` at the root and prefer functional providers (`@riverpod` equivalent pattern but manual since we don't use code-gen yet).
 - **Lints:** Follow `flutter_lints` as defined in `analysis_options.yaml`.
