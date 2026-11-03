@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../../../core/maps/cached_tile_provider.dart';
+import '../../../../core/maps/map_config.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/providers/core_providers.dart';
 
 /// Modal map picker for overriding the auto-resolved GPS location of a
 /// check-in. Mirrors the web app's `LocationPicker.vue` (OpenLayers there,
@@ -14,7 +18,7 @@ import '../../../../l10n/app_localizations.dart';
 ///   * Initial center is the auto-resolved GPS position when present.
 ///
 /// Returns the chosen [LatLng] via Navigator.pop, or null if dismissed.
-class LocationPickerSheet extends StatefulWidget {
+class LocationPickerSheet extends ConsumerStatefulWidget {
   const LocationPickerSheet({
     super.key,
     this.initial,
@@ -46,10 +50,11 @@ class LocationPickerSheet extends StatefulWidget {
   }
 
   @override
-  State<LocationPickerSheet> createState() => _LocationPickerSheetState();
+  ConsumerState<LocationPickerSheet> createState() =>
+      _LocationPickerSheetState();
 }
 
-class _LocationPickerSheetState extends State<LocationPickerSheet> {
+class _LocationPickerSheetState extends ConsumerState<LocationPickerSheet> {
   final _mapController = MapController();
   late LatLng _picked;
 
@@ -68,6 +73,7 @@ class _LocationPickerSheetState extends State<LocationPickerSheet> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final t = AppLocalizations.of(context)!;
+    final mapConfig = ref.watch(mapConfigProvider);
     return Column(
       children: [
         Padding(
@@ -104,8 +110,8 @@ class _LocationPickerSheetState extends State<LocationPickerSheet> {
                 options: MapOptions(
                   initialCenter: _picked,
                   initialZoom: widget.initial == null ? 6 : 16,
-                  minZoom: 2,
-                  maxZoom: 19,
+                  minZoom: mapConfig.minZoom.toDouble(),
+                  maxZoom: mapConfig.maxZoom.toDouble(),
                   onTap: widget.readOnly ? null : _onTap,
                   interactionOptions: const InteractionOptions(
                     flags: InteractiveFlag.pinchZoom |
@@ -116,11 +122,13 @@ class _LocationPickerSheetState extends State<LocationPickerSheet> {
                 ),
                 children: [
                   TileLayer(
-                    urlTemplate:
-                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    userAgentPackageName: 'com.rayuela.mobile',
-                    // OSM's tile policy asks us to identify ourselves; the
-                    // package name above is the canonical channel.
+                    urlTemplate: mapConfig.urlTemplate,
+                    subdomains: mapConfig.subdomains,
+                    userAgentPackageName: mapConfig.userAgent,
+                    tileProvider: CachedTileProvider(
+                      cache: ref.watch(tileCacheServiceProvider),
+                      userAgentPackageName: mapConfig.userAgent,
+                    ),
                   ),
                   MarkerLayer(
                     markers: [
@@ -181,9 +189,9 @@ class _LocationPickerSheetState extends State<LocationPickerSheet> {
                     color: theme.colorScheme.surface.withValues(alpha: 0.85),
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: const Text(
-                    '© OpenStreetMap',
-                    style: TextStyle(fontSize: 10),
+                  child: Text(
+                    mapConfig.attributionText,
+                    style: const TextStyle(fontSize: 10),
                   ),
                 ),
               ),

@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/maps/map_config.dart';
 import '../../core/maps/tile_cache_service.dart';
 import '../../core/maps/tile_prefetcher.dart';
 import '../../core/network/api_client.dart';
@@ -93,15 +94,22 @@ final backgroundSyncSchedulerProvider =
 // Sprint F — offline maps
 // ---------------------------------------------------------------------------
 
-/// Bounded LRU disk cache for OSM tiles. Shared by [CachedTileProvider]
+/// Bounded LRU disk cache for map tiles. Shared by [CachedTileProvider]
 /// inside flutter_map and the [TilePrefetcher] used to warm the cache
 /// for a project ahead of time.
 final tileCacheServiceProvider = Provider<TileCacheService>((ref) {
-  return TileCacheService();
+  final mapConfig = ref.watch(mapConfigProvider);
+  return TileCacheService(userAgent: mapConfig.userAgent);
 });
 
 /// Pre-cache loop that walks a project's slippy-map tiles. Construct
 /// per use so cancellation is per-project.
 final tilePrefetcherProvider = Provider<TilePrefetcher>((ref) {
-  return TilePrefetcher(cache: ref.watch(tileCacheServiceProvider));
+  final mapConfig = ref.watch(mapConfigProvider);
+  return TilePrefetcher(
+    cache: ref.watch(tileCacheServiceProvider),
+    config: TilePrefetchConfig(
+      urlTemplate: mapConfig.urlTemplate,
+    ),
+  );
 });

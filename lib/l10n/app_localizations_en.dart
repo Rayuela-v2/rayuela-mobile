@@ -410,7 +410,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get map_legend_your_location => 'Your location';
 
   @override
-  String get map_attribution => '© OpenStreetMap';
+  String get map_attribution => '© OpenStreetMap contributors';
+
+  @override
+  String get map_report_issue => 'Report a map issue';
+
+  @override
+  String get map_copyright_link => 'Licence and copyright';
 
   @override
   String get map_area_no_tasks => 'No missions in this zone';

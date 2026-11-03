@@ -6,6 +6,7 @@ import 'package:workmanager/workmanager.dart';
 import '../../../features/checkin/data/sources/checkin_outbox_sender.dart';
 import '../../../features/checkin/data/sources/checkins_remote_source.dart';
 import '../../network/api_client.dart';
+import '../../network/user_agent_http_overrides.dart';
 import '../../storage/image_store.dart';
 import '../../storage/secure_token_store.dart';
 import '../app_database.dart';
@@ -41,6 +42,7 @@ Future<bool> runOutboxBackgroundCycle({
   BackgroundOutboxBootstrap? bootstrap,
 }) async {
   WidgetsFlutterBinding.ensureInitialized();
+  RayuelaHttpOverrides.install();
   final boot = bootstrap ?? const _DefaultBackgroundOutboxBootstrap();
 
   AppDatabase? db;

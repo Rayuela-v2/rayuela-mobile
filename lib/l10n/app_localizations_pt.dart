@@ -415,7 +415,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get map_legend_your_location => 'Sua localização';
 
   @override
-  String get map_attribution => '© OpenStreetMap';
+  String get map_attribution => '© Colaboradores do OpenStreetMap';
+
+  @override
+  String get map_report_issue => 'Reportar um problema no mapa';
+
+  @override
+  String get map_copyright_link => 'Licença e direitos autorais';
 
   @override
   String get map_area_no_tasks => 'Sem missões nesta zona';

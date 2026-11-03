@@ -176,7 +176,9 @@
   "map_legend_no_task": "Exploración libre",
   "map_legend_you_here": "Estás aquí",
   "map_legend_your_location": "Tu ubicación",
-  "map_attribution": "© OpenStreetMap",
+  "map_attribution": "© Colaboradores de OpenStreetMap",
+  "map_report_issue": "Reportar un problema en el mapa",
+  "map_copyright_link": "Licencia y derechos de autor",
   "map_area_no_tasks": "Esta zona no tiene misiones",
   "map_area_all_completed": "¡Completaste las {count} misiones!",
   "@map_area_all_completed": {

@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 
+import '../network/user_agent_http_overrides.dart';
 import 'tile_cache_service.dart';
 
 /// flutter_map [TileProvider] that pulls bytes from [TileCacheService]
@@ -23,7 +24,7 @@ class CachedTileProvider extends TileProvider {
   }) : super(
           headers: <String, String>{
             'User-Agent':
-                userAgentPackageName ?? 'rayuela_mobile/1.0 (offline)',
+                userAgentPackageName ?? RayuelaUserAgent.defaultValue,
             ...?headers,
           },
         );
@@ -35,6 +36,7 @@ class CachedTileProvider extends TileProvider {
     return _CachedTileImage(
       url: getTileUrl(coordinates, options),
       cache: cache,
+      headers: headers,
     );
   }
 }
@@ -43,10 +45,15 @@ class CachedTileProvider extends TileProvider {
 /// [TileCacheService] singleton. Mostly mirrors flutter_map's own
 /// `NetworkTileImage`, swapping out the byte source.
 class _CachedTileImage extends ImageProvider<_CachedTileImage> {
-  const _CachedTileImage({required this.url, required this.cache});
+  const _CachedTileImage({
+    required this.url,
+    required this.cache,
+    this.headers = const <String, String>{},
+  });
 
   final String url;
   final TileCacheService cache;
+  final Map<String, String> headers;
 
   @override
   Future<_CachedTileImage> obtainKey(ImageConfiguration configuration) {
@@ -69,7 +76,7 @@ class _CachedTileImage extends ImageProvider<_CachedTileImage> {
     _CachedTileImage key,
     ImageDecoderCallback decode,
   ) async {
-    final bytes = await cache.getTileBytes(url);
+    final bytes = await cache.getTileBytes(url, headers: headers);
     if (bytes == null) {
       throw NetworkImageLoadException(statusCode: 0, uri: Uri.parse(url));
     }
