@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../core/locale/locale_controller.dart';
 import '../core/network/api_client.dart';
 import '../core/network/api_paths.dart';
+import '../core/network/user_agent_http_overrides.dart';
 import '../core/storage/image_store.dart';
 import '../core/storage/secure_token_store.dart';
 import '../core/sync/app_database.dart';
@@ -32,6 +33,7 @@ import '../shared/providers/core_providers.dart';
 /// (with the check-in sender) and the [OutboxLifecycle] listener.
 Future<ProviderContainer> bootstrapContainer() async {
   WidgetsFlutterBinding.ensureInitialized();
+  RayuelaHttpOverrides.install();
 
   final tokens = SecureTokenStore();
   final prefs = await SharedPreferences.getInstance();

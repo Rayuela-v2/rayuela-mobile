@@ -5,7 +5,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../../../core/maps/cached_tile_provider.dart';
+import '../../../../core/maps/map_config.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/providers/core_providers.dart';
 import '../../../dashboard/presentation/providers/project_detail_providers.dart';
 import '../../domain/entities/checkin_submission_outcome.dart';
 import '../providers/checkin_wizard_controller.dart';
@@ -31,6 +34,7 @@ class Step2ContextInfo extends ConsumerWidget {
     final notifier = ref.read(checkinWizardProvider(args).notifier);
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
+    final mapConfig = ref.watch(mapConfigProvider);
     final canEditLocation = ref
             .watch(projectDetailValueProvider(args.projectId))
             .valueOrNull
@@ -138,9 +142,13 @@ class Step2ContextInfo extends ConsumerWidget {
                   ),
                   children: [
                     TileLayer(
-                      urlTemplate:
-                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                      userAgentPackageName: 'com.rayuela.mobile',
+                      urlTemplate: mapConfig.urlTemplate,
+                      subdomains: mapConfig.subdomains,
+                      userAgentPackageName: mapConfig.userAgent,
+                      tileProvider: CachedTileProvider(
+                        cache: ref.watch(tileCacheServiceProvider),
+                        userAgentPackageName: mapConfig.userAgent,
+                      ),
                     ),
                     MarkerLayer(
                       markers: [

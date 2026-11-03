@@ -763,7 +763,7 @@ abstract class AppLocalizations {
   /// No description provided for @map_attribution.
   ///
   /// In en, this message translates to:
-  /// **'© OpenStreetMap'**
+  /// **'© OpenStreetMap contributors'**
   String get map_attribution;
 
   /// No description provided for @map_area_no_tasks.

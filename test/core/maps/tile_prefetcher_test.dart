@@ -13,12 +13,16 @@ class _SpyCache extends TileCacheService {
   final urls = <String>[];
 
   @override
-  Future<void> prefetchTile(String url) async {
+  Future<void> prefetchTile(String url, {Map<String, String>? headers}) async {
     urls.add(url);
   }
 
   @override
-  Future<Uint8List?> getTileBytes(String url) async => null;
+  Future<Uint8List?> getTileBytes(
+    String url, {
+    Map<String, String>? headers,
+  }) async =>
+      null;
 }
 
 /// Stub CacheManager that does nothing — the test never reaches its

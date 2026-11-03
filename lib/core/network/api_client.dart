@@ -10,6 +10,7 @@ import '../error/result.dart';
 import '../storage/secure_token_store.dart';
 import 'auth_interceptor.dart';
 import 'refresh_interceptor.dart';
+import 'user_agent_http_overrides.dart';
 
 /// Thin typed wrapper around [Dio]. UI code never touches Dio directly —
 /// repositories call [request] with a lambda and a parser, and get a
@@ -29,6 +30,7 @@ class ApiClient {
                 contentType: Headers.jsonContentType,
                 headers: {
                   HttpHeaders.acceptHeader: 'application/json',
+                  HttpHeaders.userAgentHeader: RayuelaUserAgent.defaultValue,
                 },
               ),
             ) {

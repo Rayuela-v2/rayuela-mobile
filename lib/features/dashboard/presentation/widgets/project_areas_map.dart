@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../../../core/maps/cached_tile_provider.dart';
+import '../../../../core/maps/map_config.dart';
 import '../../../../core/maps/tile_prefetcher.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/providers/core_providers.dart';
@@ -194,6 +195,7 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final t = AppLocalizations.of(context)!;
+    final mapConfig = ref.watch(mapConfigProvider);
     final tasksAsync = ref.watch(projectTasksProvider(widget.projectId));
     final checkinsAsync = ref.watch(userCheckinsProvider(widget.projectId));
 
@@ -245,8 +247,8 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
                         padding: const EdgeInsets.all(24),
                         maxZoom: 17,
                       ),
-                minZoom: 2,
-                maxZoom: 19,
+                minZoom: mapConfig.minZoom.toDouble(),
+                maxZoom: mapConfig.maxZoom.toDouble(),
                 interactionOptions: const InteractionOptions(
                   flags: InteractiveFlag.pinchZoom |
                       InteractiveFlag.drag |
@@ -257,16 +259,15 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
               ),
               children: [
                 TileLayer(
-                  urlTemplate:
-                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  userAgentPackageName: 'com.rayuela.mobile',
+                  urlTemplate: mapConfig.urlTemplate,
+                  subdomains: mapConfig.subdomains,
+                  userAgentPackageName: mapConfig.userAgent,
                   // Tiles flow through the disk cache so a project's
                   // map keeps working offline once it's been opened
-                  // online at least once. The pre-cache action below
-                  // warms it ahead of time when the user asks.
+                  // online at least once.
                   tileProvider: CachedTileProvider(
-                    cache: ref.read(tileCacheServiceProvider),
-                    userAgentPackageName: 'com.rayuela.mobile',
+                    cache: ref.watch(tileCacheServiceProvider),
+                    userAgentPackageName: mapConfig.userAgent,
                   ),
                 ),
                 PolygonLayer(
@@ -363,13 +364,15 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
                     onPressed: () =>
                         setState(() => _showLegend = !_showLegend),
                   ),
-                  const SizedBox(height: 6),
-                  _MapButton(
-                    icon: Icons.download_for_offline_outlined,
-                    tooltip: t.map_download_offline_tooltip,
-                    onPressed:
-                        widget.areas.isEmpty ? null : _downloadOfflineMaps,
-                  ),
+                  if (mapConfig.allowBulkPrefetch) ...[
+                    const SizedBox(height: 6),
+                    _MapButton(
+                      icon: Icons.download_for_offline_outlined,
+                      tooltip: t.map_download_offline_tooltip,
+                      onPressed:
+                          widget.areas.isEmpty ? null : _downloadOfflineMaps,
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -384,10 +387,10 @@ class _ProjectAreasMapState extends ConsumerState<ProjectAreasMap> {
                   hasUserLocation: _userLocation != null,
                 ),
               ),
-            const Positioned(
+            Positioned(
               right: 6,
               bottom: 6,
-              child: _Attribution(),
+              child: _Attribution(config: mapConfig),
             ),
             if (_selectedAreaId != null)
               Positioned(
@@ -936,7 +939,9 @@ class _PillIconSwatch extends StatelessWidget {
 }
 
 class _Attribution extends StatelessWidget {
-  const _Attribution();
+  const _Attribution({required this.config});
+
+  final MapConfig config;
 
   @override
   Widget build(BuildContext context) {
@@ -946,9 +951,9 @@ class _Attribution extends StatelessWidget {
         color: Colors.white.withValues(alpha: 0.85),
         borderRadius: BorderRadius.circular(4),
       ),
-      child: const Text(
-        '© OpenStreetMap',
-        style: TextStyle(fontSize: 10),
+      child: Text(
+        config.attributionText,
+        style: const TextStyle(fontSize: 10, color: Colors.black87),
       ),
     );
   }
