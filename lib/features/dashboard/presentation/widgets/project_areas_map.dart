@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/maps/cached_tile_provider.dart';
 import '../../../../core/maps/map_config.dart';
@@ -944,68 +943,17 @@ class _Attribution extends StatelessWidget {
 
   final MapConfig config;
 
-  Future<void> _openUrl(String url) async {
-    final uri = Uri.tryParse(url);
-    if (uri == null) return;
-    await launchUrl(uri, mode: LaunchMode.externalApplication);
-  }
-
-  void _showAttributionDialog(BuildContext context) {
-    final t = AppLocalizations.of(context)!;
-    showModalBottomSheet<void>(
-      context: context,
-      showDragHandle: true,
-      builder: (ctx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.copyright_outlined),
-              title: Text(config.attributionText),
-              subtitle: Text(t.map_copyright_link),
-              trailing: const Icon(Icons.open_in_new, size: 18),
-              onTap: () {
-                Navigator.of(ctx).pop();
-                unawaited(_openUrl(config.attributionUrl));
-              },
-            ),
-            if (config.fixMapUrl.isNotEmpty)
-              ListTile(
-                leading: const Icon(Icons.bug_report_outlined),
-                title: Text(t.map_report_issue),
-                subtitle: Text(config.fixMapUrl),
-                trailing: const Icon(Icons.open_in_new, size: 18),
-                onTap: () {
-                  Navigator.of(ctx).pop();
-                  unawaited(_openUrl(config.fixMapUrl));
-                },
-              ),
-            const SizedBox(height: 8),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.white.withValues(alpha: 0.88),
-      borderRadius: BorderRadius.circular(4),
-      child: InkWell(
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.85),
         borderRadius: BorderRadius.circular(4),
-        onTap: () => _showAttributionDialog(context),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-          child: Text(
-            config.attributionText,
-            style: const TextStyle(
-              fontSize: 10,
-              color: Colors.black87,
-              decoration: TextDecoration.underline,
-            ),
-          ),
-        ),
+      ),
+      child: Text(
+        config.attributionText,
+        style: const TextStyle(fontSize: 10, color: Colors.black87),
       ),
     );
   }
